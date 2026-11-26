@@ -12,68 +12,69 @@
   const badgeEl = document.getElementById("stateBadge");
   const entropyEl = document.getElementById("entropyReadout");
   const gammaEl = document.getElementById("gammaReadout");
+  const roleAxisEl = document.getElementById("roleAxisGroup");
   const pokeBtn = document.getElementById("pokeBtn");
   const gammaBtn = document.getElementById("gammaBtn");
   const resetBtn = document.getElementById("resetBtn");
 
   function shannonEntropy(weights) {
-    return weights.reduce((acc, w) => {
-      if (w <= 0) return acc;
-      return acc - w * Math.log2(w);
-    }, 0);
+    return weights.reduce((acc, w) => (w <= 0 ? acc : acc - w * Math.log2(w)), 0);
   }
 
   function renderSchematic() {
     for (let i = 0; i < 4; i++) {
       const idx = i + 1;
       const w = currentWeights[i];
-      const edge = document.getElementById(`edge${idx}`);
+      const arc = document.getElementById(`arc${idx}`);
       const label = document.getElementById(`wlabel${idx}`);
       const node = document.getElementById(`node${idx}`);
-      const circle = node ? node.querySelector("circle") : null;
 
       if (label) {
-        label.textContent = `${ROLES[i]} // ${w.toFixed(2)}`;
-      }
-      if (edge) {
-        const opacity = w > 0 ? Math.max(0.22, w) : 0.06;
-        const strokeWidth = w > 0 ? (0.8 + 1.8 * w).toFixed(2) : "0.6";
-        edge.setAttribute("stroke-width", strokeWidth);
-        edge.setAttribute(
-          "stroke",
-          collapsedIndex === i ? "rgba(159, 132, 172, 0.95)" : `rgba(234, 234, 234, ${opacity.toFixed(2)})`
+        label.textContent = `G${idx} // ${ROLES[i]} // w=${w.toFixed(2)}`;
+        label.setAttribute(
+          "fill",
+          collapsedIndex === i ? "#EAEAEA" : (w > 0 ? (idx === 2 ? "#B892CC" : "#9E9EA8") : "#46464F")
         );
       }
-      if (circle) {
-        circle.setAttribute("opacity", w > 0 ? "1" : "0.28");
-        circle.setAttribute(
+      if (arc) {
+        const strokeWidth = w > 0 ? (0.75 + 1.5 * w).toFixed(2) : "0.5";
+        const alpha = w > 0 ? Math.max(0.22, w) : 0.06;
+        arc.setAttribute("stroke-width", strokeWidth);
+        arc.setAttribute(
           "stroke",
-          collapsedIndex === i ? "#EAEAEA" : (w > 0 ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.16)")
+          collapsedIndex === i ? "rgba(184, 146, 204, 0.95)" : `rgba(234, 234, 234, ${alpha.toFixed(2)})`
         );
       }
+      if (node) {
+        node.setAttribute("opacity", w > 0 ? "1" : "0.24");
+      }
+    }
+
+    if (roleAxisEl) {
+      roleAxisEl.setAttribute("transform", gammaZero ? "rotate(0 500 250)" : "rotate(-26 500 250)");
     }
 
     if (entropyEl) {
-      entropyEl.textContent = `${shannonEntropy(currentWeights).toFixed(3)} bits`;
+      entropyEl.textContent = `H(w) = ${shannonEntropy(currentWeights).toFixed(3)} bits`;
     }
     if (gammaEl) {
       if (collapsedIndex !== null) {
-        gammaEl.textContent = "0.00 (collapsed eigenstate)";
+        gammaEl.textContent = "collapsed eigenstate";
       } else {
-        gammaEl.textContent = gammaZero ? "0.00 (commuting, k_R = 0)" : "0.75 (non-commuting, k_R > 0)";
+        gammaEl.textContent = gammaZero ? "gamma = 0.00 (k_R = 0)" : "gamma = 0.75 (k_R > 0)";
       }
     }
     if (badgeEl) {
       if (collapsedIndex !== null) {
-        badgeEl.textContent = `COLLAPSED -> G${collapsedIndex + 1}`;
+        badgeEl.textContent = `STATE: COLLAPSED -> G${collapsedIndex + 1}`;
         badgeEl.classList.add("is-collapsed");
       } else {
-        badgeEl.textContent = "SUPERPOSED";
+        badgeEl.textContent = "STATE: SUPERPOSED";
         badgeEl.classList.remove("is-collapsed");
       }
     }
     if (gammaBtn) {
-      gammaBtn.textContent = gammaZero ? "Restore gamma = 0.75" : "Toggle gamma = 0";
+      gammaBtn.textContent = gammaZero ? "[ Restore gamma = 0.75 ]" : "[ Toggle gamma = 0 ]";
     }
   }
 
@@ -112,29 +113,72 @@
     });
   }
 
-  /* Scroll reveal with immediate hero visibility and graceful fallback */
-  const heroEl = document.querySelector(".hero");
-  if (heroEl) heroEl.classList.add("is-visible");
+  /* Custom editorial cursor for fine desktop pointers */
+  const dot = document.getElementById("cursorDot");
+  const ring = document.getElementById("cursorRing");
+  if (dot && ring && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let ringX = 0;
+    let ringY = 0;
+    let rafActive = false;
 
-  const revealNodes = document.querySelectorAll(".reveal");
+    document.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.left = `${mouseX}px`;
+      dot.style.top = `${mouseY}px`;
+      document.body.classList.add("cursor-active");
+      if (!rafActive) {
+        rafActive = true;
+        requestAnimationFrame(tickCursor);
+      }
+    });
+
+    function tickCursor() {
+      ringX += (mouseX - ringX) * 0.22;
+      ringY += (mouseY - ringY) * 0.22;
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
+      if (Math.abs(mouseX - ringX) > 0.2 || Math.abs(mouseY - ringY) > 0.2) {
+        requestAnimationFrame(tickCursor);
+      } else {
+        rafActive = false;
+      }
+    }
+
+    document.querySelectorAll("a, button").forEach((el) => {
+      el.addEventListener("mouseenter", () => document.body.classList.add("cursor-hover"));
+      el.addEventListener("mouseleave", () => document.body.classList.remove("cursor-hover"));
+    });
+  }
+
+  /* Immediate hero reveal + scroll observer for subsequent blocks */
+  document.querySelectorAll("#hero .reveal-item").forEach((el) => el.classList.add("visible"));
+
+  const revealTargets = document.querySelectorAll(".reveal-item, .sep");
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
+            entry.target.classList.add("visible");
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.1 }
     );
-    revealNodes.forEach((el) => observer.observe(el));
+    revealTargets.forEach((el) => {
+      if (!el.classList.contains("visible")) {
+        observer.observe(el);
+      }
+    });
   } else {
-    revealNodes.forEach((el) => el.classList.add("is-visible"));
+    revealTargets.forEach((el) => el.classList.add("visible"));
   }
 
-  /* Footer repository last-updated status via public GitHub API with offline fallback */
+  /* Footer repository last-updated status via GitHub API with offline fallback */
   const statusEl = document.getElementById("updateStatus");
   if (statusEl && typeof fetch === "function") {
     const fallbackDate = statusEl.getAttribute("data-fallback-date") || "2026-11-26";

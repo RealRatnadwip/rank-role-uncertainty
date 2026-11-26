@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Rank-Role Uncertainty Principle | RST</title>
-  <meta name="description" content="Relational Superposition Theory: a formal mathematical monograph, deterministic simulation suite, and Lean 4 verification for concurrent role-partitioned relational portfolios." />
+  <meta name="description" content="Relational Superposition Theory: formal monograph, deterministic simulations, and Lean 4 verification for concurrent role-partitioned relational portfolios." />
   <meta name="theme-color" content="#0A0A0A" />
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -18,15 +18,19 @@
   <div class="ambient-layer" aria-hidden="true">
     <div class="ambient-orb orb-1"></div>
     <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
   </div>
   <div class="grain-overlay" aria-hidden="true"></div>
 
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
   <header class="site-header">
     <div class="header-inner">
-      <a href="#top" class="brand">
-        <span class="brand-code">RST // v1.1</span>
+      <a href="#hero" class="brand">
+        <span class="brand-code">RST</span>
         <span class="brand-sep">/</span>
-        <span class="brand-sub">MONOGRAPH</span>
+        <span class="brand-sub">MONOGRAPH v1.1</span>
       </a>
       <nav class="top-nav" aria-label="Primary navigation">
         <a href="#dilemma">Dilemma</a>
@@ -37,28 +41,103 @@
     </div>
   </header>
 
-  <main id="top" class="page-shell">
-    <!-- HERO -->
-    <section class="hero reveal">
-      <div class="meta-strip">
-        <span class="mono-label">[ RELATIONAL SUPERPOSITION THEORY ]</span>
-        <span class="mono-label muted">55 PAGES / LEAN 4.36.0 / SEEDS 202601..202605</span>
+  <main class="page-shell">
+    <!-- FULL-STAGE CENTERED HERO -->
+    <section class="hero-section" id="hero">
+      <div class="hero-meta-top reveal-item">
+        <span class="mono-tag">[ RELATIONAL SUPERPOSITION THEORY ]</span>
+        <span class="mono-meta">55 PAGES / LEAN 4.36.0 / SEEDS 202601..202605</span>
       </div>
 
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <h1 class="display-title">
+      <div class="hero-stage">
+        <!-- Wide Atmospheric Hilbert / Portfolio Schematic Behind Typography -->
+        <div class="schematic-visual-wrap" id="schematicWrap" aria-hidden="true">
+          <svg viewBox="0 0 1000 500" fill="none" class="hero-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="axisGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+                <stop offset="50%" stop-color="#D4D4D8" stop-opacity="0.38"/>
+                <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="rotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9F84AC" stop-opacity="0"/>
+                <stop offset="50%" stop-color="#B892CC" stop-opacity="0.52"/>
+                <stop offset="100%" stop-color="#9F84AC" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Coordinate Frame & Uncertainty Rings -->
+            <g stroke="rgba(255,255,255,0.06)" stroke-width="0.75">
+              <line x1="60" y1="250" x2="940" y2="250" stroke="url(#axisGrad)" stroke-dasharray="3 6" />
+              <line x1="500" y1="30" x2="500" y2="470" stroke-dasharray="3 6" />
+              <circle cx="500" cy="250" r="195" stroke="rgba(116,84,130,0.28)" stroke-dasharray="2 8" />
+              <circle cx="500" cy="250" r="122" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2 6" />
+              <circle cx="500" cy="250" r="56" stroke="rgba(159,132,172,0.34)" stroke-dasharray="1 5" />
+            </g>
+
+            <!-- Context-Rotated Role Observable Axis L(gamma) -->
+            <g id="roleAxisGroup" transform="rotate(-26 500 250)">
+              <line x1="120" y1="250" x2="880" y2="250" stroke="url(#rotGrad)" stroke-width="1.15" stroke-dasharray="4 6" />
+              <text x="810" y="240" fill="#B892CC" font-family="'Space Mono', monospace" font-size="9" letter-spacing="1.4">AXIS L(gamma)</text>
+            </g>
+
+            <!-- Delicate Vector Coupling Arcs from Focal Node W(500,250) -->
+            <g fill="none">
+              <path id="arc1" d="M 500,250 Q 320,165 185,112" stroke="rgba(234,234,234,0.38)" stroke-width="1.1" />
+              <path id="arc2" d="M 500,250 Q 675,155 815,118" stroke="rgba(184,146,204,0.45)" stroke-width="1.0" />
+              <path id="arc3" d="M 500,250 Q 335,345 205,388" stroke="rgba(234,234,234,0.24)" stroke-width="0.9" stroke-dasharray="3 5" />
+              <path id="arc4" d="M 500,250 Q 680,340 805,382" stroke="rgba(234,234,234,0.22)" stroke-width="0.9" stroke-dasharray="3 5" />
+            </g>
+
+            <!-- Pulse Nodes -->
+            <g class="pulse-node" transform="translate(500, 250)">
+              <circle cx="0" cy="0" r="4" fill="#FFFFFF" />
+              <circle cx="0" cy="0" r="11" stroke="#9F84AC" stroke-width="1" class="halo" />
+            </g>
+
+            <g id="node1" class="pulse-node" transform="translate(185, 112)">
+              <circle cx="0" cy="0" r="3.5" fill="#EAEAEA" />
+              <circle cx="0" cy="0" r="9" stroke="rgba(255,255,255,0.45)" stroke-width="0.8" class="halo" />
+            </g>
+            <g id="node2" class="pulse-node" transform="translate(815, 118)">
+              <circle cx="0" cy="0" r="3.5" fill="#B892CC" />
+              <circle cx="0" cy="0" r="9" stroke="rgba(184,146,204,0.5)" stroke-width="0.8" class="halo" />
+            </g>
+            <g id="node3" class="pulse-node" transform="translate(205, 388)">
+              <circle cx="0" cy="0" r="3" fill="#EAEAEA" />
+              <circle cx="0" cy="0" r="8" stroke="rgba(255,255,255,0.3)" stroke-width="0.7" />
+            </g>
+            <g id="node4" class="pulse-node" transform="translate(805, 382)">
+              <circle cx="0" cy="0" r="3" fill="#EAEAEA" />
+              <circle cx="0" cy="0" r="8" stroke="rgba(255,255,255,0.3)" stroke-width="0.7" />
+            </g>
+
+            <!-- Coordinate Microtext -->
+            <g font-family="'Space Mono', monospace" font-size="8.5" letter-spacing="1.3">
+              <text id="wlabel1" x="128" y="94" fill="#A8A8B2">G1 // r1 // w=0.38</text>
+              <text id="wlabel2" x="752" y="100" fill="#B892CC">G2 // r2 // w=0.29</text>
+              <text id="wlabel3" x="148" y="410" fill="#6F6F78">G3 // r3 // w=0.18</text>
+              <text id="wlabel4" x="742" y="404" fill="#6F6F78">G4 // r4 // w=0.15</text>
+              <text x="855" y="266" fill="#6F6F78">AXIS R</text>
+              <text x="458" y="48" fill="#6F6F78">H(w) // DELTAR DELTAL</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Centered Monumental Typography Core -->
+        <div class="hero-content">
+          <p class="hero-kicker reveal-item">FORMAL MONOGRAPH &amp; LEAN 4 SUITE</p>
+          <h1 class="hero-title reveal-item">
             The Rank-Role<br />
             <em>Uncertainty</em> Principle
           </h1>
-          <p class="hero-lead">
-            You cannot know a partner's ordinal rank and functional role at the same time.
-            When attention is partitioned across specialized connections, "who is first?"
-            is not a secret list hidden from view: it is an unmeasured observable until a
-            direct status query collapses the portfolio.
-          </p>
 
-          <div class="action-row">
+          <div class="hero-subline reveal-item">
+            <p class="symbolism-line"><em>You cannot know a partner's rank and role at the same time.</em></p>
+            <p class="tagline">Until a direct inquiry collapses the state, no connection occupies rank one.</p>
+          </div>
+
+          <div class="hero-actions reveal-item">
             <a class="btn btn-primary" href="https://github.com/RealRatnadwip/rank-role-uncertainty/blob/main/paper/output/rank-role-uncertainty.pdf" target="_blank" rel="noopener noreferrer">
               Read Monograph PDF
             </a>
@@ -67,69 +146,28 @@
             </a>
           </div>
         </div>
+      </div>
 
-        <!-- Minimal Interactive Superposition Schematic -->
-        <aside class="schematic-card" aria-label="Interactive superposition schematic">
-          <div class="schematic-head">
-            <span class="mono-label">STATE MONITOR // [R, L]</span>
-            <span class="mono-status" id="stateBadge">SUPERPOSED</span>
-          </div>
+      <!-- Minimal Bottom Control & Telemetry Strip -->
+      <div class="hero-bottom-bar reveal-item">
+        <div class="telemetry-group">
+          <span class="mono-badge" id="stateBadge">STATE: SUPERPOSED</span>
+          <span class="mono-val" id="entropyReadout">H(w) = 1.908 bits</span>
+          <span class="mono-val muted" id="gammaReadout">gamma = 0.75 (k_R &gt; 0)</span>
+        </div>
 
-          <svg class="state-svg" viewBox="0 0 360 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four-partner relational superposition graph">
-            <circle cx="180" cy="110" r="82" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3 5" />
-            <circle cx="180" cy="110" r="42" stroke="rgba(159,132,172,0.28)" stroke-dasharray="2 4" />
-            <line id="edge1" x1="180" y1="110" x2="72" y2="52" stroke="rgba(234,234,234,0.45)" stroke-width="1.4" />
-            <line id="edge2" x1="180" y1="110" x2="288" y2="52" stroke="rgba(234,234,234,0.38)" stroke-width="1.2" />
-            <line id="edge3" x1="180" y1="110" x2="72" y2="168" stroke="rgba(234,234,234,0.28)" stroke-width="1.0" />
-            <line id="edge4" x1="180" y1="110" x2="288" y2="168" stroke="rgba(234,234,234,0.24)" stroke-width="0.9" />
-
-            <rect x="158" y="96" width="44" height="28" rx="4" fill="#111113" stroke="rgba(255,255,255,0.28)" />
-            <text x="180" y="114" text-anchor="middle" fill="#EAEAEA" font-family="Space Mono, monospace" font-size="11">W</text>
-
-            <g id="node1">
-              <circle cx="72" cy="52" r="18" fill="#141418" stroke="#EAEAEA" stroke-width="1.2" />
-              <text x="72" y="56" text-anchor="middle" fill="#EAEAEA" font-family="Space Mono, monospace" font-size="10">G1</text>
-              <text id="wlabel1" x="72" y="25" text-anchor="middle" fill="#8E8E93" font-family="Space Mono, monospace" font-size="9">r1 // 0.38</text>
-            </g>
-            <g id="node2">
-              <circle cx="288" cy="52" r="18" fill="#141418" stroke="#9F84AC" stroke-width="1.2" />
-              <text x="288" y="56" text-anchor="middle" fill="#EAEAEA" font-family="Space Mono, monospace" font-size="10">G2</text>
-              <text id="wlabel2" x="288" y="25" text-anchor="middle" fill="#8E8E93" font-family="Space Mono, monospace" font-size="9">r2 // 0.29</text>
-            </g>
-            <g id="node3">
-              <circle cx="72" cy="168" r="18" fill="#141418" stroke="rgba(255,255,255,0.35)" stroke-width="1.1" />
-              <text x="72" y="172" text-anchor="middle" fill="#EAEAEA" font-family="Space Mono, monospace" font-size="10">G3</text>
-              <text id="wlabel3" x="72" y="201" text-anchor="middle" fill="#8E8E93" font-family="Space Mono, monospace" font-size="9">r3 // 0.18</text>
-            </g>
-            <g id="node4">
-              <circle cx="288" cy="168" r="18" fill="#141418" stroke="rgba(255,255,255,0.35)" stroke-width="1.1" />
-              <text x="288" y="172" text-anchor="middle" fill="#EAEAEA" font-family="Space Mono, monospace" font-size="10">G4</text>
-              <text id="wlabel4" x="288" y="201" text-anchor="middle" fill="#8E8E93" font-family="Space Mono, monospace" font-size="9">r4 // 0.15</text>
-            </g>
-          </svg>
-
-          <div class="schematic-metrics">
-            <div class="metric-item">
-              <span class="metric-k">ENTROPY H(w)</span>
-              <span class="metric-v" id="entropyReadout">1.908 bits</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-k">ROTATION GAMMA</span>
-              <span class="metric-v" id="gammaReadout">0.75 (non-commuting)</span>
-            </div>
-          </div>
-
-          <div class="schematic-controls">
-            <button type="button" class="ctrl-btn" id="pokeBtn">Issue Poke P</button>
-            <button type="button" class="ctrl-btn" id="gammaBtn">Toggle gamma = 0</button>
-            <button type="button" class="ctrl-btn ctrl-reset" id="resetBtn">Reset</button>
-          </div>
-        </aside>
+        <div class="hero-controls">
+          <button type="button" class="inline-ctrl" id="pokeBtn">[ Issue Poke P ]</button>
+          <button type="button" class="inline-ctrl" id="gammaBtn">[ Toggle gamma = 0 ]</button>
+          <button type="button" class="inline-ctrl muted-ctrl" id="resetBtn">[ Reset ]</button>
+        </div>
       </div>
     </section>
 
+    <div class="sep reveal-item"></div>
+
     <!-- 01 // THE PROBLEM & DILEMMA -->
-    <section id="dilemma" class="section-block reveal">
+    <section id="dilemma" class="section-block reveal-item">
       <div class="section-header">
         <span class="section-index">01 // THE PROBLEM &amp; DILEMMA</span>
         <h2 class="section-title">Why classical total orders fail</h2>
@@ -172,8 +210,10 @@
       </div>
     </section>
 
-    <!-- 02 // DYNAMICS & PAPER SCOPE -->
-    <section id="paper" class="section-block reveal">
+    <div class="sep reveal-item"></div>
+
+    <!-- 02 // ARCHITECTURE OF THE MONOGRAPH -->
+    <section id="paper" class="section-block reveal-item">
       <div class="section-header">
         <span class="section-index">02 // ARCHITECTURE OF THE MONOGRAPH</span>
         <h2 class="section-title">Drift, projective collapse, and social cascades</h2>
@@ -209,8 +249,10 @@
       </div>
     </section>
 
+    <div class="sep reveal-item"></div>
+
     <!-- 03 // FORMAL VERIFICATION IN LEAN 4 -->
-    <section id="lean" class="section-block reveal">
+    <section id="lean" class="section-block reveal-item">
       <div class="section-header">
         <span class="section-index">03 // FORMAL VERIFICATION (LEAN 4.36.0)</span>
         <h2 class="section-title">Auditable algebra, separated from behavioral claims</h2>
@@ -239,14 +281,16 @@
             nor does a Lean proof validate empirical dating psychology or prove that attractiveness increases pool size.
           </p>
           <div class="code-strip">
-            <code>make figures && make lean && make test && make pdf</code>
+            <code>make figures &amp;&amp; make lean &amp;&amp; make test &amp;&amp; make pdf</code>
           </div>
         </article>
       </div>
     </section>
 
+    <div class="sep reveal-item"></div>
+
     <!-- 04 // UNSOLVED HYPOTHESES -->
-    <section id="hypotheses" class="section-block reveal">
+    <section id="hypotheses" class="section-block reveal-item">
       <div class="section-header">
         <span class="section-index">04 // UNSOLVED EMPIRICAL HYPOTHESES</span>
         <h2 class="section-title">Open claims awaiting observational data</h2>

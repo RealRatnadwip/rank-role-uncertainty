@@ -1,0 +1,23 @@
+\section{The Poke and Projective Collapse}
+\label{sec:poke}
+
+A poke $\poke$ transforms the superposed state abruptly according to the Poke
+Rule:
+\begin{equation}
+  \ket{\Psi} \;\xrightarrow{\;\poke\;}\; \ket{G_k},
+  \qquad \text{with probability } \abs{a_k}^2 .
+  \label{eq:collapse}
+\end{equation}
+After a poke, exactly one partner remains in the primary state, selected
+probabilistically by the pre-poke weights. In practice, collapse exhibits
+three observable phases:
+\begin{enumerate}[nosep]
+  \item \textbf{Silence.} Response latency rises while the system recomputes.
+  \item \textbf{Redistribution.} Weights shift among remaining partners.
+  \item \textbf{Cascade.} If partners compare notes, collapse propagates
+        across the system and all active amplitudes decay to zero. We term
+        this system-wide loss of coherence \emph{decoherence}.
+\end{enumerate}
+
+The poke is irreversible: a collapsed system cannot be returned to
+superposition by subsequent reassurance or apology.

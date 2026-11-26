@@ -1,0 +1,69 @@
+\section{A Formal Framework}
+\label{sec:framework}
+
+\begin{definition}[Role]
+A \emph{role} is a function a partner performs for the observed person.
+We work with a finite role set $\roleset = \{r_1, \dots, r_m\}$.
+\end{definition}
+
+\begin{table}[htbp]
+\centering
+\caption{The basis roles used in this paper. The list is incomplete by design.}
+\label{tab:roles}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Symbol & Role & Typical observable \\
+\midrule
+$r_1$ & Primary (``the main one'') & Appears in photos \\
+$r_2$ & Emotional support & Receives long voice notes \\
+$r_3$ & Financial support & Receives ``are you free?'' before dinner \\
+$r_4$ & Entertainment & Appears on weekends \\
+$r_5$ & Contingency (``just in case'') & Receives a message every few weeks \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{definition}[Rank]
+The \emph{rank} of a partner is his position in the observed person's
+preference ordering. In a classical system rank is a well-defined integer.
+In a superposed system it is not.
+\end{definition}
+
+\begin{definition}[The poke]
+A \emph{poke}, denoted $\poke$, is any direct question or action that demands
+a definite answer about status, for example ``so what are we?''
+\end{definition}
+
+Let the observed person have $n$ partners and let $\abs{\roleset} = m$ roles.
+The state of partner $G_i$ is the vector
+\begin{equation}
+  \ket{G_i} = \sum_{j=1}^{m} c_{ij}\,\ket{r_j},
+  \qquad \sum_{j=1}^{m} \abs{c_{ij}}^2 = 1,
+  \label{eq:partner-state}
+\end{equation}
+where $\abs{c_{ij}}^2$ is the weight with which $G_i$ currently occupies role
+$r_j$. A partner is not \emph{in} a role; he is in a combination of roles.
+
+The full relational state of the system is
+\begin{equation}
+  \ket{\Psi} = \sum_{i=1}^{n} a_i \,\ket{G_i},
+  \qquad \sum_{i=1}^{n} \abs{a_i}^2 = 1,
+  \label{eq:system-state}
+\end{equation}
+where $\abs{a_i}^2$ is the weight of $G_i$ as the primary partner.
+
+\begin{definition}[Relational superposition]
+\label{def:superposition}
+The system is in \emph{relational superposition} if at least two of the
+amplitudes $a_i$ are nonzero, and no $\abs{a_i}^2$ equals $1$.
+\end{definition}
+
+\begin{proposition}[Absence of a first partner]
+\label{prop:nobody-first}
+In a system in relational superposition, ``who is first?'' has no
+well-defined answer prior to a poke.
+\end{proposition}
+\begin{proof}
+If $G_k$ were strictly first, then $\abs{a_k}^2 = 1$ and all other amplitudes
+would vanish, contradicting \cref{def:superposition}.
+\end{proof}

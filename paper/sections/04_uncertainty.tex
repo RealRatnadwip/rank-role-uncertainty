@@ -1,0 +1,36 @@
+\section{The Rank-Role Uncertainty Principle}
+\label{sec:uncertainty}
+
+Let $\opR$ denote the rank-measuring operator and $\opL$ the role-measuring
+operator applied to a given partner. Informally, measuring rank corresponds to
+asking ``where does he stand?'' and measuring role corresponds to asking ``what
+does he do?''
+
+\begin{principle}[Rank-Role Inequality]
+\label{prin:uncertainty}
+For any partner, the dispersion in rank, $\Delta R$, and the dispersion in
+role, $\Delta L$, satisfy
+\begin{equation}
+  \Delta R \cdot \Delta L \;\geq\; \kappaS,
+  \label{eq:uncertainty}
+\end{equation}
+where $\kappaS > 0$ is the \emph{situationship constant}.
+\end{principle}
+
+In plain terms: \textbf{you cannot know a guy's rank and his role at the same
+time.} If you fix his role precisely (``he is the emotional support''), his
+rank becomes undefined. If you fix his rank (``he is first''), his role
+distributes across every functional dimension.
+
+\begin{remark}
+The value of $\kappaS$ is not universal. It depends on the observed person's
+communication style, the size of the social graph, and whether the partners
+share mutual friends. We leave its empirical determination to longitudinal
+messaging analysis.
+\end{remark}
+
+\paragraph{Commutation failure.}
+The order in which rank and role are queried alters the observed distribution:
+\begin{equation}
+  \comm{\opR}{\opL} \neq 0.
+\end{equation}

@@ -71,21 +71,16 @@
           <span class="crop-mark crop-br" aria-hidden="true"></span>
 
           <div class="plate-head">
-            <span>FIG. 01 // OBSERVABLE PLATE</span>
+            <span>FIG. 01 // POKE COLLAPSE</span>
             <span id="stateBadge" class="plate-state">SUPERPOSED</span>
           </div>
 
           <div class="plate-diagram">
-            <svg viewBox="0 0 360 220" fill="none" class="plate-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two-axis rank and role observable plane">
+            <svg viewBox="0 0 360 220" fill="none" class="plate-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rank and role observable plane">
               <line x1="20" y1="110" x2="340" y2="110" stroke="#343438" stroke-width="1" stroke-dasharray="3 4" />
               <line x1="180" y1="16" x2="180" y2="204" stroke="#343438" stroke-width="1" stroke-dasharray="3 4" />
               <circle cx="180" cy="110" r="78" stroke="#242428" stroke-width="1" />
               <circle cx="180" cy="110" r="42" stroke="#303036" stroke-width="1" stroke-dasharray="2 4" />
-
-              <g id="roleAxisGroup" transform="rotate(-28 180 110)">
-                <line x1="36" y1="110" x2="324" y2="110" stroke="#F2F2F2" stroke-width="1.25" />
-                <text x="248" y="102" fill="#F2F2F2" font-family="'Space Mono', monospace" font-size="9" letter-spacing="1">L(gamma)</text>
-              </g>
 
               <path id="arc1" d="M 180,110 L 82,56" stroke="#EAEAEA" stroke-width="1.4" />
               <path id="arc2" d="M 180,110 L 284,62" stroke="#BDBDC2" stroke-width="1.15" />
@@ -99,6 +94,7 @@
               <circle id="node4" cx="270" cy="164" r="3.5" fill="#8A8A90" />
 
               <text x="294" y="124" fill="#6F6F75" font-family="'Space Mono', monospace" font-size="8.5">AXIS R</text>
+              <text x="188" y="24" fill="#6F6F75" font-family="'Space Mono', monospace" font-size="8.5">AXIS L</text>
               <text id="wlabel1" x="28" y="46" fill="#E4E4E7" font-family="'Space Mono', monospace" font-size="8.5">G1 // r1 // 0.38</text>
               <text id="wlabel2" x="240" y="48" fill="#A1A1AA" font-family="'Space Mono', monospace" font-size="8.5">G2 // r2 // 0.29</text>
               <text id="wlabel3" x="28" y="184" fill="#78787E" font-family="'Space Mono', monospace" font-size="8.5">G3 // r3 // 0.18</text>
@@ -131,19 +127,16 @@
 
           <div class="plate-meta">
             <span id="entropyReadout">H(w) = 1.908 bits</span>
-            <span id="gammaReadout">gamma = 0.75 (k_R &gt; 0)</span>
+            <span id="regimeReadout">PRE-POKE MIXTURE</span>
           </div>
 
           <div class="plate-controls">
             <button type="button" class="ctrl-btn" id="pokeBtn">Issue Poke P</button>
-            <button type="button" class="ctrl-btn" id="gammaBtn">Toggle gamma = 0</button>
             <button type="button" class="ctrl-btn ctrl-muted" id="resetBtn">Reset</button>
           </div>
         </aside>
       </div>
     </section>
-
-    <hr class="hairline" />
 
     <!-- 01 // THE PROBLEM & DILEMMA -->
     <section id="dilemma" class="section-block">
@@ -177,7 +170,7 @@
           <p>
             When role evaluation rotates away from the rank basis (L = U(&gamma;)&dagger; D<sub>L</sub> U(&gamma;)),
             rank and role observables fail to commute, forcing a joint dispersion bound via the
-            Schrodinger-Robertson relations. At zero rotation (&gamma; = 0), diagonal operators commute cleanly.
+            Schrodinger-Robertson relations. At zero rotation, diagonal operators commute cleanly.
           </p>
           <p>
             Sub-unit weight alone (w<sub>k</sub> &lt; 1) does not prevent a unique winner, as shown
@@ -187,8 +180,6 @@
         </article>
       </div>
     </section>
-
-    <hr class="hairline" />
 
     <!-- 02 // PAPER ARCHITECTURE -->
     <section id="paper" class="section-block">
@@ -228,8 +219,6 @@
       </div>
     </section>
 
-    <hr class="hairline" />
-
     <!-- 03 // FORMAL VERIFICATION IN LEAN 4 -->
     <section id="lean" class="section-block">
       <div class="section-header">
@@ -265,8 +254,6 @@
         </article>
       </div>
     </section>
-
-    <hr class="hairline" />
 
     <!-- 04 // UNSOLVED HYPOTHESES -->
     <section id="hypotheses" class="section-block">
@@ -320,23 +307,24 @@
     <div class="footer-inner">
       <div>
         <p class="footer-authors">
-          Ratnadwip Sarkar, Koushik Mondal, Himanshu Malik, Saswata Howladar
+          <a href="mailto:me@ratnadwip.com">Ratnadwip Sarkar</a>,
+          <a href="mailto:koushikmondal0069@gmail.com">Koushik Mondal</a>,
+          <a href="mailto:hello@himanshum.com">Himanshu Malik</a>,
+          <a href="mailto:nwolf8014@gmail.com">Saswata Howladar</a>
         </p>
         <p class="footer-affil">
-          Hooghly Engineering &amp; Technology College (B.Tech CSE) &middot;
-          <a href="mailto:me@ratnadwip.com">me@ratnadwip.com</a> &middot;
           ORCID <a href="https://orcid.org/0009-0004-9098-8696" target="_blank" rel="noopener noreferrer">0009-0004-9098-8696</a>
         </p>
       </div>
 
       <div class="footer-right">
-        <p class="footer-status" id="updateStatus" data-fallback-date="2026-11-26">
-          Last updated: 2026-11-26 (v1.1)
+        <p class="footer-status" id="updateStatus" data-fallback-ts="2026-11-26T23:12:10Z">
+          Last updated: 2026-11-26 23:12:10 UTC (v1.1)
         </p>
         <p class="footer-links">
-          <a href="https://github.com/RealRatnadwip/rank-role-uncertainty/blob/main/paper/output/rank-role-uncertainty.pdf" target="_blank" rel="noopener noreferrer">Download PDF (GitHub Blob)</a>
+          <a href="https://github.com/RealRatnadwip/rank-role-uncertainty/blob/main/paper/output/rank-role-uncertainty.pdf" target="_blank" rel="noopener noreferrer">Download PDF</a>
           &middot;
-          <a href="https://github.com/RealRatnadwip/rank-role-uncertainty" target="_blank" rel="noopener noreferrer">Source Repo</a>
+          <a href="https://github.com/RealRatnadwip/rank-role-uncertainty" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
         </p>
       </div>
     </div>

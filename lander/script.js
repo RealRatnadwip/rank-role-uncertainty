@@ -1,4 +1,4 @@
-/* Relational Superposition Theory // Monochrome Plate Interactions */
+/* Relational Superposition Theory // Monochrome Plate & Live Status */
 
 (function () {
   "use strict";
@@ -7,14 +7,11 @@
   const ROLES = ["r1", "r2", "r3", "r4"];
   let currentWeights = [...BASE_WEIGHTS];
   let collapsedIndex = null;
-  let gammaZero = false;
 
   const badgeEl = document.getElementById("stateBadge");
   const entropyEl = document.getElementById("entropyReadout");
-  const gammaEl = document.getElementById("gammaReadout");
-  const roleAxisEl = document.getElementById("roleAxisGroup");
+  const regimeEl = document.getElementById("regimeReadout");
   const pokeBtn = document.getElementById("pokeBtn");
-  const gammaBtn = document.getElementById("gammaBtn");
   const resetBtn = document.getElementById("resetBtn");
 
   function shannonEntropy(weights) {
@@ -50,18 +47,11 @@
       }
     }
 
-    if (roleAxisEl) {
-      roleAxisEl.setAttribute("transform", gammaZero ? "rotate(0 180 110)" : "rotate(-28 180 110)");
-    }
     if (entropyEl) {
       entropyEl.textContent = `H(w) = ${shannonEntropy(currentWeights).toFixed(3)} bits`;
     }
-    if (gammaEl) {
-      if (collapsedIndex !== null) {
-        gammaEl.textContent = "collapsed eigenstate";
-      } else {
-        gammaEl.textContent = gammaZero ? "gamma = 0.00 (k_R = 0)" : "gamma = 0.75 (k_R > 0)";
-      }
+    if (regimeEl) {
+      regimeEl.textContent = collapsedIndex !== null ? "POST-POKE EIGENSTATE" : "PRE-POKE MIXTURE";
     }
     if (badgeEl) {
       if (collapsedIndex !== null) {
@@ -71,9 +61,6 @@
         badgeEl.textContent = "SUPERPOSED";
         badgeEl.classList.remove("is-collapsed");
       }
-    }
-    if (gammaBtn) {
-      gammaBtn.textContent = gammaZero ? "Restore gamma = 0.75" : "Toggle gamma = 0";
     }
   }
 
@@ -96,45 +83,61 @@
     });
   }
 
-  if (gammaBtn) {
-    gammaBtn.addEventListener("click", () => {
-      gammaZero = !gammaZero;
-      renderPlate();
-    });
-  }
-
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
       currentWeights = [...BASE_WEIGHTS];
       collapsedIndex = null;
-      gammaZero = false;
       renderPlate();
     });
   }
 
-  /* Footer repository last-updated status via GitHub API with offline fallback */
+  function pad2(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function formatUtc24(isoStr) {
+    const d = new Date(isoStr);
+    if (Number.isNaN(d.getTime())) return "2026-11-26 23:12:10 UTC";
+    const datePart = `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+    const timePart = `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())}`;
+    return `${datePart} ${timePart} UTC`;
+  }
+
+  /* Dynamically update footer timestamp (24h HH:MM:SS) from GitHub repository */
   const statusEl = document.getElementById("updateStatus");
-  if (statusEl && typeof fetch === "function") {
-    const fallbackDate = statusEl.getAttribute("data-fallback-date") || "2026-11-26";
-    const apiUrl = "https://api.github.com/repos/RealRatnadwip/rank-role-uncertainty/commits?per_page=1";
-    fetch(apiUrl, { headers: { Accept: "application/vnd.github+json" } })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const item = data[0];
-          const sha = (item.sha || "").slice(0, 7);
-          const rawDate = item.commit && item.commit.committer ? item.commit.committer.date : "";
-          const isoDate = rawDate ? rawDate.slice(0, 10) : fallbackDate;
-          if (sha) {
-            statusEl.textContent = `Last updated: ${isoDate} (${sha}, v1.1)`;
-            return;
-          }
-        }
-        statusEl.textContent = `Last updated: ${fallbackDate} (v1.1)`;
+  if (statusEl) {
+    const fallbackIso = statusEl.getAttribute("data-fallback-ts") || "2026-11-26T23:12:10Z";
+    const fallbackFormatted = formatUtc24(fallbackIso);
+
+    if (typeof fetch === "function") {
+      const apiUrl = "https://api.github.com/repos/RealRatnadwip/rank-role-uncertainty/commits?per_page=1";
+      fetch(apiUrl, {
+        cache: "no-store",
+        headers: { Accept: "application/vnd.github+json" }
       })
-      .catch(() => {
-        statusEl.textContent = `Last updated: ${fallbackDate} (v1.1)`;
-      });
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            const item = data[0];
+            const sha = (item.sha || "").slice(0, 7);
+            const rawDate =
+              (item.commit && item.commit.committer && item.commit.committer.date) ||
+              (item.commit && item.commit.author && item.commit.author.date) ||
+              fallbackIso;
+            const formatted = formatUtc24(rawDate);
+            if (sha) {
+              statusEl.textContent = `Last updated: ${formatted} (${sha}, v1.1)`;
+              return;
+            }
+          }
+          statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.1)`;
+        })
+        .catch(() => {
+          statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.1)`;
+        });
+    } else {
+      statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.1)`;
+    }
   }
 
   renderPlate();

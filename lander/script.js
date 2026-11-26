@@ -91,7 +91,25 @@
     return 0;
   }
 
-  /* Single smooth toggle button: Poke -> Collapse -> Reset */
+  function randomSimplexWeights() {
+    const raw = [];
+    let sum = 0;
+    for (let i = 0; i < 4; i++) {
+      const draw = 0.15 - Math.log(Math.max(1e-6, Math.random()));
+      raw.push(draw);
+      sum += draw;
+    }
+    const rounded = raw.map((x) => Math.max(0.04, Math.round((x / sum) * 100) / 100));
+    const currentSum = rounded.reduce((a, b) => a + b, 0);
+    let maxIdx = 0;
+    for (let i = 1; i < rounded.length; i++) {
+      if (rounded[i] > rounded[maxIdx]) maxIdx = i;
+    }
+    rounded[maxIdx] = Math.round((rounded[maxIdx] + (1 - currentSum)) * 100) / 100;
+    return rounded;
+  }
+
+  /* Single smooth toggle button: Poke -> Collapse -> Reset (fresh random G1..G4) */
   if (pokeBtn) {
     pokeBtn.addEventListener("click", () => {
       if (collapsedIndex === null) {
@@ -101,7 +119,7 @@
         triggerPulse();
       } else {
         collapsedIndex = null;
-        currentWeights = [...BASE_WEIGHTS];
+        currentWeights = randomSimplexWeights();
       }
       renderPlate();
     });

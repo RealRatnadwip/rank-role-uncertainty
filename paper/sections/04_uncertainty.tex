@@ -81,7 +81,10 @@ then $\comm{\opR}{\opL} = 0$. Consequently, at zero context rotation ($\gamma = 
 $\opL(0) = D_L$ commutes with $\opR = D_R$ and the commutator uncertainty bound vanishes.
 \end{proposition}
 \begin{proof}
-Componentwise, $(D_a D_b \Psi)_i = a_i b_i \Psi_i = b_i a_i \Psi_i = (D_b D_a \Psi)_i$,
+Evaluated componentwise for every $i \in \{1, \dots, d\}$,
+\begin{equation*}
+  (D_a D_b \Psi)_i = a_i b_i \Psi_i = b_i a_i \Psi_i = (D_b D_a \Psi)_i,
+\end{equation*}
 verified formally in \texttt{diagMat\_commute}.
 \end{proof}
 
@@ -279,10 +282,14 @@ and $D_{L,3} = \diag(-1, 0, 1)$. Then
   \opL_3 = U_3^\dagger D_{L,3} U_3 =
   \frac{1}{25}\begin{pmatrix} -9 & -12i & 0 \\ 12i & -16 & 0 \\ 0 & 0 & 25 \end{pmatrix}.
 \end{equation*}
-Evaluating on the normalized vector $\ket{\Psi_3} = \bigl(\frac{9}{25}, \frac{12}{25}, \frac{4}{5}\bigr)^\top$
-yields $\var{D_{R,3}}{\Psi_3} = \frac{198{,}864}{390{,}625}$, $\var{\opL_3}{\Psi_3} = \frac{155{,}101{,}536}{244{,}140{,}625}$,
-$\ImPart\braket{\Psi_3}{\comm{D_{R,3}}{\opL_3}\Psi_3} = \frac{2{,}592}{15{,}625}$, and
-$\RePart\braket{\Psi_3}{\{\opR',\opL'\}\Psi_3} = \frac{8{,}966{,}304}{9{,}765{,}625}$. Hence:
+Evaluating on the normalized vector $\ket{\Psi_3} = \bigl(\frac{9}{25}, \frac{12}{25}, \frac{4}{5}\bigr)^\top$ gives
+\begin{align*}
+  \var{D_{R,3}}{\Psi_3} &= \frac{198{,}864}{390{,}625}, &
+  \var{\opL_3}{\Psi_3} &= \frac{155{,}101{,}536}{244{,}140{,}625}, \\
+  \ImPart\braket{\Psi_3}{\comm{D_{R,3}}{\opL_3}\Psi_3} &= \frac{2{,}592}{15{,}625}, &
+  \RePart\braket{\Psi_3}{\{\opR',\opL'\}\Psi_3} &= \frac{8{,}966{,}304}{9{,}765{,}625}.
+\end{align*}
+Hence:
 \begin{equation*}
   \Delta R \cdot \Delta L \approx 0.56870
   \;>\; B_S(\Psi_3) \approx 0.46651

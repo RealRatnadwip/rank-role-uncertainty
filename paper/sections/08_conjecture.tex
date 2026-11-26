@@ -48,9 +48,8 @@ without approximation as \texttt{superpositionProb\_step}, \texttt{superposition
 and \texttt{superpositionProb\_strict\_step} in \texttt{RST.Optionality.Binomial}.
 \end{proof}
 
-\noindent\layermath{} When retention probabilities vary across heterogeneous partners
-($p_1, \dots, p_n \in [0, 1]$, independent), $K = \sum_{i=1}^n X_i$ obeys a
-Poisson-binomial law with mean $\mu = \sum_{i=1}^n p_i$ and variance
+\noindent\layermath{} Letting retention probabilities $p_1, \dots, p_n \in [0, 1]$ vary
+independently across partners gives a Poisson-binomial count $K = \sum_{i=1}^n X_i$ with mean $\mu = \sum_{i=1}^n p_i$ and variance
 $\operatorname{Var}(K) = \sum_{i=1}^n p_i(1 - p_i) \le n/4$ (checked in
 \texttt{Optionality.\allowbreak{}Bernoulli}). When total active attention faces a strict
 time-budget constraint ($K_{\mathrm{cap}} = \min(K, B_{\max})$ or negatively correlated

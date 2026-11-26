@@ -41,9 +41,9 @@ For a critical exposure fraction $\theta \in (0, 1]$ (default $\theta = 0.60$), 
   \frac{\abs{C(i_0)}}{n} \;\ge\; \theta.
   \label{eq:cascade-condition}
 \end{equation}
-Regardless of network structure, $\abs{C(i_0)} \le n$ and $0 \le \abs{C(i_0)} / n \le 1$
-hold identically (\texttt{cascadeSize\_\allowbreak{}le\_n} and
-\texttt{cascadeFraction\_\allowbreak{}bounds} in Lean~4).
+Regardless of graph structure, the bounds $\abs{C(i_0)} \le n$ and
+$0 \le \abs{C(i_0)} / n \le 1$ hold identically
+(\texttt{cascadeSize\_le\_n} and \texttt{cascadeFraction\_bounds} in Lean~4).
 \end{definition}
 
 To analyze homogeneous random overlap $G_{\mathrm{soc}} \sim G(n, q)$ analytically,
@@ -115,7 +115,7 @@ $p_{\mathrm{tx}} \in \{0.40, 0.72, 0.90\}$:
   \label{fig:cascade-percolation}
 \end{figure}
 
-\subsection{Exact Small-$n$ Cascade Polynomials}
+\subsection{Exact Small-\texorpdfstring{$n$}{n} Cascade Polynomials}
 \label{subsec:cas-small-n}
 
 \noindent\layermath{} For very small partner portfolios ($n \in \{2, 3, 4\}$) under

@@ -73,7 +73,7 @@ Poisson-Binomial \& Binomial & \texttt{Optionality.\{Bernoulli,Binomial\}} & \te
 and \cref{lst:lean-schrodinger} shows the division-free finite-dimensional Schr\"odinger
 uncertainty proof and its Robertson corollary.
 
-\begin{lstlisting}[language=Lean4,caption={Lean 4 separation between DistributedWeights and SharedMaximum (RST/Relational/SharedMaximum.lean).},label={lst:lean-shared-max}]
+\begin{lstlisting}[language=Lean4,caption={Model A vs.\ Model B separation in Lean~4 (\texttt{SharedMaximum.lean}).},label={lst:lean-shared-max}]
 def w99 : Weights 2 where
   w | 0 => 99 / 100 | 1 => 1 / 100
   nonneg := by intro i; match i with | 0 => grind | 1 => grind
@@ -86,7 +86,7 @@ theorem distributed_not_implies_shared_max :
   exact h.2.2 (hall w99 h.1)
 \end{lstlisting}
 
-\begin{lstlisting}[language=Lean4,caption={Division-free Schrodinger and Robertson inequalities over rational complex vectors (RST/Uncertainty/Robertson.lean).},label={lst:lean-schrodinger}]
+\begin{lstlisting}[language=Lean4,caption={Schr\"odinger and Robertson inequalities in Lean~4 (\texttt{Robertson.lean}).},label={lst:lean-schrodinger}]
 theorem schrodinger_uncertainty {d : Nat} (R L : Mat d)
     (hR : IsHermitian R) (hL : IsHermitian L) (ψ : Fin d → Cpx) :
     ((dotC ψ (comm R L ψ)).im) * ((dotC ψ (comm R L ψ)).im) +

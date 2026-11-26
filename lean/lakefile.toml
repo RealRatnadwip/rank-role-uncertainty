@@ -1,0 +1,6 @@
+name = "rst"
+version = "0.1.0"
+defaultTargets = ["RST"]
+
+[[lean_lib]]
+name = "RST"

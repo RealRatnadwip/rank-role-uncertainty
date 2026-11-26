@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Rank-Role Uncertainty Principle | RST</title>
   <meta name="description" content="Relational Superposition Theory: formal monograph, deterministic simulations, and Lean 4 verification for concurrent role-partitioned relational portfolios." />
-  <meta name="theme-color" content="#0A0A0A" />
+  <meta name="theme-color" content="#060606" />
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,25 +15,18 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="ambient-layer" aria-hidden="true">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
-  </div>
-  <div class="grain-overlay" aria-hidden="true"></div>
-
-  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+  <div class="grain-layer" aria-hidden="true"></div>
+  <div class="vignette-layer" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="header-inner">
       <a href="#hero" class="brand">
-        <span class="brand-code">RST</span>
-        <span class="brand-sep">/</span>
-        <span class="brand-sub">MONOGRAPH v1.1</span>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-code">RST // v1.1</span>
       </a>
       <nav class="top-nav" aria-label="Primary navigation">
         <a href="#dilemma">Dilemma</a>
+        <a href="#paper">Model</a>
         <a href="#lean">Lean 4</a>
         <a href="#hypotheses">Hypotheses</a>
         <a href="https://github.com/RealRatnadwip/rank-role-uncertainty/blob/main/paper/output/rank-role-uncertainty.pdf" class="nav-cta" target="_blank" rel="noopener noreferrer">PDF</a>
@@ -42,163 +35,148 @@
   </header>
 
   <main class="page-shell">
-    <!-- FULL-STAGE CENTERED HERO -->
+    <!-- ASYMMETRIC ARCHIVAL HERO -->
     <section class="hero-section" id="hero">
-      <div class="hero-meta-top reveal-item">
-        <span class="mono-tag">[ RELATIONAL SUPERPOSITION THEORY ]</span>
-        <span class="mono-meta">55 PAGES / LEAN 4.36.0 / SEEDS 202601..202605</span>
-      </div>
-
-      <div class="hero-stage">
-        <!-- Wide Atmospheric Hilbert / Portfolio Schematic Behind Typography -->
-        <div class="schematic-visual-wrap" id="schematicWrap" aria-hidden="true">
-          <svg viewBox="0 0 1000 500" fill="none" class="hero-svg" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="axisGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
-                <stop offset="50%" stop-color="#D4D4D8" stop-opacity="0.38"/>
-                <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-              </linearGradient>
-              <linearGradient id="rotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#9F84AC" stop-opacity="0"/>
-                <stop offset="50%" stop-color="#B892CC" stop-opacity="0.52"/>
-                <stop offset="100%" stop-color="#9F84AC" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-
-            <!-- Coordinate Frame & Uncertainty Rings -->
-            <g stroke="rgba(255,255,255,0.06)" stroke-width="0.75">
-              <line x1="60" y1="250" x2="940" y2="250" stroke="url(#axisGrad)" stroke-dasharray="3 6" />
-              <line x1="500" y1="30" x2="500" y2="470" stroke-dasharray="3 6" />
-              <circle cx="500" cy="250" r="195" stroke="rgba(116,84,130,0.28)" stroke-dasharray="2 8" />
-              <circle cx="500" cy="250" r="122" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2 6" />
-              <circle cx="500" cy="250" r="56" stroke="rgba(159,132,172,0.34)" stroke-dasharray="1 5" />
-            </g>
-
-            <!-- Context-Rotated Role Observable Axis L(gamma) -->
-            <g id="roleAxisGroup" transform="rotate(-26 500 250)">
-              <line x1="120" y1="250" x2="880" y2="250" stroke="url(#rotGrad)" stroke-width="1.15" stroke-dasharray="4 6" />
-              <text x="810" y="240" fill="#B892CC" font-family="'Space Mono', monospace" font-size="9" letter-spacing="1.4">AXIS L(gamma)</text>
-            </g>
-
-            <!-- Delicate Vector Coupling Arcs from Focal Node W(500,250) -->
-            <g fill="none">
-              <path id="arc1" d="M 500,250 Q 320,165 185,112" stroke="rgba(234,234,234,0.38)" stroke-width="1.1" />
-              <path id="arc2" d="M 500,250 Q 675,155 815,118" stroke="rgba(184,146,204,0.45)" stroke-width="1.0" />
-              <path id="arc3" d="M 500,250 Q 335,345 205,388" stroke="rgba(234,234,234,0.24)" stroke-width="0.9" stroke-dasharray="3 5" />
-              <path id="arc4" d="M 500,250 Q 680,340 805,382" stroke="rgba(234,234,234,0.22)" stroke-width="0.9" stroke-dasharray="3 5" />
-            </g>
-
-            <!-- Pulse Nodes -->
-            <g class="pulse-node" transform="translate(500, 250)">
-              <circle cx="0" cy="0" r="4" fill="#FFFFFF" />
-              <circle cx="0" cy="0" r="11" stroke="#9F84AC" stroke-width="1" class="halo" />
-            </g>
-
-            <g id="node1" class="pulse-node" transform="translate(185, 112)">
-              <circle cx="0" cy="0" r="3.5" fill="#EAEAEA" />
-              <circle cx="0" cy="0" r="9" stroke="rgba(255,255,255,0.45)" stroke-width="0.8" class="halo" />
-            </g>
-            <g id="node2" class="pulse-node" transform="translate(815, 118)">
-              <circle cx="0" cy="0" r="3.5" fill="#B892CC" />
-              <circle cx="0" cy="0" r="9" stroke="rgba(184,146,204,0.5)" stroke-width="0.8" class="halo" />
-            </g>
-            <g id="node3" class="pulse-node" transform="translate(205, 388)">
-              <circle cx="0" cy="0" r="3" fill="#EAEAEA" />
-              <circle cx="0" cy="0" r="8" stroke="rgba(255,255,255,0.3)" stroke-width="0.7" />
-            </g>
-            <g id="node4" class="pulse-node" transform="translate(805, 382)">
-              <circle cx="0" cy="0" r="3" fill="#EAEAEA" />
-              <circle cx="0" cy="0" r="8" stroke="rgba(255,255,255,0.3)" stroke-width="0.7" />
-            </g>
-
-            <!-- Coordinate Microtext -->
-            <g font-family="'Space Mono', monospace" font-size="8.5" letter-spacing="1.3">
-              <text id="wlabel1" x="128" y="94" fill="#A8A8B2">G1 // r1 // w=0.38</text>
-              <text id="wlabel2" x="752" y="100" fill="#B892CC">G2 // r2 // w=0.29</text>
-              <text id="wlabel3" x="148" y="410" fill="#6F6F78">G3 // r3 // w=0.18</text>
-              <text id="wlabel4" x="742" y="404" fill="#6F6F78">G4 // r4 // w=0.15</text>
-              <text x="855" y="266" fill="#6F6F78">AXIS R</text>
-              <text x="458" y="48" fill="#6F6F78">H(w) // DELTAR DELTAL</text>
-            </g>
-          </svg>
-        </div>
-
-        <!-- Centered Monumental Typography Core -->
-        <div class="hero-content">
-          <p class="hero-kicker reveal-item">FORMAL MONOGRAPH &amp; LEAN 4 SUITE</p>
-          <h1 class="hero-title reveal-item">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-index">MONOGRAPH NO. 01 // 55 PAGES // LEAN 4.36.0</p>
+          <h1 class="hero-title">
             The Rank-Role<br />
             <em>Uncertainty</em> Principle
           </h1>
+          <p class="hero-lead">
+            Under concurrent role partitioning, no partner occupies a well-defined ordinal first rank
+            prior to direct measurement.
+          </p>
 
-          <div class="hero-subline reveal-item">
-            <p class="symbolism-line"><em>You cannot know a partner's rank and role at the same time.</em></p>
-            <p class="tagline">Until a direct inquiry collapses the state, no connection occupies rank one.</p>
+          <div class="hero-equation-strip">
+            <span class="eq-tag">INEQUALITY</span>
+            <code class="eq-expr">&Delta;R &middot; &Delta;L &ge; B<sub>S</sub>(&Psi;) &ge; &kappa;<sub>R</sub></code>
           </div>
 
-          <div class="hero-actions reveal-item">
+          <div class="hero-actions">
             <a class="btn btn-primary" href="https://github.com/RealRatnadwip/rank-role-uncertainty/blob/main/paper/output/rank-role-uncertainty.pdf" target="_blank" rel="noopener noreferrer">
-              Read Monograph PDF
+              Download Monograph PDF
             </a>
             <a class="btn btn-ghost" href="https://github.com/RealRatnadwip/rank-role-uncertainty" target="_blank" rel="noopener noreferrer">
               GitHub Repository
             </a>
           </div>
         </div>
-      </div>
 
-      <!-- Minimal Bottom Control & Telemetry Strip -->
-      <div class="hero-bottom-bar reveal-item">
-        <div class="telemetry-group">
-          <span class="mono-badge" id="stateBadge">STATE: SUPERPOSED</span>
-          <span class="mono-val" id="entropyReadout">H(w) = 1.908 bits</span>
-          <span class="mono-val muted" id="gammaReadout">gamma = 0.75 (k_R &gt; 0)</span>
-        </div>
+        <aside class="specimen-plate" aria-label="Interactive observable specimen">
+          <span class="crop-mark crop-tl" aria-hidden="true"></span>
+          <span class="crop-mark crop-tr" aria-hidden="true"></span>
+          <span class="crop-mark crop-bl" aria-hidden="true"></span>
+          <span class="crop-mark crop-br" aria-hidden="true"></span>
 
-        <div class="hero-controls">
-          <button type="button" class="inline-ctrl" id="pokeBtn">[ Issue Poke P ]</button>
-          <button type="button" class="inline-ctrl" id="gammaBtn">[ Toggle gamma = 0 ]</button>
-          <button type="button" class="inline-ctrl muted-ctrl" id="resetBtn">[ Reset ]</button>
-        </div>
+          <div class="plate-head">
+            <span>FIG. 01 // OBSERVABLE PLATE</span>
+            <span id="stateBadge" class="plate-state">SUPERPOSED</span>
+          </div>
+
+          <div class="plate-diagram">
+            <svg viewBox="0 0 360 220" fill="none" class="plate-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two-axis rank and role observable plane">
+              <line x1="20" y1="110" x2="340" y2="110" stroke="#343438" stroke-width="1" stroke-dasharray="3 4" />
+              <line x1="180" y1="16" x2="180" y2="204" stroke="#343438" stroke-width="1" stroke-dasharray="3 4" />
+              <circle cx="180" cy="110" r="78" stroke="#242428" stroke-width="1" />
+              <circle cx="180" cy="110" r="42" stroke="#303036" stroke-width="1" stroke-dasharray="2 4" />
+
+              <g id="roleAxisGroup" transform="rotate(-28 180 110)">
+                <line x1="36" y1="110" x2="324" y2="110" stroke="#F2F2F2" stroke-width="1.25" />
+                <text x="248" y="102" fill="#F2F2F2" font-family="'Space Mono', monospace" font-size="9" letter-spacing="1">L(gamma)</text>
+              </g>
+
+              <path id="arc1" d="M 180,110 L 82,56" stroke="#EAEAEA" stroke-width="1.4" />
+              <path id="arc2" d="M 180,110 L 284,62" stroke="#BDBDC2" stroke-width="1.15" />
+              <path id="arc3" d="M 180,110 L 94,166" stroke="#8C8C92" stroke-width="1" />
+              <path id="arc4" d="M 180,110 L 270,164" stroke="#76767C" stroke-width="1" />
+
+              <circle cx="180" cy="110" r="3.5" fill="#FFFFFF" />
+              <circle id="node1" cx="82" cy="56" r="4" fill="#FFFFFF" />
+              <circle id="node2" cx="284" cy="62" r="4" fill="#D4D4D8" />
+              <circle id="node3" cx="94" cy="166" r="3.5" fill="#A1A1AA" />
+              <circle id="node4" cx="270" cy="164" r="3.5" fill="#8A8A90" />
+
+              <text x="294" y="124" fill="#6F6F75" font-family="'Space Mono', monospace" font-size="8.5">AXIS R</text>
+              <text id="wlabel1" x="28" y="46" fill="#E4E4E7" font-family="'Space Mono', monospace" font-size="8.5">G1 // r1 // 0.38</text>
+              <text id="wlabel2" x="240" y="48" fill="#A1A1AA" font-family="'Space Mono', monospace" font-size="8.5">G2 // r2 // 0.29</text>
+              <text id="wlabel3" x="28" y="184" fill="#78787E" font-family="'Space Mono', monospace" font-size="8.5">G3 // r3 // 0.18</text>
+              <text id="wlabel4" x="236" y="182" fill="#78787E" font-family="'Space Mono', monospace" font-size="8.5">G4 // r4 // 0.15</text>
+            </svg>
+          </div>
+
+          <div class="plate-bars" aria-label="Portfolio support weights">
+            <div class="bar-row">
+              <span class="bar-name">G1</span>
+              <div class="bar-track"><span class="bar-fill" id="bar1" style="width: 38%"></span></div>
+              <span class="bar-pct" id="pct1">0.38</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-name">G2</span>
+              <div class="bar-track"><span class="bar-fill" id="bar2" style="width: 29%"></span></div>
+              <span class="bar-pct" id="pct2">0.29</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-name">G3</span>
+              <div class="bar-track"><span class="bar-fill" id="bar3" style="width: 18%"></span></div>
+              <span class="bar-pct" id="pct3">0.18</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-name">G4</span>
+              <div class="bar-track"><span class="bar-fill" id="bar4" style="width: 15%"></span></div>
+              <span class="bar-pct" id="pct4">0.15</span>
+            </div>
+          </div>
+
+          <div class="plate-meta">
+            <span id="entropyReadout">H(w) = 1.908 bits</span>
+            <span id="gammaReadout">gamma = 0.75 (k_R &gt; 0)</span>
+          </div>
+
+          <div class="plate-controls">
+            <button type="button" class="ctrl-btn" id="pokeBtn">Issue Poke P</button>
+            <button type="button" class="ctrl-btn" id="gammaBtn">Toggle gamma = 0</button>
+            <button type="button" class="ctrl-btn ctrl-muted" id="resetBtn">Reset</button>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <div class="sep reveal-item"></div>
+    <hr class="hairline" />
 
     <!-- 01 // THE PROBLEM & DILEMMA -->
-    <section id="dilemma" class="section-block reveal-item">
+    <section id="dilemma" class="section-block">
       <div class="section-header">
         <span class="section-index">01 // THE PROBLEM &amp; DILEMMA</span>
         <h2 class="section-title">Why classical total orders fail</h2>
       </div>
 
       <div class="two-col">
-        <article class="minimal-panel">
+        <article class="panel">
           <h3>Multi-role partitioning breaks ordinal ranking</h3>
           <p>
             Classical matching theory assumes every participant maps partners onto a strict
-            ordinal list: first choice, second choice, third choice. Under functional
-            partitioning across distinct roles (public visibility r<sub>1</sub>, late-night
-            emotional support r<sub>2</sub>, practical provision r<sub>3</sub>, weekend
-            leisure r<sub>4</sub>, and reserve contingency r<sub>5</sub>), no partner dominates
-            vectorwise across the role matrix M.
+            ordinal list: first choice, second choice, third choice. Under functional partitioning
+            across distinct roles (public visibility r<sub>1</sub>, late-night emotional support r<sub>2</sub>,
+            practical provision r<sub>3</sub>, weekend leisure r<sub>4</sub>, and reserve contingency r<sub>5</sub>),
+            no partner dominates vectorwise across the role matrix M.
           </p>
           <p>
             Changing context weights across days reverses who sits at rank 1. Across 1,000
-            uniform Dirichlet role weightings on our benchmark 4 x 5 matrix, every partner
+            uniform Dirichlet role weightings on the benchmark 4 x 5 matrix, every partner
             attains first rank over substantial cones of the simplex (22.7%, 19.0%, 25.3%, 33.0%).
           </p>
         </article>
 
-        <article class="minimal-panel">
-          <h3>The Uncertainty Inequality &amp; the (0.99, 0.01) distinction</h3>
-          <p class="formula-line">
+        <article class="panel">
+          <h3>Non-commutation and the (0.99, 0.01) distinction</h3>
+          <p class="formula-box">
             &Delta;R &middot; &Delta;L &ge; B<sub>S</sub>(&Psi;) = &radic;( |Cov(&Rcirc;, &Lcirc;)|&sup2; + &kappa;<sub>R</sub>&sup2; )
           </p>
           <p>
             When role evaluation rotates away from the rank basis (L = U(&gamma;)&dagger; D<sub>L</sub> U(&gamma;)),
-            rank and role observables fail to commute, forcing a lower bound via the
+            rank and role observables fail to commute, forcing a joint dispersion bound via the
             Schrodinger-Robertson relations. At zero rotation (&gamma; = 0), diagonal operators commute cleanly.
           </p>
           <p>
@@ -210,35 +188,36 @@
       </div>
     </section>
 
-    <div class="sep reveal-item"></div>
+    <hr class="hairline" />
 
-    <!-- 02 // ARCHITECTURE OF THE MONOGRAPH -->
-    <section id="paper" class="section-block reveal-item">
+    <!-- 02 // PAPER ARCHITECTURE -->
+    <section id="paper" class="section-block">
       <div class="section-header">
-        <span class="section-index">02 // ARCHITECTURE OF THE MONOGRAPH</span>
+        <span class="section-index">02 // MONOGRAPH ARCHITECTURE</span>
         <h2 class="section-title">Drift, projective collapse, and social cascades</h2>
       </div>
 
       <div class="three-col">
-        <article class="minimal-cell">
+        <article class="cell">
           <span class="cell-tag">MARKOV DRIFT</span>
           <h4>Periodic &amp; Joint Chains</h4>
           <p>
             Weekday, weekend, and stress kernels sustain positive rank entropy indefinitely
-            prior to absorbing commitment, causing temporal occupancy to diverge from static support scores.
+            prior to absorbing commitment, causing temporal occupancy to diverge from static scores.
           </p>
         </article>
 
-        <article class="minimal-cell">
+        <article class="cell">
           <span class="cell-tag">THE POKE RULE</span>
           <h4>Selection vs. Exit</h4>
           <p>
-            A direct status question triggers projective subspace selection P<sub>k</sub>|&Psi;&rang; / ||P<sub>k</sub>|&Psi;&rang;||,
-            or partner exit renormalization bounded at the n = 1 empty-portfolio edge case.
+            A direct status inquiry triggers projective subspace selection
+            P<sub>k</sub>|&Psi;&rang; / ||P<sub>k</sub>|&Psi;&rang;||, or partner exit renormalization
+            bounded at the n = 1 empty-portfolio edge case.
           </p>
         </article>
 
-        <article class="minimal-cell">
+        <article class="cell">
           <span class="cell-tag">DECOHERENCE</span>
           <h4>Finite-Graph Percolation</h4>
           <p>
@@ -249,27 +228,27 @@
       </div>
     </section>
 
-    <div class="sep reveal-item"></div>
+    <hr class="hairline" />
 
     <!-- 03 // FORMAL VERIFICATION IN LEAN 4 -->
-    <section id="lean" class="section-block reveal-item">
+    <section id="lean" class="section-block">
       <div class="section-header">
         <span class="section-index">03 // FORMAL VERIFICATION (LEAN 4.36.0)</span>
         <h2 class="section-title">Auditable algebra, separated from behavioral claims</h2>
       </div>
 
       <div class="two-col">
-        <article class="minimal-panel">
+        <article class="panel">
           <h3>What Lean 4 formally proves (20 modules, 44 targets, 0 sorry)</h3>
           <ul class="clean-list">
             <li><strong>Foundations &amp; Normalization:</strong> Complex Cauchy-Schwarz over Q[i]<sup>d</sup>, guarded exit renormalization, and n = 1 singleton weight = 1.</li>
-            <li><strong>Relational &amp; SharedMaximum:</strong> Zero-safe role-matrix normalization, competition rank bounds [1, n], and formal separation of Model A from Model B via <code>w99</code>.</li>
-            <li><strong>Uncertainty &amp; Conjugation:</strong> Diagonal commutation, unitary Hermiticity preservation, and division-free Schrodinger and Robertson inequalities with 2D and 3D rational witnesses.</li>
+            <li><strong>Relational &amp; SharedMaximum:</strong> Zero-safe role-matrix normalization, competition rank bounds [1, n], and separation of Model A from Model B via <code>w99</code>.</li>
+            <li><strong>Uncertainty &amp; Conjugation:</strong> Diagonal commutation, unitary Hermiticity preservation, and division-free Schrodinger and Robertson inequalities with rational witnesses.</li>
             <li><strong>Dynamics &amp; Optionality:</strong> Absorbing state invariance, EMA simplex preservation, bounded cascade sizes, and Binomial plus Poisson-binomial moments.</li>
           </ul>
         </article>
 
-        <article class="minimal-panel">
+        <article class="panel">
           <h3>Explicit verification boundary</h3>
           <p>
             Lean verifies algebraic identities, finite probability bounds, and order-theoretic
@@ -277,8 +256,8 @@
           </p>
           <p>
             Formal verification does <strong>not</strong> verify floating-point Monte Carlo runs
-            (checked separately by Python unit tests in <code>tests/test_rst_invariants.py</code>),
-            nor does a Lean proof validate empirical dating psychology or prove that attractiveness increases pool size.
+            (checked separately by unit tests in <code>tests/test_rst_invariants.py</code>),
+            nor does a Lean proof validate empirical dating psychology or prove that attractiveness grows pool size.
           </p>
           <div class="code-strip">
             <code>make figures &amp;&amp; make lean &amp;&amp; make test &amp;&amp; make pdf</code>
@@ -287,18 +266,18 @@
       </div>
     </section>
 
-    <div class="sep reveal-item"></div>
+    <hr class="hairline" />
 
     <!-- 04 // UNSOLVED HYPOTHESES -->
-    <section id="hypotheses" class="section-block reveal-item">
+    <section id="hypotheses" class="section-block">
       <div class="section-header">
         <span class="section-index">04 // UNSOLVED EMPIRICAL HYPOTHESES</span>
         <h2 class="section-title">Open claims awaiting observational data</h2>
       </div>
 
       <div class="hyp-grid">
-        <article class="hyp-item">
-          <span class="mono-label">CONJECTURE + H1</span>
+        <article class="panel">
+          <span class="cell-tag">CONJECTURE + H1</span>
           <h4>Optionality Mediation</h4>
           <p>
             Whether equilibrium superposition prevalence increases with perceived attractiveness A
@@ -307,8 +286,8 @@
           </p>
         </article>
 
-        <article class="hyp-item">
-          <span class="mono-label">H2 // ORDER EFFECT</span>
+        <article class="panel">
+          <span class="cell-tag">H2 // ORDER EFFECT</span>
           <h4>Rank-then-Role vs. Role-then-Rank</h4>
           <p>
             Tests whether querying ordinal rank prior to functional role shifts conditional response
@@ -316,8 +295,8 @@
           </p>
         </article>
 
-        <article class="hyp-item">
-          <span class="mono-label">H3 // GRAPH EXPOSURE</span>
+        <article class="panel">
+          <span class="cell-tag">H3 // GRAPH EXPOSURE</span>
           <h4>Simultaneous Network Exit</h4>
           <p>
             Tests whether higher mutual-acquaintance density q increases multi-partner exit hazard
@@ -325,8 +304,8 @@
           </p>
         </article>
 
-        <article class="hyp-item">
-          <span class="mono-label">H4 // REGIME DRIFT</span>
+        <article class="panel">
+          <span class="cell-tag">H4 // REGIME DRIFT</span>
           <h4>Cadence vs. Stated Priority</h4>
           <p>
             Tests whether weekday, weekend, and stress communication shares produce systematic
@@ -339,7 +318,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-col">
+      <div>
         <p class="footer-authors">
           Ratnadwip Sarkar, Koushik Mondal, Himanshu Malik, Saswata Howladar
         </p>
@@ -350,7 +329,7 @@
         </p>
       </div>
 
-      <div class="footer-col footer-right">
+      <div class="footer-right">
         <p class="footer-status" id="updateStatus" data-fallback-date="2026-11-26">
           Last updated: 2026-11-26 (v1.1)
         </p>

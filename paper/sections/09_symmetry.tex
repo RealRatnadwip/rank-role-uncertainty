@@ -1,80 +1,73 @@
 \section{Symmetry and the Mirror Configuration}
 \label{sec:symmetry}
 
-Although the motivating example introduced a focal person $W$ maintaining
-several partners $\{G_i\}$ using the male pronoun for the latter, nothing in
-the mathematical machinery of \RST{} encodes gender. This section formalizes
-permutation and role-relabeling symmetry and applies the theory to the mirror
-configuration.
+Although the motivating narrative introduced a focal person $W$ maintaining several
+partners $\{G_i\}$ using male pronouns for the latter, nothing in the mathematical
+machinery of \RST{} encodes gender. This section formalizes unitary and combinatorial
+relabeling symmetry and states the exact invariant predictions for the mirror configuration.
 
 \subsection{Invariance Under Partner and Role Permutations}
 \label{subsec:sym-invariance}
 
-Let $\pi_G \in S_n$ be any permutation of partner indices $\{1, \dots, n\}$ and
-$\pi_R \in S_m$ be any permutation of role basis indices $\{1, \dots, m\}$.
-These induce a unitary change of basis $U = U_{\pi_G} \otimes U_{\pi_R}$ on
+\noindent\layermath{} Let $\pi_G \in S_n$ be any permutation of partner indices $\{1, \dots, n\}$
+and $\pi_R \in S_m$ be any permutation of role indices $\{1, \dots, m\}$. Together they
+induce a unitary change of basis $U = U_{\pi_G} \otimes U_{\pi_R}$ on
 $\vspaceTot = \vspaceG \otimes \vspaceR$.
 
-\begin{proposition}[Unitary and relabeling invariance of \RST{}]
+\begin{proposition}[Unitary and relabeling invariance of \RST{}; \layermath]
 \label{prop:unitary-invariance}
 Under any unitary relabeling $U$ mapping $\ket{\Psi} \mapsto U\ket{\Psi}$,
 $\opR \mapsto U\opR U^\dagger$, and $\opL \mapsto U\opL U^\dagger$:
 \begin{enumerate}[nosep]
-  \item normalization $\braket{\Psi}{\Psi} = 1$ and superposition status
-        (\cref{def:superposition}) are preserved;
-  \item dispersions $\Delta R$, $\Delta L$, and the situationship constant
-        $\kappaS = \frac{1}{2}\abs{\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}}$
-        are strictly invariant;
-  \item collapse probabilities $\abs{a_i}^2$, renormalization~\eqref{eq:renormalization},
-        Markov transition eigenvalues, and social-graph cascade probabilities are
-        invariant under index relabeling.
+  \item state normalization $\braket{\Psi}{\Psi} = 1$, role-matrix column normalization,
+        competition ordinal ranks $r_i(\mathbf{w})$, \textnormal{\texttt{DistributedWeights}},
+        and \textnormal{\texttt{SharedMaximum}} predicates are invariant;
+  \item dispersions $\Delta R$, $\Delta L$, covariance $\mathrm{Cov}_\Psi(\opR,\opL)$,
+        Schr\"odinger bound $B_S(\Psi)$, and Robertson constant $\kappa_R(\Psi)$ are invariant;
+  \item collapse weights $\abs{a_i}^2$, renormalization~\eqref{eq:renormalization},
+        Markov transition eigenvalues, and social-graph cascade fractions are invariant
+        under vertex relabeling.
 \end{enumerate}
 \end{proposition}
 \begin{proof}
 Since $U^\dagger U = U U^\dagger = \opI$, inner products and norms satisfy
-$\braket{U\phi}{U\psi} = \braket{\phi}{\psi}$. Thus
-$\expect{U\hat{A}U^\dagger}{U\Psi} = \expect{\hat{A}}{\Psi}$ and
-$\var{U\hat{A}U^\dagger}{U\Psi} = \var{\hat{A}}{\Psi}$ for $\hat{A} \in \{\opR, \opL\}$.
-Similarly, $\comm{U\opR U^\dagger}{U\opL U^\dagger} = U\comm{\opR}{\opL}U^\dagger$,
-leaving $\braket{U\Psi}{U\comm{\opR}{\opL}U^\dagger U\Psi} = \braket{\Psi}{\comm{\opR}{\opL}\Psi}$
-unchanged. Combinatorial relabeling of vertices in $G_{\mathrm{soc}}$ and rows
-in $P^{(r)}$ preserves graph isomorphism classes and spectrum identically.
+$\braket{U\phi}{U\psi} = \braket{\phi}{\psi}$. Thus expectation values, centered variances,
+commutators $\comm{U\opR U^\dagger}{U\opL U^\dagger} = U\comm{\opR}{\opL}U^\dagger$, and
+anticommutators transform unitarily, leaving every trace and expectation unchanged.
+Graph isomorphism preserves connected component counts $\abs{C(i_0)}$ identically.
 \end{proof}
 
 \subsection{The Mirror Configuration}
 \label{subsec:sym-mirror}
 
-In the mirror configuration, a male focal agent $M$ maintains $n$ concurrent
-female partners $W_1, \dots, W_n$ (colloquially described as the ``playboy''
-configuration). Every primitive object translates without modification:
+\noindent\layerformal{} \layersatire{} In the mirror configuration, a male focal agent $M$
+maintains $n$ concurrent female partners $W_1, \dots, W_n$ (colloquially framed as the
+``playboy'' portfolio). Every formal primitive translates without alteration:
 \begin{itemize}[nosep]
-  \item role $r_1$ denotes the publicly visible primary partner; $r_2$ denotes
-        emotional confidante; $r_3$ denotes practical or domestic support;
-        $r_4$ denotes weekend social companionship; $r_5$ denotes low-cadence
-        contingency;
-  \item prior to a poke, no $W_k$ holds weight $\abs{a_k}^2 = 1$, and
-        $\Delta R \cdot \Delta L \ge \kappaS$ holds with identical proof;
-  \item a direct status question from any $W_k$ triggers silence, projective
-        collapse or exit renormalization, and percolation cascade whenever
-        $\{W_i\}$ share mutual acquaintances or social feeds.
+  \item role $r_1$ indexes public social visibility; $r_2$ emotional confidante; $r_3$
+        practical/domestic support; $r_4$ weekend leisure; $r_5$ low-cadence contingency;
+  \item a distributed weight vector establishes $w_k < 1$, whereas genuine ordinal
+        indeterminacy requires \textnormal{\texttt{SharedMaximum}} or role-scheme sensitivity,
+        and uncertainty obeys $\Delta R \cdot \Delta L \ge B_S \ge \kappa_R$;
+  \item a direct status question from any $W_k$ forces projective collapse, exit
+        renormalization, or social-graph decoherence whenever $\{W_i\}$ share friends.
 \end{itemize}
 
-\begin{proposition}[Gender independence]
+\begin{proposition}[Parameter symmetry under gender inversion; \layerformal]
 \label{prop:symmetry}
-Relational superposition is a structural function of optionality $n(A)$ and
-social-graph connectivity $q$, not of gender.
+Within \RST{}, relational superposition depends structurally on option pool size $n(A)$,
+role weighting $\boldsymbol{\alpha}$, retention probabilities $\{p_i\}$, and social-graph
+connectivity $q$, with zero gender-indexed parameters.
 \end{proposition}
 \begin{proof}
-Equations~\eqref{eq:partner-state} through~\eqref{eq:conjecture} contain no
-gender-indexed parameter, and by \cref{prop:unitary-invariance} any bijection
-between focal/partner gender labels leaves all predictions invariant.
+Every mathematical structure from \cref{sec:framework} through \cref{sec:conjecture} is
+parameterized exclusively by $(n, m, M, \mathbf{w}, \opR, \opL, P^{(r)}, G_{\mathrm{soc}}, p)$;
+by \cref{prop:unitary-invariance}, agent-label bijection leaves all derived quantities unchanged.
 \end{proof}
 
-\begin{remark}[Empirical identifiability]
-Because the structural laws of \RST{} are symmetric under gender inversion,
-observational state data alone (weights, latency, and cascade rates) cannot
-distinguish the two configurations without demographic labels. Any population-level
-asymmetry observed empirically would therefore reflect differences in the
-distribution of $n(A)$, retention probability $p$, or social-graph density $q$
-across groups rather than a difference in the governing mechanics.
+\begin{remark}[Empirical non-identifiability of labels vs.\ distributional asymmetries; \layerempiric]
+Notice what \cref{prop:symmetry} does not assert: structural parameter invariance does not
+imply equal empirical population means across demographics. Any empirical gender gap in
+portfolio prevalence or collapse rates would arise through differences in the underlying
+distributions of $(n(A), p, q, B_{\max})$ rather than a difference in formal dynamics.
 \end{remark}

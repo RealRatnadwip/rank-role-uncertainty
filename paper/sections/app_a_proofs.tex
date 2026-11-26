@@ -9,7 +9,8 @@ results invoked in \cref{sec:uncertainty,sec:dynamics,sec:cascade,sec:conjecture
 
 In \cref{sec:uncertainty}, \cref{thm:rank-role-inequality} relies on the
 complex Cauchy-Schwarz inequality $\abs{\braket{u}{v}}^2 \le \norm{u}^2 \norm{v}^2$.
-To align directly with the constructive formalization in \texttt{lean/RST/Uncertainty.lean}
+To align directly with the constructive formalization in
+\texttt{lean/RST/Foundations/Vectors.lean} and \texttt{lean/RST/Uncertainty/Robertson.lean}
 (which avoids case-splitting on division inside algebraic rewrites), we give
 the division-free polynomial proof.
 
@@ -100,7 +101,7 @@ $\Prob(K \ge 2) = 1 - \Prob(K = 0) - \Prob(K = 1) = 1 - e^{-p\lambda}(1 + p\lamb
 \label{app:proof-percolation}
 
 In \cref{thm:percolation-threshold}, we bounded the expected informed partner
-cluster size below $q_c = \frac{1}{(n - 1)p_{\mathrm{tx}}}$.
+cluster size below $q_{\mathrm{ref}} = \frac{1}{(n - 1)p_{\mathrm{tx}}}$.
 Specifically, exploring $C(i_0)$ via breadth-first generation layers
 $Z_0 = 1, Z_1, Z_2, \dots$, each vertex in generation $t$ tests at most
 $n - 1$ unvisited candidates independently with bond probability $q p_{\mathrm{tx}}$.

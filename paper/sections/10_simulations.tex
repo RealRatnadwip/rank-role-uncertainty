@@ -1,222 +1,203 @@
-\section{Synthetic Simulation Study}
+\section{Synthetic Computational Experiments}
 \label{sec:simulations}
 
-To examine the quantitative behavior of Relational Superposition Theory across
-parameter regimes where analytic closed forms are unavailable or involve finite-size
-effects, we conduct four deterministic Monte Carlo experiments using
-\texttt{scripts/run\_simulations.py}. Every datum, summary table, and plot in
-this section is \emph{synthetic}, generated from the formal mathematical models
-of \cref{sec:framework,sec:uncertainty,sec:dynamics,sec:poke,sec:cascade,sec:conjecture}
-with fixed PCG64 pseudorandom seeds. No empirical human subject data is used
-or implied.
+To test internal mathematical consistency across every regime and visualize nonlinear
+behaviors not visible from closed-form formulas alone, we run five deterministic synthetic
+computational experiments implemented in \texttt{scripts/run\_simulations.py}, paired with
+automated mathematical invariant tests in \texttt{tests/test\_rst\_invariants.py}.
 
-\subsection{Experimental Protocol and Seed Ledger}
+\noindent\textbf{Important disclaimer on empirical status.} All numbers, trajectories,
+and plots reported in this section are \emph{purely synthetic Monte Carlo or linear-algebraic
+outputs} generated with fixed random seeds (\cref{tab:seeds}). None represent real human
+survey measurements, and no empirical population parameter is estimated here.
+
+\subsection{Experimental Architecture and Seed Ledger}
 \label{subsec:sim-protocol}
 
-All simulations execute under Python~3.13 with NumPy~2.2.4, reading parameters
-hardcoded in \texttt{scripts/run\_simulations.py} and writing reproducible
-CSV tables and \texttt{summary.json} to \texttt{paper/data/}. \cref{tab:seeds}
-records the exact random seeds, sample sizes, and output files.
+Every experiment accepts explicit deterministic seeds via \texttt{numpy.random.default\_rng}
+and emits machine-readable CSV tables plus an audit file \texttt{paper/data/summary.json}.
+\cref{tab:seeds} summarizes the five v1.1 simulation tasks, their parameters, and key scope
+limitations.
 
 \begin{table}[htbp]
 \centering
-\footnotesize
-\caption{Deterministic simulation ledger for all synthetic datasets in \texttt{paper/data/}.}
+\small
+\caption{Deterministic synthetic simulation ledger and model boundaries (v1.1).}
 \label{tab:seeds}
-\begin{tabularx}{\textwidth}{@{}llrLL@{}}
+\begin{tabularx}{\textwidth}{@{}llL@{}}
 \toprule
-Experiment & Output CSV & Seed & Sample size & Primary measured quantities \\
+Experiment & Seed & Target mathematical object, sample count, and scope limitation \\
 \midrule
-Attention drift & \texttt{markov\_drift.csv} & \texttt{202601} & $180$ steps ($20{,}000$ wk) & Weights $w_i(t)$, $H_{\mathrm{rank}}$, stationary $\pi$ \\
-Optionality scaling & \texttt{optionality\_vs\_n.csv} & \texttt{202602} & $4{,}000$ trials / $n$ & Superposition prob., $30$-day hazard \\
-Attractiveness sweep & \texttt{optionality\_vs\_A.csv} & \texttt{202602} & $4{,}000$ trials / $A$ & Mean Poisson pool, superposition prob. \\
-Graph percolation & \texttt{cascade\_percolation.csv} & \texttt{202603} & $1{,}500$ trials / pt & Cascade prob., mean exposed fraction \\
-Uncertainty sweep & \texttt{uncertainty\_sweep.csv} & \texttt{202604} & $2{,}400$ states & $\Delta R$, $\Delta L$, $\Delta R\cdot\Delta L$, $\kappa_{\mathrm{comm}}$ \\
+1. Role aggregation & \texttt{202605} & $4\times 5$ matrix $M$, two fixed $\boldsymbol{\alpha}$ schemes, $1{,}000$ Dirichlet weights. Demonstrates rank reversal; assumes normalized additive linear utility. \\
+2. Markov attention & \texttt{202601} & $90$-day daily schedule, $12\times 12$ joint chain, $P_{\mathrm{week}}$, $\alpha=0.16$. Assumes first-order Markov dynamics without endogenous poke hazard. \\
+3. Optionality curves & \texttt{202602} & $n \in \{1,\dots,10\}$, $A \in [0,10]$, $4{,}000$ trials/point plus Poisson-binomial and $B_{\max}=3$ cap. Synthetic arrival curve $n(A)$; not human field data. \\
+4. Social cascades & \texttt{202603} & $n=8$ partners, $1{,}500$ trials/point across ER, clustered, hub, and $p_{\mathrm{tx}} \in \{0.40,0.72,0.90\}$. Static graph without re-wiring. \\
+5. Uncertainty sweep & \texttt{202604} & $3{,}200$ Haar-random states ($d \in \{2,3,4,5\} \times \gamma \in \{0.0,0.25,0.75,1.5\}$). Tests unitary rotation $\opL = U(\gamma)^\dagger D_L U(\gamma)$; algebraic check only. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\subsection{Experiment 1: Periodic Attention Drift and Ergodic Convergence}
+\subsection{Experiment 1: Role-Matrix Normalization and Rank Reversal}
+\label{subsec:sim-role-agg}
+
+On the benchmark matrix $M_{4\times 5}$ of \cref{ex:role-aggregation} (Seed \texttt{202605}),
+column sums are strictly positive $(14.0, 15.8, 13.5, 15.5, 9.0)$ and each column reaches
+a distinct leader ($G_1, G_2, G_3, G_4, G_4$). Under visibility weights
+$\boldsymbol{\alpha}_{\mathrm{vis}}$, linear scores evaluate to $(0.4167, 0.2225, 0.1716, 0.1893)$
+putting $G_1$ first; under support weights $\boldsymbol{\alpha}_{\mathrm{sup}}$, linear scores
+become $(0.2169, 0.3508, 0.2865, 0.1458)$ putting $G_2$ first. Across $1{,}000$ independent
+$\mathrm{Dir}(1,1,1,1,1)$ draws (\cref{fig:role-aggregation}), partner top-rank counts equal
+$(227, 190, 253, 330)$, confirming zero universal consensus leader on $\Delta^{4}$.
+
+\subsection{Experiment 2: Periodic Weekly vs.\ Augmented Joint Markov Drift}
 \label{subsec:sim-markov}
 
-In Experiment~1 (seed \texttt{202601}), we simulate a four-partner portfolio
-$\{G_1, G_2, G_3, G_4\}$ over $90$ days ($180$ half-day intervals) using
-regime-specific transition matrices $P^{(\mathrm{wd})}$, $P^{(\mathrm{we})}$,
-and $P^{(\mathrm{st})}$ (full matrices in \cref{app:reproducibility}), stress
-probability $p_{\mathrm{st}} = 0.15$, and EMA smoothing $\alpha = 0.16$.
+Using the exact transition matrices $P^{(\mathrm{wd})}, P^{(\mathrm{we})}, P^{(\mathrm{st})}$
+in \cref{app:rep-matrices} with $p_{\mathrm{st}} = 0.15$ and EMA smoothing $\alpha = 0.16$
+(Seed \texttt{202601}), we compute both the exact $7$-day stroboscopic eigenvector
+$\pi_{\mathrm{week}}$, the exact $12$-state joint `(partner, regime)` marginal stationary
+distribution $\pi_{\mathrm{joint}}$, and the empirical visitation frequencies over $180$
+simulated days (\cref{tab:markov-stationary}, \cref{fig:markov-drift}). Weekend clustering
+pushes stroboscopic $\pi_{\mathrm{week}}(G_4) = 0.3779$, diverging sharply from static support
+score $G_4(\boldsymbol{\alpha}_{\mathrm{sup}}) = 0.1458$, whereas daily stress interruptions
+rebalance the $12$-state marginal back toward $G_1$ ($0.3334$) and $G_2$ ($0.3087$).
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Comparison of exact weekly stationary eigenvector $\pi_{\mathrm{theory}}$
-against $20{,}000$-week Monte Carlo occupancy (seed \texttt{202601}).}
+\caption{Markov attention occupancy vs.\ static role-matrix scores (Seed \texttt{202601} and \texttt{202605}).}
 \label{tab:markov-stationary}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-Metric & $G_1$ (Primary) & $G_2$ (Emotional) & $G_3$ (Financial) & $G_4$ (Weekend) \\
+Distribution / Metric & $G_1$ & $G_2$ & $G_3$ & $G_4$ \\
 \midrule
-Initial weight $w_i(0)$ & $0.3400$ & $0.2600$ & $0.2000$ & $0.2000$ \\
-Theoretical $\pi_i$ & $0.2511$ & $0.2248$ & $0.1462$ & $0.3779$ \\
-Empirical ($20{,}000$ wk) & $0.2516$ & $0.2200$ & $0.1439$ & $0.3846$ \\
-Absolute discrepancy & $0.0005$ & $0.0048$ & $0.0023$ & $0.0067$ \\
+Stroboscopic weekly stationary $\pi_{\mathrm{week}}$ & 0.2511 & 0.2248 & 0.1462 & 0.3779 \\
+12-state joint `(partner, regime)` marginal & 0.3334 & 0.3087 & 0.1741 & 0.1838 \\
+180-day synthetic empirical visitation & 0.2516 & 0.2200 & 0.1439 & 0.3846 \\
+Static visibility score $G_i(\boldsymbol{\alpha}_{\mathrm{vis}})$ & 0.4167 & 0.2225 & 0.1716 & 0.1893 \\
+Static support score $G_i(\boldsymbol{\alpha}_{\mathrm{sup}})$ & 0.2169 & 0.3508 & 0.2865 & 0.1458 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-As reported in \cref{tab:markov-stationary} and plotted earlier in
-\cref{fig:markov-drift}, theoretical and empirical stationary weights agree
-to within $0.007$ across all four partners. Notice a structurally revealing
-artifact of periodic weekend forcing: although $G_1$ starts with the largest
-baseline weight ($0.3400$), weekend transitions concentrate strongly enough on
-$G_4$ that $G_4$ attains the highest long-run occupancy ($0.3779$), while rank
-ambiguity entropy stabilizes at $1.450$ bits at day~$90$.
-
-\subsection{Experiment 2: Superposition Prevalence and Collapse Hazard}
+\subsection{Experiment 3: Optionality Scaling, Heterogeneity, and Attention Budget}
 \label{subsec:sim-optionality}
 
-Experiment~2 (seed \texttt{202602}) tests the binomial and Poisson retention
-models of \cref{sec:conjecture} across partner counts $n \in \{1, \dots, 10\}$
-and attractiveness indices $A \in [0, 10]$, using $4{,}000$ independent trials
-per parameter setting. Alongside superposition prevalence, we evaluate a
-synthetic $30$-day poke hazard model
+Experiment~3 (Seed \texttt{202602}, $4{,}000$ Monte Carlo replications per grid point) compares
+analytic~\eqref{eq:binomial-superposition} against simulated Binomial draws, heterogeneous
+Poisson-binomial retention ($p_i$ drawn uniformly around $p=0.45$), capacity-constrained
+selection capping active slots at $B_{\max} = 3$, and a synthetic 30-day cumulative
+collapse hazard incorporating relational edge growth:
 \begin{equation}
-  h_{30}(n) = 1 - \exp\!\bigl(-0.08\,n\,[1 + 0.12(n - 1)]\bigr),
+  h_{30}(n) = 1 - \exp\!\left(-0.08\,\max(n,1) - 0.015\, n(n - 1)\right).
   \label{eq:sim-hazard}
 \end{equation}
-capturing both linear individual inquiry risk and quadratic pairwise visibility
-friction as partner count expands.
+All Monte Carlo proportions stay within binomial standard errors of analytic formulas
+(\cref{tab:optionality-sim}), while capacity capping flattens expected active partners
+sublinearly at $n = 10$ ($3.4947$ kept vs.\ $4.5000$ unconstrained; \cref{fig:optionality-extensions}).
 
 \begin{table}[htbp]
 \centering
-\small
-\caption{Selected synthetic outputs from \texttt{optionality\_vs\_n.csv}
-(seed \texttt{202602}, $4{,}000$ trials per $n$).}
+\footnotesize
+\caption{Selected synthetic optionality and constraint outcomes across partner counts $n$ (Seed \texttt{202602}).}
 \label{tab:optionality-sim}
-\begin{tabular}{@{}rrrrrr@{}}
+\begin{tabular}{@{}c@{\hspace{7pt}}c@{\hspace{7pt}}c@{\hspace{7pt}}c@{\hspace{7pt}}c@{\hspace{7pt}}c@{\hspace{7pt}}c@{\hspace{7pt}}c@{}}
 \toprule
-$n$ & Exact ($p=0.25$) & MC ($p=0.25$) & Exact ($p=0.45$) & MC ($p=0.45$) & $30$-day hazard \\
+$n$ & Exact $p{=}0.25$ & Exact $p{=}0.45$ & MC $p{=}0.45$ & Hetero PB & Cap ($B_{\max}{=}3$) & Kept Mean & $h_{30}(n)$ \\
 \midrule
-$1$ & $0.0000$ & $0.0000$ & $0.0000$ & $0.0000$ & $0.0769$ \\
-$2$ & $0.0625$ & $0.0563$ & $0.2025$ & $0.2073$ & $0.1641$ \\
-$3$ & $0.1563$ & $0.1515$ & $0.4253$ & $0.4218$ & $0.2574$ \\
-$5$ & $0.3672$ & $0.3683$ & $0.7438$ & $0.7318$ & $0.4468$ \\
-$7$ & $0.5551$ & $0.5665$ & $0.9029$ & $0.9033$ & $0.6184$ \\
-$10$ & $0.7560$ & $0.7640$ & $0.9767$ & $0.9775$ & $0.8106$ \\
+1  & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.4380 & 0.0769 \\
+2  & 0.0625 & 0.2025 & 0.2043 & 0.1948 & 0.1683 & 0.8650 & 0.1641 \\
+3  & 0.1563 & 0.4253 & 0.4230 & 0.4178 & 0.3733 & 1.2745 & 0.2574 \\
+5  & 0.3672 & 0.7438 & 0.7318 & 0.7358 & 0.6778 & 1.9632 & 0.4468 \\
+7  & 0.5551 & 0.8976 & 0.8880 & 0.8958 & 0.8640 & 2.6643 & 0.6183 \\
+10 & 0.7560 & 0.9767 & 0.9775 & 0.9740 & 0.9608 & 3.4947 & 0.8106 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\cref{tab:optionality-sim} confirms that Monte Carlo counts track exact binomial
-probabilities within sampling error ($\pm 0.012$) while illustrating the
-central stability tradeoff (\cref{fig:collapse-vs-n-A}): high optionality makes
-entering superposition nearly inevitable ($0.977$ at $n = 10, p = 0.45$), yet
-raises $30$-day collapse hazard from $0.164$ ($n = 2$) to $0.811$ ($n = 10$).
-
-\subsection{Experiment 3: Social-Graph Percolation Across Topologies}
+\subsection{Experiment 4: Finite-Graph Cascade Percolation and Transmission Sensitivity}
 \label{subsec:sim-cascade}
 
-Experiment~3 (seed \texttt{202603}) compares total decoherence probability
-(fraction of partners informed $\ge 0.60$) across $n = 8$ partners and edge
-densities $q \in [0, 1]$ under homogeneous, clustered, and hub-mediated
-networks (\cref{fig:cascade-percolation}). Numerical checkpoints appear in
-\cref{tab:cascade-sim}.
+Experiment~4 (Seed \texttt{202603}, $n = 8$, $\theta = 0.60$, $1{,}500$ trials per edge
+density $q \in [0.05, 0.90]$) measures both finite-network cascade probability across
+homogeneous ER, clustered two-clique, and hub-mediated graphs at $p_{\mathrm{tx}} = 0.72$,
+and transmission sensitivity across $p_{\mathrm{tx}} \in \{0.40, 0.72, 0.90\}$
+(\cref{tab:cascade-sim}, \cref{fig:cascade-percolation}). Even at $q = 0.20$ near the
+infinite-tree unit reproduction reference $q_{\mathrm{ref}} = 0.1984$ ($R_0 = 1.008$),
+finite-$n$ broadening produces $29.33\%$ cascades in homogeneous ER graphs rather than
+zero, highlighting why asymptotic thresholds must not be treated as sharp step edges for small $n$.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Simulated cascade probability and mean exposed partner fraction for
-$n = 8$, $p_{\mathrm{tx}} = 0.72$, $\theta = 0.60$ (seed \texttt{202603}).}
+\caption{Synthetic finite-$n$ ($n=8$) social-graph cascade probability across topology and $p_{\mathrm{tx}}$ (Seed \texttt{202603}).}
 \label{tab:cascade-sim}
 \begin{tabular}{@{}ccccccc@{}}
 \toprule
-\multirow{2}{*}{Density $q$} & \multicolumn{3}{c}{Cascade probability} & \multicolumn{3}{c}{Mean exposed fraction} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}
- & Homogeneous & Clustered & Hub-mediated & Homogeneous & Clustered & Hub-mediated \\
+$q$ & $R_0$ ($p_{\mathrm{tx}}{=}0.72$) & ER ($0.72$) & Clustered ($0.72$) & Hub ($0.72$) & ER ($p_{\mathrm{tx}}{=}0.40$) & ER ($p_{\mathrm{tx}}{=}0.90$) \\
 \midrule
-$0.10$ & $0.0567$ & $0.0720$ & $0.0973$ & $0.2145$ & $0.2367$ & $0.2286$ \\
-$0.20$ & $0.2933$ & $0.2780$ & $0.3053$ & $0.4050$ & $0.3999$ & $0.3958$ \\
-$0.30$ & $0.6067$ & $0.5567$ & $0.4787$ & $0.6256$ & $0.5920$ & $0.5403$ \\
-$0.40$ & $0.8087$ & $0.7667$ & $0.6300$ & $0.7793$ & $0.7524$ & $0.6540$ \\
-$0.60$ & $0.9753$ & $0.9420$ & $0.8220$ & $0.9410$ & $0.9036$ & $0.8053$ \\
-$0.80$ & $0.9987$ & $0.9927$ & $0.9187$ & $0.9857$ & $0.9679$ & $0.8920$ \\
+0.10 & 0.504 & 0.0453 & 0.0447 & 0.0133 & 0.0047 & 0.0973 \\
+0.20 & 1.008 & 0.2933 & 0.2660 & 0.1187 & 0.0520 & 0.4440 \\
+0.30 & 1.512 & 0.6107 & 0.5707 & 0.3213 & 0.1793 & 0.7633 \\
+0.40 & 2.016 & 0.8193 & 0.7873 & 0.5653 & 0.3787 & 0.9353 \\
+0.60 & 3.024 & 0.9753 & 0.9613 & 0.8580 & 0.6800 & 0.9953 \\
+0.80 & 4.032 & 0.9967 & 0.9773 & 0.9193 & 0.8720 & 0.9993 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Two qualitative lessons emerge from \cref{tab:cascade-sim}. First, below the
-analytic homogeneous threshold $q_c \approx 0.1984$, hub-mediated networks
-suffer the highest cascade probability ($0.0973$ vs $0.0567$ at $q = 0.10$)
-because a single highly connected partner bridges otherwise disjoint peers.
-Second, above $q = 0.30$, homogeneous graphs overtake both structured variants,
-reaching $0.9753$ cascade probability by $q = 0.60$ while hub-mediated graphs
-retain partial peripheral insulation ($0.8220$).
-
-\subsection{Experiment 4: Empirical Verification of the Uncertainty Bound}
+\subsection{Experiment 5: Unitary Basis-Rotation Uncertainty Sweep}
 \label{subsec:sim-uncertainty}
 
-Experiment~4 (seed \texttt{202604}) samples $2{,}400$ random Hermitian rank-role
-operator pairs $(\opR, \opL)$ and normalized complex superposed states
-$\ket{\Psi}$ across dimensions $d \in \{2, 3, 4, 5\}$ and role-mixing coupling
-strengths $\gamma \in \{0.25, 0.75, 1.50\}$. For each state, we evaluate
-$\Delta R$, $\Delta L$, their product $\Delta R \cdot \Delta L$, and the
-commutator lower bound $\kappa_{\mathrm{comm}} = \frac{1}{2}\abs{\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}}$.
+Experiment~5 (Seed \texttt{202604}) evaluates $N = 3{,}200$ normalized Haar-random complex
+state vectors across dimensions $d \in \{2, 3, 4, 5\}$ and context rotations
+$\gamma \in \{0.0, 0.25, 0.75, 1.50\}$ ($200$ states per cell), setting
+$\opR = \diag(1, \dots, d)$ and $\opL(\gamma) = U(\gamma)^\dagger D_L U(\gamma)$ where
+$U(\gamma) = \exp(i\gamma H)$ for normalized random Hermitian $H$.
+
+Zero violations occurred out of $3{,}200$ samples for either Robertson ($\min \Delta R \Delta L / \kappa_R = 1.000$)
+or Schr\"odinger ($\min \Delta R \Delta L / B_S = 1.000$). Crucially, at $\gamma = 0.0$
+where $[\opR, \opL(0)] = 0$, Robertson's commutator bound vanishes identically (`0.0000`
+in every dimension), whereas Schr\"odinger's covariance term tracks the positive dispersion
+correlation cleanly (and hits exact equality in $d = 2$ across all $\gamma$). Overall across
+nonzero $\gamma$, median observed product is $0.4996$, median Schr\"odinger bound is $0.4409$,
+and median Robertson bound is $0.1087$ (\cref{fig:uncertainty-bound}, \cref{tab:uncertainty-cells}).
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.95\textwidth]{figures/fig_uncertainty_bound.pdf}
-  \caption[Synthetic sweep of the Rank-Role Inequality across random operators]{Synthetic sweep over $2{,}400$ random Hermitian rank-role operator
-  pairs and normalized complex states (\texttt{scripts/run\_simulations.py},
-  seed \texttt{202604}). (a) Uncertainty product $\Delta R \cdot \Delta L$ vs
-  commutator lower bound $\kappa_{\mathrm{comm}}$, with zero points below the
-  dashed equality line $\Delta R \cdot \Delta L = \kappa$. (b) Distribution of
-  $\Delta R \cdot \Delta L$ across state dimension $d$.}
+  \includegraphics[width=0.94\textwidth]{figures/fig_uncertainty_bound.pdf}
+  \caption{Unitary operator uncertainty sweep ($N = 3{,}200$ states, Seed \texttt{202604}).
+  (a)~Observed product $\Delta R \cdot \Delta L$ vs.\ Schr\"odinger bound $B_S$ across
+  $\gamma \in \{0.0, 0.25, 0.75, 1.50\}$. (b)~Dimension-wise medians comparing Robertson,
+  Schr\"odinger, and observed dispersion product.}
   \label{fig:uncertainty-bound}
 \end{figure}
-
-Across all $2{,}400$ sampled systems, \textbf{zero violations} of~\eqref{eq:rank-role-inequality}
-occurred (\cref{fig:uncertainty-bound}a). The observed minimum ratio
-$(\Delta R \cdot \Delta L) / \kappa_{\mathrm{comm}}$ over states with
-$\kappa_{\mathrm{comm}} > 10^{-9}$ is $1.0000$, confirming that random $2$-dimensional
-states routinely approach the minimum-uncertainty boundary of
-\cref{prop:minimum-uncertainty}. Across the entire ensemble, the median
-uncertainty product is $0.6453$ and the median commutator floor is $0.0860$,
-while median dispersion grows systematically with partner count $d$
-(\cref{fig:uncertainty-bound}b).
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Stratified summary of synthetic uncertainty sweep (\texttt{uncertainty\_sweep.csv},
-seed \texttt{202604}, $200$ states per $(d, \gamma)$ cell, zero bound violations).}
+\caption{Stratified medians from the 3,200-sample unitary uncertainty sweep (Seed \texttt{202604}).}
 \label{tab:uncertainty-cells}
-\begin{tabular}{@{}ccrrrrrr@{}}
+\begin{tabular}{@{}ccccc@{}}
 \toprule
-$d$ & $\gamma$ & Med.\ $\Delta R$ & Med.\ $\Delta L$ & Med.\ $\Delta R\cdot\Delta L$ & Med.\ $\kappa_{\mathrm{comm}}$ & $95$th pct.\ prod. & Min.\ ratio \\
+Dimension $d$ & Rotation $\gamma$ & Median $\Delta R \cdot \Delta L$ & Median Robertson $\kappa_R$ & Median Schr\"odinger $B_S$ \\
 \midrule
-$2$ & $0.25$ & $0.4221$ & $0.8479$ & $0.3569$ & $0.0275$ & $0.5178$ & $1.1790$ \\
-$2$ & $0.75$ & $0.4141$ & $0.8557$ & $0.3547$ & $0.0962$ & $0.6708$ & $1.0010$ \\
-$2$ & $1.50$ & $0.4144$ & $1.0648$ & $0.4147$ & $0.1699$ & $0.8959$ & $1.0000$ \\
-$3$ & $0.25$ & $0.6505$ & $0.6714$ & $0.4245$ & $0.0332$ & $0.9270$ & $1.8680$ \\
-$3$ & $0.75$ & $0.6852$ & $0.8145$ & $0.5470$ & $0.0884$ & $1.0631$ & $1.2245$ \\
-$3$ & $1.50$ & $0.6806$ & $1.0440$ & $0.6991$ & $0.2296$ & $1.3025$ & $1.0738$ \\
-$4$ & $0.25$ & $0.9894$ & $0.6584$ & $0.6485$ & $0.0323$ & $1.2344$ & $3.4040$ \\
-$4$ & $0.75$ & $0.9646$ & $0.7648$ & $0.7122$ & $0.1201$ & $1.4291$ & $1.4495$ \\
-$4$ & $1.50$ & $0.9707$ & $1.0653$ & $1.0270$ & $0.2314$ & $1.6454$ & $1.2170$ \\
-$5$ & $0.25$ & $1.2758$ & $0.6579$ & $0.8277$ & $0.0408$ & $1.4178$ & $3.7880$ \\
-$5$ & $0.75$ & $1.2904$ & $0.7498$ & $0.9676$ & $0.1582$ & $1.6593$ & $1.7094$ \\
-$5$ & $1.50$ & $1.2862$ & $1.0853$ & $1.3591$ & $0.2495$ & $2.3096$ & $1.1950$ \\
+2 & 0.00 & 0.3767 & 0.0000 & 0.3767 \\
+2 & 0.25 & 0.3706 & 0.0583 & 0.3706 \\
+2 & 0.75 & 0.3433 & 0.1471 & 0.3433 \\
+2 & 1.50 & 0.3422 & 0.1937 & 0.3422 \\
+3 & 0.00 & 0.4837 & 0.0000 & 0.4837 \\
+3 & 0.25 & 0.4530 & 0.0542 & 0.4511 \\
+3 & 0.75 & 0.4403 & 0.1331 & 0.3873 \\
+3 & 1.50 & 0.4792 & 0.1853 & 0.3456 \\
+4 & 0.00 & 0.6603 & 0.0000 & 0.6603 \\
+4 & 0.25 & 0.6324 & 0.0561 & 0.6208 \\
+4 & 0.75 & 0.6289 & 0.1166 & 0.5336 \\
+4 & 1.50 & 0.5967 & 0.1939 & 0.3861 \\
+5 & 0.00 & 0.8611 & 0.0000 & 0.8611 \\
+5 & 0.25 & 0.8185 & 0.0569 & 0.8057 \\
+5 & 0.75 & 0.7589 & 0.1735 & 0.6509 \\
+5 & 1.50 & 0.7966 & 0.2521 & 0.4375 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\cref{tab:uncertainty-cells} reveals two geometric trends across the $12$
-dimension-coupling cells. First, median rank dispersion $\Delta R$ scales
-primarily with portfolio dimension $d$ ($0.42$ at $d=2$ to $1.29$ at $d=5$),
-whereas median role dispersion $\Delta L$ and commutator floor
-$\kappa_{\mathrm{comm}}$ scale strongly with role-mixing coupling $\gamma$
-(for $d=5$, median $\kappa_{\mathrm{comm}}$ increases sixfold from $0.0408$
-at $\gamma=0.25$ to $0.2495$ at $\gamma=1.50$). Second, minimum tightness
-ratios stay close to unity in low dimension ($1.0000$ at $d=2, \gamma=1.50$)
-and drift upward in higher dimensions because generic random vectors rarely
-lie inside the two-dimensional minimum-uncertainty manifold of
-\cref{prop:minimum-uncertainty}.

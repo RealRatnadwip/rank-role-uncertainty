@@ -1,0 +1,48 @@
+\section{Assumptions, Scope Conditions, and Failure Modes}
+\label{sec:scope}
+
+Every formal framework purchases precision at the cost of explicit structural idealizations.
+Rather than burying modeling assumptions inside prose, \cref{tab:assumptions} gathers the
+core premises of \RST{}, identifies the domain conditions under which each remains
+defensible, and documents exact failure modes when those conditions break.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Explicit structural assumptions, valid scope regimes, and formal failure modes of \RST{}.}
+\label{tab:assumptions}
+\begin{tabularx}{\textwidth}{@{}lL@{\hspace{8pt}}LL@{}}
+\toprule
+Component & Formal Assumption & Valid Scope Regime & Mathematical / Empirical Failure Mode \\
+\midrule
+Static ranking & Linear additive score $G_i(\boldsymbol{\alpha})$ on normalized $M$ & Multi-criteria comparison across non-dominated niches & Breaks under strict non-compensatory vetoes or nonlinear complementarities; rank invariance holds only inside simplex cones. \\
+State representation & Unit vector $\ket{\Psi} \in \Cnum^n \otimes \Cnum^m$ & Modeling context-rotated non-commuting observables & Unmotivated complex phases collapse cleanly to classical simplex $\Delta^{n-1}$ at $\gamma = 0$; phases lack direct psychometric measurement. \\
+Indeterminacy criterion & \texttt{SharedMaximum} or context rank reversal & Portfolios lacking a single dominant maximizer & \texttt{DistributedWeights} alone admits skewed vectors like $(0.99, 0.01)$ where unique rank~$1$ persists. \\
+Uncertainty bound & $\opL = U(\gamma)^\dagger D_L U(\gamma)$, Hermitian $\opR, \opL$ & Incompatible context queries ($[\opR,\opL]\neq 0$) & At $\gamma = 0$, $[\opR,\opL] = 0$ and Robertson bound vanishes; pure Robertson alone misses large covariance ($\mathrm{Cov}_\Psi$). \\
+Markov drift & First-order $P_{\mathrm{aug}}$ with strictly positive entries & Short-to-medium pre-poke periods & Fails when interaction memory spans $>1$ week, when weights freeze into an absorbing commitment ($P_{kk}=1$), or when $p_{\mathrm{st}}$ depends on partner exit. \\
+Poke \& exit & Clean projective collapse or $(1-w_k)^{-1}$ exit scaling & Solitary query without third-party leakage & Breaks at $n = 1$ ($w_1 = 1$, leaving empty vacuum state upon exit) and under multi-partner simultaneous leakage. \\
+Social cascade & Static $G_{\mathrm{soc}}$ with independent edge transmission $p_{\mathrm{tx}}$ & Pre-collapse static friend overlap & Branching $R_0 = 1$ threshold broadens smoothly at small $n$ (e.g., $n=8$); fails if partners block contacts or dynamically warn strangers. \\
+Optionality supply & Independent retention $p_i$ vs.\ hard budget $B_{\max}$ & Low-to-moderate candidate pools & Unconstrained $np$ growth overpredicts active count once daily time constraints cap simultaneous maintenance ($B_{\max} \approx 3$--$5$). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Summary of Failure Regimes}
+\label{subsec:scope-failures}
+
+Three structural boundary failures require explicit vigilance whenever interpreting \RST{}
+outputs:
+\begin{enumerate}[nosep]
+  \item \textbf{Near-monogamous skew ($\mathbf{w}_{99}$ failure).} Checking only that $w_k < 1$
+        misclassifies strongly skewed portfolios where a primary connection already holds $99\%$
+        share and a single outlier sits in contingency. Any empirical classifier must test
+        competition rank ties (\texttt{SharedMaximum} up to $\epsilon$-tolerance) or cross-role
+        incomparability directly.
+  \item \textbf{Time-budget saturation.} Unlimited pool expansion $n \to \infty$ raises
+        $\Prob(K \ge 2) \to 1$ monotonically in unconstrained Binomial equations, whereas actual
+        maintenance time caps active chat slots ($B_{\max}$). Once saturation sets in, marginal
+        optionality shifts partner selection quality rather than multiplying active threads indefinitely.
+  \item \textbf{Finite-$n$ percolation misreading.} Applying infinite-tree critical densities
+        $q_c$ to $n \le 10$ acquaintance graphs understates sub-threshold multi-partner cascades
+        ($29.33\%$ at $q = 0.20 \approx q_{\mathrm{ref}}$ for $n = 8$) while ignoring hub vulnerabilities.
+\end{enumerate}

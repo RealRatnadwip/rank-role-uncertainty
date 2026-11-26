@@ -1,302 +1,360 @@
-\section{A Formal Framework of Relational Superposition}
+\section{Formal Framework: Role Matrices, Ranking, and Superposition}
 \label{sec:framework}
 
-We now construct the state-space formalism of Relational Superposition Theory.
-The model represents both the functional composition of each individual partner
-and the system-wide priority distribution across all concurrent partners.
+This section constructs the static state representations of \RST{} in four steps:
+(1)~grounding functional roles inside a non-negative role matrix $M \in \Rnum_{\ge 0}^{n \times m}$
+with zero-safe normalization and linear aggregation, (2)~comparing classical simplex
+weights against complex Hilbert-space amplitudes and explicitly bounding the role of
+complex phases, (3)~defining competition ordinal rank alongside Model~A
+(\emph{DistributedWeights}) and Model~B (\emph{SharedMaximum}) to resolve the
+sub-unit-weight flaw via $\mathbf{w} = (0.99, 0.01)$, and (4)~documenting reduced
+partner density matrices and canonical worked examples.
 
-\subsection{Primitive Objects: Roles, Ranks, and Pokes}
+\subsection{Role Basis, Raw Role Matrix, and Normalization}
 \label{subsec:fw-primitives}
 
-\begin{definition}[Role and role basis]
+\begin{definition}[Relational role basis; \layerformal]
 \label{def:role}
-A \emph{role} is an identifiable relational function performed by a partner for
-the focal person $W$. We model the set of elementary functions by a finite
-orthonormal basis $\roleset = \{r_1, \dots, r_m\}$ generating an $m$-dimensional
-complex inner-product space $\vspaceR \cong \Cnum^m$ with basis vectors
-$\{\ket{r_1}, \dots, \ket{r_m}\}$ satisfying $\braket{r_j}{r_\ell} = \delta_{j\ell}$.
+Let $\roleset = \{r_1, r_2, \dots, r_m\}$ be a finite set of distinct relational
+functions ($m \ge 2$). In the canonical $5$-dimensional \RST{} basis:
+\begin{align*}
+  \roleset = \bigl\{&\text{primary visibility } (r_1),\, \text{emotional support } (r_2),\,
+  \text{financial/material } (r_3), \\
+  &\text{entertainment } (r_4),\, \text{contingency } (r_5)\bigr\}.
+\end{align*}
+In Hilbert-space coordinates, we associate $\roleset$ with an orthonormal basis
+$\{\ket{r_1}, \dots, \ket{r_m}\}$ of $\vspaceR \cong \Cnum^m$ satisfying
+$\braket{r_j}{r_\ell} = \delta_{j\ell}$. An extended $10$-role basis appears in \cref{app:roles}.
 \end{definition}
 
 \begin{table}[htbp]
 \centering
-\caption{Canonical five-role basis used throughout the monograph. Additional
-sub-roles are catalogued in \cref{app:roles}.}
+\small
+\caption{Canonical five-role basis $\roleset$ of Relational Superposition Theory.}
 \label{tab:roles}
-\begin{tabularx}{\textwidth}{@{}llX@{}}
+\begin{tabularx}{\textwidth}{@{}lllX@{}}
 \toprule
-Symbol & Role & Typical behavioral observable \\
+Symbol & Relational role & Colloquial cue & Typical behavioral observables \\
 \midrule
-$r_1$ & Primary (``the main one'') & Appears in public photos; introduced to inner circle \\
-$r_2$ & Emotional support & Receives long voice notes; contacted late at night \\
-$r_3$ & Financial support & Receives ``are you free?'' before dinner or errands \\
-$r_4$ & Entertainment & Appears on weekends, concerts, and social outings \\
-$r_5$ & Contingency (``just in case'') & Receives intermittent check-ins every few weeks \\
+$r_1$ & Primary visibility & ``Main / official'' & Shared daytime social events, friends-group visibility \\
+$r_2$ & Emotional support & ``The 2~a.m.\ listener'' & Late-night voice notes, stress venting, crisis processing \\
+$r_3$ & Financial/material & ``Practical provider'' & Meals, rides, errands, logistical or financial favors \\
+$r_4$ & Entertainment & ``Weekend energy'' & Parties, concerts, spontaneous outings, novelty \\
+$r_5$ & Contingency reserve & ``Just in case'' & Low-cadence check-ins preserving reactivation potential \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\begin{definition}[Rank]
+\noindent\layerformal{} To separate behavioral observations from Hilbert-space
+abstractions, we begin with a finite partner set $\partnerset = \{G_1, \dots, G_n\}$
+and a non-negative \emph{raw role matrix} $M \in \Rnum_{\ge 0}^{n \times m}$, whose entry
+$M_{ij} \ge 0$ records partner $G_i$'s raw behavioral score on role $r_j$. Depending
+on empirical or synthetic context, $M_{ij}$ represents normalized interaction counts,
+weighted time-slot tallies, or rated rubric scores (\cref{app:instrument}).
+
+\begin{definition}[Zero-safe column normalization and role dominance; \layerformal]
+\label{def:role-matrix}
+For each role column $j \in \{1, \dots, m\}$, let $S_j(M) = \sum_{i=1}^n M_{ij}$ denote
+the total activity observed in role $r_j$. The \emph{column-normalized role matrix}
+$\tilde{M} \in [0, 1]^{n \times m}$ is defined entrywise by
+\begin{equation}
+  \tilde{M}_{ij} =
+  \begin{cases}
+    \dfrac{M_{ij}}{S_j(M)} & \text{if } S_j(M) > 0, \\[8pt]
+    0 & \text{if } S_j(M) = 0.
+  \end{cases}
+  \label{eq:col-normalize}
+\end{equation}
+Partner $G_i$ \emph{strictly dominates} role $r_j$ if $\tilde{M}_{ij} > \tilde{M}_{kj}$
+for all $k \neq i$. Given a context weighting vector $\boldsymbol{\alpha} \in \Delta^{m-1}$,
+each partner receives a scalar \emph{linear composite score}
+\begin{equation}
+  G_i(\boldsymbol{\alpha}) = \sum_{j=1}^{m} \alpha_j \tilde{M}_{ij},
+  \qquad \text{with } 0 \le G_i(\boldsymbol{\alpha}) \le 1.
+  \label{eq:global-score}
+\end{equation}
+\end{definition}
+
+Zero-safe normalization avoids division-by-zero singularities when an optional role (such
+as $r_3$) receives zero behavioral instances across all partners in a given window; both
+the column-sum identity $\sum_i \tilde{M}_{ij} = 1$ (whenever $S_j > 0$) and the zero-column
+guard are formally verified in \texttt{RST.Relational.RoleMatrix}. Importantly, because
+$\tilde{M}$ is generally multi-peaked across columns, changing $\boldsymbol{\alpha}$ across
+social contexts routinely reverses which partner attains $\max_i G_i(\boldsymbol{\alpha})$.
+
+\begin{example}[Four-partner raw role matrix and aggregation rank reversal; \layerformal]
+\label{ex:role-aggregation}
+Consider the benchmark $4\times 5$ matrix used in Experiment~1 of \cref{sec:simulations}
+(rows $G_1,\dots,G_4$, columns $r_1,\dots,r_5$):
+\begin{equation*}
+  M_{4\times 5} =
+  \begin{pmatrix}
+    8.5 & 3.0 & 2.0 & 3.5 & 1.0 \\
+    2.5 & 9.0 & 1.5 & 2.0 & 1.5 \\
+    1.5 & 2.0 & 8.8 & 1.8 & 2.0 \\
+    1.5 & 1.8 & 1.2 & 8.2 & 4.5
+  \end{pmatrix}.
+\end{equation*}
+$M_{4\times 5}$: column sums equal $(14.0,\, 15.8,\, 13.5,\, 15.5,\, 9.0)$ ($G_1$ leads
+$r_1$, $G_2$ leads $r_2$, $G_3$ leads $r_3$, and $G_4$ leads $r_4, r_5$). Evaluating~\eqref{eq:global-score}
+under public-visibility weights $\boldsymbol{\alpha}_{\mathrm{vis}} = (0.55, 0.15, 0.10, 0.15, 0.05)$
+yields composite scores $(0.4167,\, 0.2225,\, 0.1716,\, 0.1893)$ ($G_1$ rank~$1$),
+while support weights $\boldsymbol{\alpha}_{\mathrm{sup}} = (0.10, 0.50, 0.30, 0.05, 0.05)$
+yield $(0.2169,\, 0.3508,\, 0.2865,\, 0.1458)$ ($G_2$ rank~$1$). Drawing $1{,}000$
+uniform $\mathrm{Dir}(1,1,1,1,1)$ weights (\cref{fig:role-aggregation}) gives top-rank
+counts $(227, 190, 253, 330)$ across $(G_1, G_2, G_3, G_4)$, proving every partner wins rank~$1$
+on large simplex cones.
+\end{example}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.94\textwidth]{figures/fig_role_aggregation.pdf}
+  \caption{Synthetic linear aggregation sensitivity on $M_{4\times 5}$ (Seed \texttt{202605}).
+  (a)~Rank reversal between $\boldsymbol{\alpha}_{\mathrm{vis}}$ ($G_1$ first at $0.4167$)
+  and $\boldsymbol{\alpha}_{\mathrm{sup}}$ ($G_2$ first at $0.3508$). (b)~Top-1 share across
+  $1{,}000$ uniform $\mathrm{Dir}(1,\dots,1)$ role weightings.}
+  \label{fig:role-aggregation}
+\end{figure}
+
+\begin{definition}[Competition ordinal rank; \layermath]
 \label{def:rank}
-The \emph{rank} of partner $G_i$ is his ordinal position in $W$'s preference
-hierarchy. In a classical (collapsed) system, rank is a deterministic integer
-in $\{1, \dots, n\}$. In a superposed system, rank is represented by an
-observable operator whose outcome distribution depends on the current state
-vector.
+Given any non-negative partner weight vector $\mathbf{w} = (w_1, \dots, w_n) \in \Delta^{n-1}$
+(with $w_i \ge 0$ and $\sum_{i=1}^n w_i = 1$), the \emph{competition ordinal rank} of partner
+$G_i$ is defined without tie-breaking by
+\begin{equation}
+  r_i(\mathbf{w}) = 1 + \#\{j \in \{1, \dots, n\} : w_j > w_i\} \in \{1, \dots, n\}.
+  \label{eq:ordinal-rank}
+\end{equation}
+Equal weights receive equal rank ($w_i = w_j \implies r_i(\mathbf{w}) = r_j(\mathbf{w})$),
+and strictly dominated partners obey $r_i(\mathbf{w}) \ge 2$.
 \end{definition}
 
-\begin{definition}[The poke]
+\begin{definition}[Direct status inquiry / the poke; \layerbehav]
 \label{def:poke}
-A \emph{poke}, denoted $\poke$, is any direct verbal inquiry, scheduling demand,
-or boundary ultimatum that requires $W$ to assign a definite relational status
-to one or more partners (for example, ``so what are we?'' or ``are we exclusive?'').
+A \emph{poke} is any intentional exogenous or partner-initiated intervention
+$\poke$ forcing $W$ to resolve an ambiguity across rank or role (for instance, asking
+``so what are we?'' or ``where do I stand relative to everyone else?'').
 \end{definition}
 
-\subsection{Partner State Vectors and System State}
+\subsection{Classical Weight Vectors Versus Complex Hilbert-Space States}
 \label{subsec:fw-states}
 
-Let $W$ maintain $n \ge 1$ concurrent partners $\partnerset = \{G_1, \dots, G_n\}$
-over a role basis of size $m = \abs{\roleset}$.
+A central methodological question in \RST{} is how much vector machinery is strictly
+needed. Two distinct formal representations coexist cleanly inside the model:
 
-\begin{definition}[Partner state vector]
+\begin{enumerate}[nosep]
+  \item \textbf{Classical weight representation ($\Delta^{n-1}$).} Every static role
+        profile, aggregate composite weight $w_i = G_i(\boldsymbol{\alpha}) / \sum_k G_k(\boldsymbol{\alpha})$,
+        or Markovian attention occupancy vector lives in the classical probability simplex
+        $\Delta^{n-1} = \{\mathbf{w} \in \Rnum_{\ge 0}^n : \sum_i w_i = 1\}$ (\texttt{Weights n}
+        and \texttt{ProbDist n} in Lean~4). No complex numbers are required for ranking,
+        normalization, or Markov transitions.
+  \item \textbf{Complex Hilbert-space representation ($\vspaceTot = \vspaceG \otimes \vspaceR$).}
+        To represent incompatible basis measurements in \cref{sec:uncertainty}, \RST{} lifts
+        probabilities $w_i = \abs{a_i}^2$ and role fractions $p_{ij} = \abs{c_{ij}}^2$ to
+        unit complex amplitude vectors in $\vspaceG \cong \Cnum^n$ and $\vspaceR \cong \Cnum^m$.
+\end{enumerate}
+
+\noindent\layerbehav{} \textbf{Honest scope of complex phases.} Complex relative phases
+$\theta_i = \arg(a_i)$ are \emph{not} claimed to correspond to a directly measured
+psychometric observable in human dating data. Within \RST{}, phases serve strictly as an
+algebraic encoding of non-commuting context transformations $L = U(\gamma)^\dagger D_L U(\gamma)$
+and phase-sensitive cross-terms inside inner products, reproducing classical simplex
+statistics identically along diagonal bases ($\gamma = 0$).
+
+\begin{definition}[Partner role-superposition state; \layerformal]
 \label{def:partner-state}
-The functional state of partner $G_i$ is a unit vector $\ket{G_i} \in \vspaceR$,
+For each partner $G_i \in \partnerset$, its \emph{role-superposition vector} in $\vspaceR$ is
 \begin{equation}
-  \ket{G_i} = \sum_{j=1}^{m} c_{ij}\,\ket{r_j},
-  \qquad \sum_{j=1}^{m} \abs{c_{ij}}^2 = 1,
+  \ket{G_i} = \sum_{j=1}^{m} c_{ij} \ket{r_j},
+  \qquad c_{ij} \in \Cnum,
+  \qquad \sum_{j=1}^{m} \abs{c_{ij}}^2 = 1.
   \label{eq:partner-state}
 \end{equation}
-where $c_{ij} \in \Cnum$ is the role amplitude and $p_{ij} = \abs{c_{ij}}^2 \in [0, 1]$
-is the fraction of $G_i$'s functional interaction falling into role $r_j$.
+Here $p_{ij} = \abs{c_{ij}}^2$ represents partner $G_i$'s normalized share across role $r_j$,
+matching the row-normalized counterpart of $M$. Partner $G_i$ is in a \emph{pure role} if
+$\abs{c_{ij_0}}^2 = 1$ for a single $j_0$, and in a \emph{role superposition} if at least
+two roles carry strictly positive weight.
 \end{definition}
 
-The complex phase of $c_{ij}$ encodes relational timing and framing coherence
-between roles: two partners with identical role probabilities $\abs{c_{ij}}^2$
-can interfere differently under rank-role measurements if their cross-role
-phases differ. A partner is not strictly \emph{in} a single role unless
-$\abs{c_{ik}}^2 = 1$ for some $k$; in general, he occupies a superposition of roles.
-
-\begin{definition}[System state vector]
+\begin{definition}[Composite relational system state; \layerformal]
 \label{def:system-state}
-When partner states are embedded into the $n$-partner system space
-$\vspaceG \cong \Cnum^n$ with orthonormal basis $\{\ket{e_1}, \dots, \ket{e_n}\}$
-(or equivalently the composite space $\vspaceTot = \vspaceG \otimes \vspaceR$),
-the system state of $W$'s relational portfolio is
+Let $\{\ket{e_1}, \dots, \ket{e_n}\}$ be an orthonormal basis indexing partner identities
+in $\vspaceG \cong \Cnum^n$, and let $a_1, \dots, a_n \in \Cnum$ satisfy
+$\sum_{i=1}^n \abs{a_i}^2 = 1$. The \emph{composite relational system state} in
+$\vspaceTot = \vspaceG \otimes \vspaceR \cong \Cnum^{nm}$ is
 \begin{equation}
-  \ket{\Psi} = \sum_{i=1}^{n} a_i\,\ket{e_i} \otimes \ket{G_i},
-  \qquad \sum_{i=1}^{n} \abs{a_i}^2 = 1,
+  \ket{\Psi} = \sum_{i=1}^{n} a_i \bigl(\ket{e_i} \otimes \ket{G_i}\bigr)
+  = \sum_{i=1}^{n} \sum_{j=1}^{m} a_i c_{ij}\, \ket{e_i} \otimes \ket{r_j},
   \label{eq:system-state}
 \end{equation}
-where $w_i = \abs{a_i}^2 \in [0, 1]$ is the primary-partner collapse weight of $G_i$.
-In compact notation, writing $\ket{G_i}$ for the dressed partner branch
-$\ket{e_i} \otimes \ket{G_i}$, Equation~\eqref{eq:system-state} reads
-$\ket{\Psi} = \sum_{i=1}^n a_i \ket{G_i}$.
+with partner primary weight $w_i = \abs{a_i}^2 \ge 0$ satisfying $\sum_{i=1}^n w_i = 1$.
 \end{definition}
 
-\begin{lemma}[Unit normalization of composite states]
+\begin{lemma}[Unit normalization of composite state; \layermath]
 \label{lem:composite-norm}
-If $\sum_{i=1}^n \abs{a_i}^2 = 1$ and $\sum_{j=1}^m \abs{c_{ij}}^2 = 1$ for
-every $i \in \{1, \dots, n\}$, then $\ket{\Psi}$ in~\eqref{eq:system-state} is
-a unit vector in $\vspaceTot \cong \Cnum^{nm}$:
+If $\sum_{i=1}^n \abs{a_i}^2 = 1$ and $\sum_{j=1}^m \abs{c_{ij}}^2 = 1$ for each $i$, then
+$\ket{\Psi}$ in~\eqref{eq:system-state} has unit norm:
 \begin{equation}
   \braket{\Psi}{\Psi} = \sum_{i=1}^{n} \sum_{j=1}^{m} \abs{a_i c_{ij}}^2 = 1.
   \label{eq:composite-norm}
 \end{equation}
 \end{lemma}
 \begin{proof}
-Since $\{\ket{e_i} \otimes \ket{r_j}\}$ is an orthonormal basis of $\vspaceTot$,
-\begin{equation*}
-  \braket{\Psi}{\Psi}
-  = \sum_{i=1}^{n}\sum_{k=1}^{n} a_i^* a_k \braket{e_i}{e_k}\braket{G_i}{G_k}
-  = \sum_{i=1}^{n} \abs{a_i}^2 \sum_{j=1}^{m} \abs{c_{ij}}^2
-  = \sum_{i=1}^{n} \abs{a_i}^2 \cdot 1 = 1. \qedhere
-\end{equation*}
+By orthonormality $\braket{e_i \otimes r_j}{e_k \otimes r_\ell} = \delta_{ik}\delta_{j\ell}$,
+$\braket{\Psi}{\Psi} = \sum_{i=1}^n \abs{a_i}^2 \sum_{j=1}^m \abs{c_{ij}}^2 = \sum_{i=1}^n \abs{a_i}^2 = 1$.
 \end{proof}
 
-\subsection{Relational Superposition and Absence of a First Partner}
+\subsection{Distributed Weights Versus Shared Maxima: Resolving the Central Flaw}
 \label{subsec:fw-superposition}
 
-\begin{definition}[Relational superposition]
+The initial (v1.0) formulation of \RST{} defined relational superposition solely by the
+presence of at least two positively weighted partners ($w_i > 0, w_j > 0$ for $i \neq j$)
+and claimed that this precluded any partner from holding rank~$1$. As a mathematical claim,
+that inference is false.
+
+\begin{example}[The $\mathbf{w} = (0.99, 0.01)$ counterexample; \layerformal]
+\label{ex:w99-counterexample}
+Consider $n = 2$ partners with weight vector $\mathbf{w}_{99} = (0.99, 0.01)$. Both entries
+are strictly positive and strictly below $1$, so weight is distributed across two partners.
+Evaluating~\eqref{eq:ordinal-rank}, however, gives $r_1(\mathbf{w}_{99}) = 1$ and
+$r_2(\mathbf{w}_{99}) = 2$: partner $G_1$ holds a unique global maximum ($\forall j \neq 1,\;
+w_j < w_1$). Distributed weights exclude monopoly ($w_k = 1$), not ordinal dominance.
+\end{example}
+
+To state what distributed weights do and do not imply cleanly, we distinguish two formal
+predicates over any weight vector $\mathbf{w} \in \Delta^{n-1}$:
+
+\begin{definition}[Model~A vs.\ Model~B rank-indeterminacy predicates; \layerformal]
 \label{def:superposition}
-A system state $\ket{\Psi}$ with partner weights $w_i = \abs{a_i}^2$ is in
-\emph{relational superposition} if at least two distinct partners $i \neq k$
-have strictly positive weights $w_i > 0$ and $w_k > 0$ (equivalently, $a_i \neq 0$
-and $a_k \neq 0$).
+Let $\mathbf{w} \in \Delta^{n-1}$ be a normalized partner weight vector ($w_i = \abs{a_i}^2$).
+\begin{enumerate}[nosep]
+  \item \emph{Unique maximum}: partner $G_k$ holds a \emph{unique maximum} if
+        $w_j < w_k$ for all $j \neq k$.
+  \item \emph{Model~A (\textnormal{\texttt{DistributedWeights}})}: there exist distinct
+        $i \neq j$ with $w_i > 0$ and $w_j > 0$.
+  \item \emph{Model~B (\textnormal{\texttt{SharedMaximum}})}: there exist distinct
+        $i \neq j$ such that $w_k \le w_i$ and $w_k \le w_j$ for all $k \in \{1, \dots, n\}$
+        (or within a near-tie indistinguishability band $\abs{\max_k w_k - w_i} \le \epsilon$).
+\end{enumerate}
+Under strong \RST{} indeterminacy prior to context selection, either Model~B holds on
+aggregate attention weights or distinct contexts $\boldsymbol{\alpha}$ induce incompatible
+ordinal maximizers (\cref{ex:role-aggregation}).
 \end{definition}
 
-\begin{proposition}[Absence of a first partner]
+\begin{proposition}[Precise scope of sub-unit weight versus shared-maximum rank; \layerformal]
 \label{prop:nobody-first}
-If a system is in relational superposition, then for every partner $k \in \{1, \dots, n\}$,
-the primary weight satisfies $w_k = \abs{a_k}^2 < 1$ and $w_k \neq 1$. Consequently,
-``who is first?'' has no deterministic answer prior to a poke.
+For any weight vector $\mathbf{w} \in \Delta^{n-1}$ ($n \ge 2$):
+\begin{enumerate}[nosep]
+  \item \textbf{Model~A scope:} If \textnormal{\texttt{DistributedWeights}}$(\mathbf{w})$ holds,
+        then $w_k < 1$ for every $k \in \{1, \dots, n\}$ (no partner holds all relational weight).
+  \item \textbf{Model~B excludes unique rank~1:} If \textnormal{\texttt{SharedMaximum}}$(\mathbf{w})$
+        holds, then no partner satisfies \textnormal{\texttt{UniqueMaximum}}, and at least two
+        distinct partners attain competition ordinal rank $r_i(\mathbf{w}) = r_j(\mathbf{w}) = 1$.
+  \item \textbf{Non-implication:} \textnormal{\texttt{DistributedWeights}}$(\mathbf{w})$ does
+        \emph{not} imply \textnormal{\texttt{SharedMaximum}}$(\mathbf{w})$, as witnessed by
+        $\mathbf{w}_{99} = (99/100, 1/100)$.
+\end{enumerate}
 \end{proposition}
 \begin{proof}
-By \cref{def:superposition}, there exist $i \neq j$ with $w_i > 0$ and $w_j > 0$.
-For any $k \in \{1, \dots, n\}$, at least one of $i$ or $j$ differs from $k$;
-denote that index by $m \neq k$, so $w_m > 0$. Since all weights are
-non-negative,
-\begin{equation*}
-  w_k = 1 - \sum_{\ell \neq k} w_\ell \le 1 - w_m < 1.
-\end{equation*}
-In particular $w_k \neq 1$, so no partner occupies the primary state with
-certainty. (Machine-checked in Lean~4 as \texttt{RST.nobody\_is\_first}.)
+For~(1), if $w_i, w_j > 0$ with $i \neq j$, then for any index $k$ at least one of $i, j$
+differs from $k$, whence $w_k \le 1 - w_{\ell} < 1$ where $\ell \in \{i,j\}\setminus\{k\}$.
+For~(2), if $i \neq j$ both attain $\max_t w_t$, neither can be strictly exceeded nor can any
+single $k$ satisfy $w_i < w_k$ and $w_j < w_k$ simultaneously; hence $\#\{t : w_t > w_i\} = 0$,
+yielding $r_i = r_j = 1$. Statement~(3) follows immediately from \cref{ex:w99-counterexample}.
+Every part of \cref{prop:nobody-first} is formally proved in \texttt{RST.Relational.SharedMaximum}.
 \end{proof}
 
-\subsection{Matrix Representation, Marginal Role Load, and Entropy}
+\noindent\layersatire{} In colloquial terms, $\mathbf{w}_{99}$ describes someone who
+replies to a secondary acquaintance once a month while already effectively monogamous.
+Only Model~B, or context-driven rank reversal across a non-dominated role matrix $M$,
+captures the canonical situationship in which nobody can truthfully claim to be ``the one.''
+
+\subsection{Matrix Visualization and Entropy Measures}
 \label{subsec:fw-matrix}
 
-Collecting the squared role amplitudes $P_{ij} = \abs{c_{ij}}^2$ yields an
-$n \times m$ row-stochastic \emph{role-weight matrix} $P$, while the system
-vector $\mathbf{w} = (w_1, \dots, w_n)$ gives the marginal partner weights.
-The aggregate role demand experienced by $W$ across the entire portfolio is
-the convex combination
+Putting partner weights $w_i = \abs{a_i}^2$ together with normalized role profiles
+$p_{ij} = \abs{c_{ij}}^2$ yields the $n \times m$ weighted joint partner-role matrix $W$
+with entries $W_{ij} = w_i p_{ij}$ and $\sum_{i,j} W_{ij} = 1$. Marginalizing over partners
+gives aggregate system coverage of role $r_j$:
 \begin{equation}
-  \bar{\mathbf{p}} = \mathbf{w}^\top P, \qquad
-  \bar{p}_j = \sum_{i=1}^{n} w_i \abs{c_{ij}}^2,
-  \qquad \sum_{j=1}^{m} \bar{p}_j = 1.
+  \bar{p}_j = \sum_{i=1}^{n} w_i p_{ij} = \sum_{i=1}^{n} \abs{a_i c_{ij}}^2.
   \label{eq:marginal-role}
 \end{equation}
+\cref{fig:weight-matrix} illustrates a $4$-partner portfolio partitioned across the five
+canonical roles.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.92\textwidth]{figures/fig_weight_matrix.pdf}
-  \caption{Schematic of a four-partner, five-role weight matrix $P_{ij} = \abs{c_{ij}}^2$
-  paired with primary partner weights $\abs{a_i}^2$. Each row sums to $1.00$ across
-  functional roles, and the column vector $\mathbf{w}$ sums to $1.00$ across partners.}
+  \includegraphics[width=0.90\textwidth]{figures/fig_weight_matrix.pdf}
+  \caption{Partner-role matrix visualization for a $4$-partner portfolio. Left: conditional
+  role probabilities $p_{ij} = \abs{c_{ij}}^2$ alongside partner attention shares $w_i = \abs{a_i}^2$.
+  Right: joint relational probability mass $W_{ij} = w_i p_{ij}$.}
   \label{fig:weight-matrix}
 \end{figure}
 
-To quantify the degree of ambiguity in a superposed state, we use Shannon
-entropy~\citep{shannon1948mathematical,cover2006elements} in base~$2$ (bits).
-
-\begin{definition}[Rank and role entropies]
+\begin{definition}[Rank entropy and role entropy; \layermath]
 \label{def:entropies}
-Given partner weight vector $\mathbf{w}$ and role matrix $P$, the
-\emph{rank ambiguity entropy} of the system and the \emph{role dispersion entropy}
-of partner $G_i$ are
+Using Shannon entropy in bits~\citep{shannon1948mathematical,cover2006elements} with
+$0 \log_2 0 \equiv 0$, the \emph{system rank entropy} $H(\mathbf{w})$ and the
+\emph{conditional role entropy} $H(R \mid G)$ are
 \begin{equation}
-  H_{\mathrm{rank}}(\mathbf{w}) = -\sum_{i=1}^{n} w_i \log_2 w_i,
+  H(\mathbf{w}) = -\sum_{i=1}^{n} w_i \log_2 w_i,
   \qquad
-  H_{\mathrm{role}}(G_i) = -\sum_{j=1}^{m} \abs{c_{ij}}^2 \log_2 \abs{c_{ij}}^2,
+  H(R \mid G) = -\sum_{i=1}^{n} w_i \sum_{j=1}^{m} p_{ij} \log_2 p_{ij}.
   \label{eq:entropies}
 \end{equation}
-with the standard convention $0 \log_2 0 = 0$.
 \end{definition}
 
-Clearly $H_{\mathrm{rank}}(\mathbf{w}) = 0$ if and only if the system is
-collapsed ($w_k = 1$ for some $k$), and $H_{\mathrm{rank}}(\mathbf{w}) \le \log_2 n$
-with equality when weights are uniform ($w_i = 1/n$).
+When $\mathbf{w}$ concentrates on a single collapsed partner, $H(\mathbf{w}) = 0$. Under
+uniform weights $w_i = 1/n$, $H(\mathbf{w}) = \log_2 n$.
 
-\subsection{Density Operators: Coherent Superposition Versus Classical Indecision}
+\subsection{Pure States Versus Mixed Density Operators}
 \label{subsec:fw-density}
 
-A recurring conceptual question is how relational superposition
-$\ket{\Psi} = \sum_{i=1}^n a_i \ket{e_i} \otimes \ket{G_i}$ differs from a
-purely classical probabilistic mixture in which $W$ secretly treats one partner
-as primary on any given day according to a classical lottery $\mathbf{w}$,
-without cross-partner coherence. The distinction is sharp in the density-operator
-formalism~\citep{horn2012matrix}.
-
-For a pure superposed state $\ket{\Psi}$, the system density operator is the
-rank-$1$ projection $\rho_{\Psi} = \ketbra{\Psi}{\Psi}$ on $\vspaceTot$. Tracing
-out the role subsystem $\vspaceR$ defines the \emph{reduced partner density
-operator} $\rho_{\partnerset} = \tr_{\roleset}(\rho_{\Psi})$ on $\vspaceG$, whose
-matrix entries in the partner basis $\{\ket{e_i}\}$ are
+Tracing out the partner register from $\rho_{\mathrm{tot}} = \ketbra{\Psi}{\Psi}$ yields
+the reduced role density matrix $\rho_R = \operatorname{tr}_G(\rho_{\mathrm{tot}}) =
+\sum_{i=1}^n \abs{a_i}^2 \ketbra{G_i}{G_i}$ with no partner cross-terms; conversely,
+tracing out $\vspaceR$ yields the reduced partner density matrix
 \begin{equation}
-  (\rho_{\partnerset})_{ik} = a_i a_k^* \braket{G_k}{G_i}.
+  (\rho_G)_{ik} = a_i a_k^* \braket{G_k}{G_i}
+  = a_i a_k^* \sum_{j=1}^{m} c_{kj}^* c_{ij}.
   \label{eq:reduced-partner-rho}
 \end{equation}
-Notice two structural consequences of~\eqref{eq:reduced-partner-rho}:
-\begin{enumerate}[nosep]
-  \item \textbf{Diagonal weights.} The diagonal entries are $(\rho_{\partnerset})_{ii} = \abs{a_i}^2 \braket{G_i}{G_i} = \abs{a_i}^2 = w_i$,
-        recovering the primary collapse weights identically.
-  \item \textbf{Off-diagonal role-overlap coherences.} The off-diagonal entry
-        $(\rho_{\partnerset})_{ik} = a_i a_k^* \braket{G_k}{G_i}$ vanishes if and
-        only if either $a_i a_k^* = 0$ or partners $G_i$ and $G_k$ occupy
-        strictly orthogonal role vectors ($\braket{G_k}{G_i} = 0$). Whenever
-        two active partners share nonzero overlap across roles (for example,
-        both occasionally cover weekend outings $r_4$), $\rho_{\partnerset}$
-        retains nonzero off-diagonal coherence, producing interference terms
-        in non-diagonal rank-role observables.
-\end{enumerate}
-Conversely, a purely classical mixture $\rho_{\mathrm{mix}} = \sum_{i=1}^n w_i \ketbra{e_i}{e_i}$
-has strictly zero off-diagonal entries regardless of role overlap. Measuring
-only diagonal primary weights $\{w_i\}$ cannot distinguish $\rho_{\partnerset}$
-from $\rho_{\mathrm{mix}}$, whereas non-commuting operator measurements
-(\cref{sec:uncertainty}) respond directly to off-diagonal coherences.
+When partners have disjoint roles ($\braket{G_k}{G_i} = \delta_{ik}$), $\rho_G$ reduces to
+a classical diagonal mixture $\diag(w_1, \dots, w_n)$ of rank~1 projectors; whenever roles
+overlap ($\braket{G_k}{G_i} \neq 0$), off-diagonal coherences persist prior to collapse.
 
-\begin{example}[Reduced density matrix and coherence purity]
+\begin{example}[Pure coherent state vs.\ maximally mixed portfolio; \layermath]
 \label{ex:density-comparison}
-Consider two partners $G_1$ and $G_2$ with system amplitudes
-$a_1 = \tfrac{3}{5}$, $a_2 = \tfrac{4}{5}$ (weights $w_1 = 0.36, w_2 = 0.64$)
-and role vectors in $\{r_1, r_2\}$ given by
-$\ket{G_1} = \sqrt{0.80}\ket{r_1} + \sqrt{0.20}\ket{r_2}$ and
-$\ket{G_2} = \sqrt{0.20}\ket{r_1} + \sqrt{0.80}\ket{r_2}$.
-Their role overlap is $\braket{G_2}{G_1} = 2\sqrt{0.16} = 0.80$. By~\eqref{eq:reduced-partner-rho},
-the coherent reduced partner density matrix and classical mixture are
-\begin{equation*}
-  \rho_{\partnerset} =
-  \begin{pmatrix}
-    0.360 & 0.384 \\
-    0.384 & 0.640
-  \end{pmatrix},
-  \qquad
-  \rho_{\mathrm{mix}} =
-  \begin{pmatrix}
-    0.360 & 0 \\
-    0 & 0.640
-  \end{pmatrix}.
-\end{equation*}
-Their purities differ substantially:
-\begin{equation*}
-  \tr(\rho_{\partnerset}^2) = 0.360^2 + 0.640^2 + 2(0.384)^2 = 0.8341,
-  \qquad
-  \tr(\rho_{\mathrm{mix}}^2) = 0.360^2 + 0.640^2 = 0.5392.
-\end{equation*}
-For any cross-partner swap observable $\hat{S} = \ketbra{e_1}{e_2} + \ketbra{e_2}{e_1}$,
-the classical mixture predicts $\tr(\rho_{\mathrm{mix}}\hat{S}) = 0$, whereas
-the superposed portfolio yields $\tr(\rho_{\partnerset}\hat{S}) = 2(0.384) = 0.768$,
-quantifying functional substitutability between $G_1$ and $G_2$.
+Consider $n = 2$ partners sharing identical role profile $\ket{G_1} = \ket{G_2} = \ket{r_2}$
+with equal weights $w_1 = w_2 = 1/2$. In the coherent pure state $\ket{\Psi_+} =
+\frac{1}{\sqrt{2}}(\ket{e_1} + \ket{e_2})\otimes\ket{r_2}$,
+$\rho_{G,\mathrm{pure}} = \frac{1}{2}\begin{psmallmatrix} 1 & 1 \\ 1 & 1 \end{psmallmatrix}$
+satisfies $\operatorname{tr}(\rho^2) = 1$, whereas the incoherent statistical mixture
+$\rho_{G,\mathrm{mix}} = \frac{1}{2}\begin{psmallmatrix} 1 & 0 \\ 0 & 1 \end{psmallmatrix}$
+satisfies $\operatorname{tr}(\rho^2) = 1/2$, while both produce identical marginal selection
+odds $(1/2, 1/2)$ under a partner-identity poke.
 \end{example}
 
-
-\subsection{Worked Examples}
+\subsection{Canonical Numerical Examples}
 \label{subsec:fw-examples}
 
-\begin{example}[Three-partner minimal triad]
+\begin{example}[Symmetric three-partner role partition (Triad); \layerformal]
 \label{ex:triad}
-Consider $n = 3$ partners over $m = 3$ active roles $\{r_1, r_2, r_4\}$ with
-system weights $\mathbf{w} = (0.45, 0.35, 0.20)$ and role matrix
-\begin{equation*}
-  P = \begin{pmatrix}
-    0.70 & 0.15 & 0.15 \\
-    0.15 & 0.75 & 0.10 \\
-    0.10 & 0.15 & 0.75
-  \end{pmatrix}.
-\end{equation*}
-Here $G_1$ leans toward public primary visibility ($0.70$), $G_2$ provides
-emotional support ($0.75$), and $G_3$ provides weekend entertainment ($0.75$).
-No partner has $w_i = 1$; by \cref{prop:nobody-first}, no one is first. The rank
-ambiguity entropy is
-\begin{equation*}
-  H_{\mathrm{rank}}(\mathbf{w})
-  = -(0.45\log_2 0.45 + 0.35\log_2 0.35 + 0.20\log_2 0.20)
-  \approx 1.513\text{ bits},
-\end{equation*}
-close to the three-partner maximum $\log_2 3 \approx 1.585$ bits. The aggregate
-portfolio demand~\eqref{eq:marginal-role} is
-$\bar{\mathbf{p}} = (0.3875, 0.3600, 0.2525)$, showing that $W$ achieves nearly
-balanced coverage of all three roles despite each individual partner being
-specialized.
+Let $n = 3$, $m = 3$ with uniform system weights $w_i = 1/3$ ($a_i = 1/\sqrt{3}$) satisfying
+\textnormal{\texttt{SharedMaximum}}, and role profiles $\ket{G_1} = \sqrt{0.85}\ket{r_1} + \sqrt{0.15}\ket{r_4}$,
+$\ket{G_2} = \sqrt{0.90}\ket{r_2} + \sqrt{0.10}\ket{r_5}$, and
+$\ket{G_3} = \sqrt{0.85}\ket{r_3} + \sqrt{0.15}\ket{r_4}$. Then $H(\mathbf{w}) = \log_2 3 \approx 1.585$~bits,
+every partner ties at competition rank~$1$, and aggregate coverage is
+$\bar{\mathbf{p}} = (0.283, 0.300, 0.283, 0.100, 0.033)$.
 \end{example}
 
-\begin{example}[Four-partner, five-role portfolio]
+\begin{example}[Asymmetric four-partner portfolio (Quartet); \layerformal]
 \label{ex:quartet}
-For the matrix displayed in \cref{fig:weight-matrix}, $\mathbf{w} = (0.38, 0.29, 0.18, 0.15)$.
-Here $G_4$ is primarily weekend-oriented ($0.52$) with secondary contingency
-weight ($0.24$), while $G_2$ concentrates on emotional support ($0.58$).
-Rank ambiguity entropy is $H_{\mathrm{rank}}(\mathbf{w}) \approx 1.884$ bits
-(out of $\log_2 4 = 2.000$ bits), and the aggregate portfolio coverage across
-$(r_1, r_2, r_3, r_4, r_5)$ is $(0.2454, 0.2732, 0.1728, 0.2030, 0.1056)$.
-Notice that no single partner carries weight above $0.38$, yet the aggregate
-role demand remains spread across all five functions.
+Let $\mathbf{w} = (0.34, 0.28, 0.22, 0.16)$ match the initial vector of Experiment~2
+in \cref{sec:simulations}, giving $H(\mathbf{w}) \approx 1.946$~bits. Here $G_1$ has the
+largest single scalar attention share ($0.34 < 1$), placing this static snapshot in
+Model~A rather than Model~B; genuine rank ambiguity arises as context weights shift across
+days (\cref{sec:dynamics}) or across role schemes (\cref{ex:role-aggregation}).
 \end{example}

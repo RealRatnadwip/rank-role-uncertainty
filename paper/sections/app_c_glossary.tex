@@ -20,21 +20,24 @@
   \item[Mirror configuration] The gender-inverted configuration in which a male
         focal individual maintains multiple female partners across equivalent
         functional roles (\cref{sec:symmetry}).
-  \item[Percolation threshold ($q_c$)] Critical shared-friend edge density
-        $q_c = ((n-1)p_{\mathrm{tx}})^{-1}$ above which a single poke triggers
-        macroscopic social-graph cascade (\cref{thm:percolation-threshold}).
+  \item[Percolation threshold ($q_{\mathrm{ref}}$)] Branching-process unit-reproduction
+        reference density $q_{\mathrm{ref}} = ((n-1)p_{\mathrm{tx}})^{-1}$ benchmarked
+        against finite-graph percolation crossovers (\cref{thm:percolation-threshold}).
   \item[Poke ($\poke$)] Any direct question, boundary demand, or scheduling
         confrontation forcing resolution of relational rank (\cref{def:poke}).
   \item[Poke Rule] Projective collapse law $\ket{\Psi} \xrightarrow{\poke} \ket{G_k}$
         with selection probability $\abs{a_k}^2$ (\cref{prin:poke-rule}).
-  \item[Rank] Ordinal preference position of a partner; sharp integer only after
-        collapse (\cref{def:rank}).
-  \item[Rank-Role Inequality] The bound $\Delta R \cdot \Delta L \ge \kappaS$,
-        where $\kappaS = \frac{1}{2}\abs{\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}}$
+  \item[Rank] Competition ordinal rank $r_i = 1 + \#\{j : w_j > w_i\}$ induced by weight
+        vector $\mathbf{w}$ (\cref{def:rank}); unique rank~$1$ fails under
+        \textnormal{\texttt{SharedMaximum}} (\cref{prop:nobody-first}).
+  \item[Rank-Role Inequality] The Schr\"odinger covariance-inclusive bound
+        $\Delta R \cdot \Delta L \ge B_S(\Psi)$ and its Robertson corollary
+        $\Delta R \cdot \Delta L \ge \kappa_R = \frac{1}{2}\abs{\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}}$
         (\cref{thm:rank-role-inequality}).
-  \item[Relational superposition] State in which at least two distinct partners
-        hold strictly positive primary weight and no partner holds weight~$1$
-        (\cref{def:superposition}).
+  \item[Relational superposition] Portfolio state with multiple active connections
+        (\textnormal{\texttt{DistributedWeights}}, ensuring $w_k < 1$); strong rank
+        indeterminacy requires \textnormal{\texttt{SharedMaximum}} or role-scheme rank
+        reversal (\cref{def:superposition}).
   \item[Role] Identifiable relational function performed by a partner, represented
         by an orthonormal basis vector $\ket{r_j}$ (\cref{def:role}).
   \item[Silence phase] Latency spike following a poke prior to projective

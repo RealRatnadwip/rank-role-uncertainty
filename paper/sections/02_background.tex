@@ -43,7 +43,7 @@ real number or interval on a single scalar axis.
 \subsection{Ordinal Versus Cardinal Rank Under Multi-Attribute Tradeoffs}
 \label{subsec:bg-cardinal}
 
-Suppose instead that $W$ evaluates partners along $m \ge 2$ distinct functional
+\noindent\layermath{} Suppose instead that $W$ evaluates partners along $m \ge 2$ distinct functional
 criteria indexed by roles $\roleset = \{r_1, \dots, r_m\}$ (for instance, public
 compatibility, emotional attunement, material support, and weekend leisure).
 Each partner $G_i$ realizes a non-negative performance profile
@@ -51,15 +51,14 @@ $\mathbf{u}(G_i) = (u_{i1}, \dots, u_{im}) \in \Rnum_{\ge 0}^m$, inducing $m$
 separate role-specific weak orders $\succsim_{r_1}, \dots, \succsim_{r_m}$ on
 $\partnerset$.
 
-Aggregating $\{\succsim_{r_j}\}_{j=1}^m$ into a single total order $\succsim$
-encounters the classic multi-criteria aggregation obstruction analogous to
-\citet{arrow1963social}. Specifically, if no single role is dictatorial, and if
-$W$ treats partners symmetrically across disjoint role specializations, then
-strict Pareto dominance fails to produce a complete ranking: partner $G_1$ leads
-on $r_1$, partner $G_2$ leads on $r_2$, and partner $G_3$ leads on $r_3$. None
-dominates the others vectorwise, leaving $\succsim$ strictly incomplete.
+In multi-criteria decision analysis~\citep{keeney1976decisions,arrow1963social},
+aggregating $\{\succsim_{r_j}\}_{j=1}^m$ into a single total order $\succsim$
+encounters an immediate obstruction whenever performance peaks across disjoint criteria.
+Specifically, if no single criterion is dictatorial, strict Pareto dominance leaves
+specialized candidates incomparable: partner $G_1$ leads on $r_1$, partner $G_2$
+leads on $r_2$, and partner $G_3$ leads on $r_3$.
 
-\begin{proposition}[Failure of scalar rank under functional specialization]
+\begin{proposition}[Failure of scalar rank under functional specialization; \layermath]
 \label{prop:order-failure}
 Let $m \ge 2$ and $n \ge 2$. Suppose each partner $G_i \in \partnerset$ attains
 strict superiority in at least one distinct role $r_{\phi(i)}$ such that
@@ -93,14 +92,15 @@ underlying attribute profiles alone.
 \subsection{Why Evasiveness Is Structural Rather Than Strategic}
 \label{subsec:bg-evasiveness}
 
-\cref{prop:order-failure} explains a recurring empirical regularity. In
-situationships, $W$ does not maintain a secret integer list $(G_{(1)}, G_{(2)}, \dots, G_{(n)})$
-that is merely concealed from the partners. Instead, $W$'s internal role weights
-$\boldsymbol{\alpha}(t)$ fluctuate across contexts: on Tuesday night during an
-interpersonal crisis, weight concentrates on $r_2$ (emotional support), making
-$G_2$ effectively primary; on Saturday night, weight concentrates on $r_4$
-(entertainment), making $G_4$ effectively primary; when bills or errands arise,
-weight shifts toward $r_3$.
+\noindent\layerbehav{} \layersatire{} \cref{prop:order-failure} explains a recurring
+structural feature of the satirical scenarios motivating \RST{}. Under multi-attribute
+specialization, $W$ does not necessarily maintain a secret integer list
+$(G_{(1)}, G_{(2)}, \dots, G_{(n)})$ concealed from the partners. Instead, $W$'s
+internal role weights $\boldsymbol{\alpha}(t)$ fluctuate across contexts: on Tuesday
+night during an interpersonal crisis, weight concentrates on $r_2$ (emotional support),
+making $G_2$ locally primary; on Saturday night, weight concentrates on $r_4$
+(entertainment), making $G_4$ locally primary; when bills or errands arise, weight shifts
+toward $r_3$.
 
 Asking ``who is first?'' without specifying a context or forcing a permanent
 scalarization $\boldsymbol{\alpha}$ is therefore asking for an invariant that

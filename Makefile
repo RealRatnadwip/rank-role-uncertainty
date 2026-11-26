@@ -15,6 +15,10 @@ all: figures lean test pdf
 
 pdf:
 	@mkdir -p $(BUILD_DIR) $(PAPER_DIR)/output
+	@rm -f $(PAPER_DIR)/main.aux $(PAPER_DIR)/main.log $(PAPER_DIR)/main.out \
+		$(PAPER_DIR)/main.toc $(PAPER_DIR)/main.lof $(PAPER_DIR)/main.lot \
+		$(PAPER_DIR)/main.bbl $(PAPER_DIR)/main.blg $(PAPER_DIR)/main.fls \
+		$(PAPER_DIR)/main.fdb_latexmk $(PAPER_DIR)/main.pdf $(PAPER_DIR)/main.synctex.gz
 	cd $(PAPER_DIR) && $(LATEXMK) $(LATEXMK_FLAGS) main.tex
 	cp $(BUILD_DIR)/main.pdf $(OUTPUT_PDF)
 	@pdfinfo $(OUTPUT_PDF) | grep -E 'Pages|Title|Author' || true
@@ -43,4 +47,8 @@ test:
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -f $(PAPER_DIR)/main.aux $(PAPER_DIR)/main.log $(PAPER_DIR)/main.out \
+		$(PAPER_DIR)/main.toc $(PAPER_DIR)/main.lof $(PAPER_DIR)/main.lot \
+		$(PAPER_DIR)/main.bbl $(PAPER_DIR)/main.blg $(PAPER_DIR)/main.fls \
+		$(PAPER_DIR)/main.fdb_latexmk $(PAPER_DIR)/main.pdf $(PAPER_DIR)/main.synctex.gz
 	find $(SCRIPTS_DIR) -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null || true

@@ -1,164 +1,137 @@
 \section{The Attractiveness-Optionality Conjecture}
 \label{sec:conjecture}
 
-Not every individual maintains a superposed relational state. Sustained
-superposition requires at least two concurrent viable partners, and access to
-viable options is unevenly distributed. This section formalizes the structural
-relationship between perceived attractiveness, option pool size, and the
-incidence of relational superposition.
+Superposition across multiple concurrent partners is costly to coordinate. Why do some
+individuals regularly inhabit distributed portfolios while others collapse rapidly onto
+monogamous matches? This section separates the exact discrete probability of multi-option
+retention (\layermath{}), including heterogeneous and attention-budget-capped extensions,
+from the empirical hypothesis linking option supply to attractiveness (\layerempiric{}).
 
-\subsection{Option Pool and Retention Model}
+\subsection{Discrete Retention Models Beyond I.I.D.\ Binomial}
 \label{subsec:conj-model}
 
-Let $A \ge 0$ denote a focal individual's perceived attractiveness index (a
-composite of physical appeal, social visibility, status, and communicative
-charisma in the local dating market). We model the number of concurrently
-accessible, viable prospective partners as a nondecreasing function $n(A) \in \Nnum$
-(or a random pool $N(A)$ whose mean $\lambda(A)$ grows with $A$).
+\noindent\layerformal{} Let $n \in \Nnum$ denote the focal agent's active or accessible
+pool of mutually interested, non-exclusive options during a baseline window, and suppose
+each viable partner $i \in \{1, \dots, n\}$ remains concurrently retained without collapsing
+with probability $p_i \in [0, 1]$. Under the minimal baseline model with homogeneous
+independent probabilities $p_i = p$, the retained active count $K = \sum_{i=1}^n X_i$ follows
+$\operatorname{Binomial}(n, p)$.
 
-Each viable prospect independently stabilizes into an active concurrent
-connection with retention probability $p \in (0, 1)$, capturing mutual interest
-plus tolerance for non-exclusive scheduling. Letting $K \sim \operatorname{Binomial}(n, p)$
-denote the count of retained concurrent partners, relational superposition
-(\cref{def:superposition}) occurs if and only if $K \ge 2$.
-
-\begin{definition}[Binomial superposition probability]
+\begin{definition}[Binomial superposition probability; \layermath]
 \label{def:binomial-superposition}
-For $n \in \Nnum$ viable options and retention probability $p \in [0, 1]$, the
-probability of relational superposition is
+For $n \ge 0$ and $p \in [0, 1]$, define the multi-partner superposition probability
 \begin{equation}
-  f(p, n) = \Prob(K \ge 2) =
-  \begin{cases}
-    0, & n < 2, \\[4pt]
-    1 - (1 - p)^n - n p (1 - p)^{n - 1}, & n \ge 2.
+  P_{\mathrm{sup}}(n, p) = \Prob(K \ge 2)
+  = \begin{cases}
+    0 & n \in \{0, 1\}, \\[4pt]
+    1 - (1 - p)^n - n p (1 - p)^{n-1} & n \ge 2.
   \end{cases}
   \label{eq:binomial-superposition}
 \end{equation}
 \end{definition}
 
-\begin{theorem}[Exact marginal gain and monotonicity in option count]
+\begin{theorem}[Monotonicity and exact marginal step; \layermath]
 \label{thm:optionality-monotonicity}
-For every $p \in [0, 1]$ and integer $n \ge 1$, the discrete marginal gain from
-adding one viable option satisfies the exact algebraic identity
+For every $p \in [0, 1]$ and $n \ge 1$, the increment in superposition probability from
+adding one viable partner satisfies
 \begin{equation}
-  f(p, n + 1) - f(p, n) = n\,p^2 (1 - p)^{n - 1}.
+  P_{\mathrm{sup}}(n + 1, p) - P_{\mathrm{sup}}(n, p) = n\, p^2 (1 - p)^{n-1} \;\ge\; 0,
   \label{eq:marginal-gain}
 \end{equation}
-Consequently:
-\begin{enumerate}[nosep]
-  \item $0 \le f(p, n) \le 1$ for all $n \ge 0$ and $p \in [0, 1]$;
-  \item $f(p, n)$ is nondecreasing in $n$ for every $p \in [0, 1]$;
-  \item if $0 < p < 1$ and $n \ge 1$, then $f(p, n + 1) > f(p, n)$ strictly;
-  \item if $n(A)$ is nondecreasing in $A$, then $A \mapsto f(p, n(A))$ is
-        nondecreasing in $A$.
-\end{enumerate}
+with strict positivity whenever $p \in (0, 1)$. Consequently, $P_{\mathrm{sup}}(n, p)$ is
+monotonically non-decreasing in $n$ (and strictly increasing on $n \ge 1$ for $p \in (0, 1)$).
 \end{theorem}
 \begin{proof}
-For $n = 1$, $f(p, 1) = 0$ and $f(p, 2) = 1 - (1 - p)^2 - 2p(1 - p) = p^2 = 1 \cdot p^2 (1 - p)^0$.
-For $n \ge 2$, using $(1 - p)^n - (1 - p)^{n+1} = p(1 - p)^n$,
-\begin{align*}
-  f(p, n + 1) - f(p, n)
-  &= \bigl[(1 - p)^n - (1 - p)^{n+1}\bigr] + n p (1 - p)^{n-1} - (n + 1) p (1 - p)^n \\
-  &= p(1 - p)^{n-1}\bigl[(1 - p) + n - (n + 1)(1 - p)\bigr] \\
-  &= n\,p^2 (1 - p)^{n-1}.
-\end{align*}
-Since $n \ge 1$ and $p, 1 - p \in [0, 1]$, the right-hand side is non-negative
-(and strictly positive when $0 < p < 1$), proving (2) and (3). Statement (1)
-follows from $f(p, 0) = 0$, monotonicity, and $(1 - p)^n + n p(1 - p)^{n-1} \ge 0$.
-Statement (4) follows immediately by composition. (All parts machine-checked in
-Lean~4 in module \texttt{RST.Optionality}.)
+Algebras of~\eqref{eq:marginal-gain} reduce identically by shifting $(1-p)^{n+1}$ and $(1-p)^n$;
+non-negativity and strict positivity follow because $n \ge 1$ and $p, 1-p \ge 0$. Machine-checked
+without approximation as \texttt{superpositionProb\_step}, \texttt{superpositionProb\_mono},
+and \texttt{superpositionProb\_strict\_step} in \texttt{RST.Optionality.Binomial}.
 \end{proof}
 
-When the viable pool itself is random, $N(A) \sim \operatorname{Poisson}(\lambda(A))$,
-Poisson thinning yields an active retained count $K \sim \operatorname{Poisson}(p\lambda(A))$,
-so the marginal superposition probability takes the closed form
+\noindent\layermath{} When retention probabilities vary across heterogeneous partners
+($p_1, \dots, p_n \in [0, 1]$, independent), $K = \sum_{i=1}^n X_i$ obeys a
+Poisson-binomial law with mean $\mu = \sum_{i=1}^n p_i$ and variance
+$\operatorname{Var}(K) = \sum_{i=1}^n p_i(1 - p_i) \le n/4$ (checked in
+\texttt{Optionality.\allowbreak{}Bernoulli}). When total active attention faces a strict
+time-budget constraint ($K_{\mathrm{cap}} = \min(K, B_{\max})$ or negatively correlated
+crowding once $k \ge B_{\max}$), mean active count saturates sublinearly in $n$.
+\cref{fig:optionality-extensions} compares homogeneous Binomial scaling against heterogeneous
+Beta-spread weights and capacity-capped sequential thinning ($B_{\max} = 3$).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/fig_optionality_extensions.pdf}
+  \caption{Extensions of the baseline retention model (Seed \texttt{202602}, $4{,}000$ trials
+  per point). (a)~$\Prob(K \ge 2)$ under homogeneous Binomial ($p = 0.45$), heterogeneous
+  Poisson-binomial, and attention-budget crowding ($B_{\max} = 3$). (b)~Mean active partners
+  versus unconstrained linear scaling $np$.}
+  \label{fig:optionality-extensions}
+\end{figure}
+
+When candidate pool arrival itself is random with $N \sim \operatorname{Poisson}(\lambda(A))$,
+Poisson thinning (\cref{lem:app-poisson}) yields unconditionally
 \begin{equation}
-  \Prob(K \ge 2 \mid A) = 1 - e^{-p\lambda(A)}\bigl(1 + p\lambda(A)\bigr),
+  P_{\mathrm{sup}}^{\mathrm{Poi}}(\lambda, p)
+  = \Prob(K \ge 2) = 1 - e^{-p\lambda}\bigl(1 + p\lambda\bigr),
   \label{eq:poisson-superposition}
 \end{equation}
-which is strictly increasing in $p\lambda(A)$ whenever $\lambda'(A) > 0$.
+which strictly increases with expected arrival intensity $p\lambda$.
 
-\subsection{Formal Statement of the Conjecture}
+\subsection{The Attractiveness-Optionality Conjecture}
 \label{subsec:conj-statement}
 
-\begin{conjecture}[Attractiveness-Optionality]
+\begin{conjecture}[Attractiveness-Optionality Conjecture; \layerempiric]
 \label{conj:optionality}
-In empirical dating populations, the expected number of simultaneously viable
-partners $n(A)$ grows monotonically with the focal individual's perceived
-attractiveness $A$, and the prevalence of sustained relational superposition
-scales monotonically with $n(A)$:
+Let $A \ge 0$ denote a population-perceived attractiveness index and let $n(A)$ denote the
+corresponding expected count of viable, non-exclusive options accessible to the focal agent.
+Assuming $n(A)$ is monotonically increasing in $A$ over an active social market, while
+baseline tolerance $p$ stays bounded away from zero, the equilibrium probability of occupying
+a superposed multi-partner portfolio scales monotonically with $A$:
 \begin{equation}
-  \Prob(\text{superposition}) = f\bigl(n(A)\bigr),
-  \qquad f' > 0,\quad n' > 0.
+  A_1 < A_2 \;\implies\; n(A_1) \le n(A_2) \;\implies\;
+  \Prob(\text{superposition} \mid A_1) \;\le\; \Prob(\text{superposition} \mid A_2).
   \label{eq:conjecture}
 \end{equation}
 \end{conjecture}
 
+\noindent\layermath{} Notice the strict boundary of formal proof: theorem
+\texttt{conjecture\_mono\_\allowbreak{}in\_attractiveness} in \texttt{Optionality.\allowbreak{}Binomial}
+proves \emph{only} the conditional implication $[(\forall A_1 \le A_2,\; n(A_1) \le n(A_2)) \implies
+P_{\mathrm{sup}}(n(A_1), p) \le P_{\mathrm{sup}}(n(A_2), p)]$. Whether human partner
+arrival counts $n(A)$ actually satisfy that monotonicity, and how strongly confounders
+attenuate it, is purely empirical.
+
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.95\textwidth]{figures/fig_collapse_vs_n_A.pdf}
-  \caption[Synthetic scaling under the Attractiveness-Optionality model]{Synthetic scaling under the Attractiveness-Optionality model
-  (\texttt{run\_simulations.py}, seed \texttt{202602}, $4{,}000$ trials per
-  point). (a) Exact and Monte Carlo superposition probability alongside
-  $30$-day collapse hazard vs partner count $n$. (b) Superposition probability
-  vs attractiveness index $A$ under Poisson pool $\lambda(A) = 0.35 e^{0.32 A}$.}
+  \includegraphics[width=0.92\textwidth]{figures/fig_collapse_vs_n_A.pdf}
+  \caption{Synthetic optionality and stability tradeoff (Seed \texttt{202602}).
+  (a)~Analytic vs.\ Monte Carlo $\Prob(K \ge 2)$ across $n = 1,\dots,10$ alongside 30-day
+  percolation-coupled collapse hazard. (b)~Superposition probability vs.\ perceived
+  attractiveness index $A$ under synthetic arrival function $n(A)$.}
   \label{fig:collapse-vs-n-A}
 \end{figure}
 
-As shown in \cref{fig:collapse-vs-n-A}, superposition rises steeply once $n \ge 3$
-(for $p = 0.45$, rising from $0.203$ at $n = 2$ to $0.744$ at $n = 5$), while
-under the illustrative Poisson scaling $\lambda(A) = 0.35 e^{0.32 A}$,
-superposition increases from $0.030$ at $A = 2$ to $0.611$ at $A = 8$.
-
-\subsection{Falsifiable Empirical Predictions and Proposed Study Design}
+\subsection{Confounders, Selection Effects, and Empirical Discrimination}
 \label{subsec:conj-design}
 
-\cref{conj:optionality} makes three directly falsifiable predictions:
+\noindent\layerempiric{} \layerbehav{} An observed correlation between $A$ and concurrent
+partnerships need not confirm \cref{conj:optionality} cleanly unless alternative mechanisms
+are separated empirically:
 \begin{enumerate}[nosep]
-  \item \textbf{Option-mediated effect.} Conditioning on viable option count $n$,
-        the partial correlation between attractiveness $A$ and superposition
-        prevalence should vanish or attenuate sharply, confirming that the
-        mechanism is structural optionality rather than a character trait
-        intrinsic to attractiveness.
-  \item \textbf{Low-$A$ boundary.} Individuals with $n(A) \le 1$ exhibit zero
-        relational superposition regardless of personal preference for ambiguity.
-  \item \textbf{Hazard tradeoff.} Because total $30$-day poke hazard also rises
-        with $n$ (\cref{fig:collapse-vs-n-A}a), very large $n$ increases
-        turnover even as instantaneous superposition remains common.
+  \item \textbf{Selectivity attenuation.} Higher-$A$ individuals may raise their acceptance
+        threshold simultaneously, leaving realized retained count flat despite larger arrival $n(A)$.
+  \item \textbf{Relationship-goal heterogeneity.} Sociosexual orientation and commitment
+        preferences independently drive both dating strategy and self-selection into multiple chats.
+  \item \textbf{Venue and network assortativity.} High-density urban campuses and shared
+        social feeds raise both incoming options $n(A)$ and social edge density $q$, amplifying
+        decoherence hazard alongside superposition incidence.
 \end{enumerate}
 
-To test these predictions empirically without inducing a measurement-driven
-collapse (\cref{sec:limitations}), a prospective longitudinal study should avoid
-direct status prompts (``which partner is first?'') and instead collect
-weekly communication-cadence diaries (e.g., partner count with $\ge 2$
-interactions per week, role-tag logs, and indirect rating of incoming viable
-offers by independent raters). A concrete unadministered survey instrument
-structured around these observables is provided in \cref{app:instrument}.
-
-\subsection{Optimal Portfolio Size Under the Collapse-Hazard Tradeoff}
+\subsection{Utility Versus Systemic Collapse Tradeoff}
 \label{subsec:conj-tradeoff}
 
-While \cref{thm:optionality-monotonicity} shows that superposition probability
-increases monotonically with $n$, sustaining arbitrarily large $n$ is checked
-by rising poke and coordination costs. Suppose each active partner adds
-diminishing marginal role-coverage benefit $B(k) = b_0 \log(1 + k)$ while
-incurring expected $30$-day collapse disruption cost $c_0\,h_{30}(k)$, with
-$h_{30}(k)$ defined in~\eqref{eq:sim-hazard}. Evaluating net utility
-$U_{\mathrm{net}}(k) = b_0 \log(1 + k) - c_0\,h_{30}(k)$ for illustrative
-weights $b_0 = 1.0$, $c_0 = 1.8$ across $k \in \{1, \dots, 7\}$ gives:
-\begin{center}
-\small
-\begin{tabular}{@{}cccccccc@{}}
-\toprule
-$k$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ \\
-\midrule
-$\log(1 + k)$ & $0.693$ & $1.099$ & $1.386$ & $1.609$ & $1.792$ & $1.946$ & $2.079$ \\
-$1.8\,h_{30}(k)$ & $0.138$ & $0.295$ & $0.463$ & $0.635$ & $0.804$ & $0.965$ & $1.113$ \\
-$U_{\mathrm{net}}(k)$ & $0.555$ & $0.803$ & $0.923$ & $0.974$ & $\mathbf{0.988}$ & $0.981$ & $0.966$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-Net expected value peaks in an interior band ($k \in \{4, 5\}$) before
-collapse hazard outpaces marginal role complementarity, explaining why
-observed relational superpositions cluster around $3$ to $5$ concurrent
-connections rather than diverging with $n(A)$.
+\noindent\layerbehav{} \layersatire{} As $n$ rises, role-coverage complementarity
+(\cref{eq:jensen-portfolio}) saturates with diminishing returns around $n \approx 5$--$7$,
+whereas total 30-day social-graph collapse hazard increases convexly from $0.0769$ ($n = 1$)
+to $0.8106$ ($n = 10$), producing an interior structural optimum near $n \approx 3$--$5$
+concurrent partners before coordination overhead dominates.

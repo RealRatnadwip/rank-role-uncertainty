@@ -22,30 +22,34 @@
 \par}
 
 \vspace{0.75cm}
-{\small\color{mutedgray} Version 1.0 \quad\textbullet\quad \today\par}
+{\small\color{mutedgray} Version 1.1 \quad\textbullet\quad \today\par}
 
 \vspace{1.3cm}
 \begin{minipage}{0.90\textwidth}
 \small
 \noindent\textbf{Abstract.}\;
-We develop \emph{Relational Superposition Theory} (\RST), a mathematical framework for
-systems in which a single focal individual maintains several concurrent romantic or
-quasi-romantic connections, each fulfilling a distinct functional role (primary partner,
-emotional support, financial support, entertainment, and contingency), without any
-partner holding a well-defined ordinal rank. Prior to observation, no partner is first
-or second; each partner occupies a weighted combination of roles and contributes a
-probabilistic weight to the system state. We formalize rank and role as non-commuting
-operators on a finite-dimensional inner-product space and establish the central
-bound, the \emph{Rank-Role Inequality}: $\Delta R \cdot \Delta L \ge \kappaS$, where
-$\kappaS > 0$ is the situationship constant governed by the commutator expectation.
-We formulate a Markovian attention-drift model over weekday, weekend, and emotional-stress
-regimes, characterize the \emph{poke} as a projective collapse operation governed by the
-Poke Rule, and analyze post-poke redistribution alongside social-graph cascade
-(decoherence) as a bond-percolation process. We state the
-\emph{Attractiveness-Optionality Conjecture}, prove monotonicity under an explicit
-binomial retention model, and establish symmetry under gender inversion. Quantitative
-behavior is evaluated through deterministic synthetic simulations, and core algebraic,
-normalization, monotonicity, and uncertainty results are machine-checked in Lean~4.
+We develop \emph{Relational Superposition Theory} (\RST), a formal mathematical
+framework that deliberately applies finite-dimensional Hilbert-space operator theory,
+multi-criteria decision analysis, Markov chains, graph percolation, and discrete
+probability to a satirical relational domain: concurrent, non-exclusive dating
+arrangements in which a focal individual maintains several partners across specialized
+functional roles. The theory does not claim novelty for the underlying linear-algebraic
+or stochastic machinery; rather, it embeds the familiar ambiguity of a situationship
+inside an auditable formal specification separating established mathematics, RST
+constructions, behavioral assumptions, empirical hypotheses, and satirical interpretation.
+Prior to observation, a distributed weight vector over partners ($\sum_i w_i = 1$)
+merely ensures no partner holds unit weight; we show by explicit counterexample
+$\mathbf{w} = (0.99, 0.01)$ that positive distributed weights do not preclude a unique
+maximum, and we resolve the distinction through explicit competition ordinal ranks
+and a \emph{SharedMaximum} indeterminacy model. Modeling rank and context-rotated
+role evaluation as non-commuting Hermitian operators on $\Cnum^d$, we invoke the
+classical Robertson (1929) and Schr\"odinger (1930) uncertainty relations to bound
+joint dispersion, characterize attention drift through both periodic and time-homogeneous
+augmented Markov kernels, separate projective poke selection from exit renormalization
+and finite social-graph cascades, and formalize the \emph{Attractiveness-Optionality
+Conjecture} with heterogeneous and budget-constrained extensions. All numerical figures
+are produced by deterministic scripts, invariant tests verify algebraic bounds, and
+core finite-dimensional theorems are machine-checked across $20$ modular Lean~4 files.
 \end{minipage}
 
 \vspace{0.9cm}
@@ -67,30 +71,47 @@ uncertainty, collapse, decoherence, optionality, social-graph cascade, formal ve
 \listoftables
 \clearpage
 
-\section*{Reader's Guide and Notation}
-\addcontentsline{toc}{section}{Reader's Guide and Notation}
+\section*{Reader's Guide, Epistemic Layers, and Notation}
+\addcontentsline{toc}{section}{Reader's Guide, Epistemic Layers, and Notation}
 
-This monograph is structured so that theoretical foundations, dynamical extensions,
-synthetic computational experiments, and formal verification artifacts remain clearly
-separated. \cref{sec:introduction,sec:background} motivate the failure of classical
-total-order dating models from order-theoretic first principles.
-\cref{sec:framework,sec:uncertainty} develop the core linear-algebraic state space
-and prove the Rank-Role Inequality together with tightness conditions and explicit
-matrix calculations. \cref{sec:dynamics,sec:poke,sec:cascade} introduce
-temporal attention drift, projective collapse under the poke, and social-graph
-percolation. \cref{sec:conjecture,sec:symmetry} state the Attractiveness-Optionality
-Conjecture and prove invariance under gender inversion. \cref{sec:simulations}
-presents synthetic Monte Carlo simulations generated with fixed seeds, and
-\cref{sec:verification} maps formally verified theorems to their Lean~4 declarations.
-\cref{sec:limitations,sec:discussion} examine threats to validity and open problems.
-Detailed derivations, an expanded role taxonomy, a glossary, simulation pseudocode,
-and a proposed unadministered survey instrument appear in \cref{app:proofs,app:roles,app:glossary,app:reproducibility,app:instrument}.
+This revision (v1.1) separates formal mathematical content from behavioral assumptions
+and satirical framing so that any reader can audit every derivation independently of
+the narrative premise. Throughout the monograph, propositions and modeling discussions
+are tagged with five explicit epistemic markers:
+\begin{itemize}[nosep]
+  \item \layermath: standard results from linear algebra, operator theory, multi-criteria
+        decision analysis, Markov chains, graph percolation, or discrete probability.
+  \item \layerformal: definitions, state representations, matrix constructions, and
+        consequences introduced specifically within \RST{}.
+  \item \layerbehav: psychological or interpersonal idealizations required to map a
+        real human situation onto the mathematical objects.
+  \item \layerempiric: falsifiable claims about human populations that cannot be settled
+        by proof or synthetic simulation and require future observational data.
+  \item \layersatire: deadpan academic commentary layered over formal statements.
+\end{itemize}
+
+\cref{sec:introduction,sec:background} motivate the failure of classical total-order
+dating models from multi-criteria aggregation principles. \cref{sec:framework} builds
+the raw role matrix $M$, column normalization, rank-reversal sensitivity, classical vs.
+complex Hilbert-space representations, and the sharp distinction between distributed
+weights and shared maxima. \cref{sec:uncertainty} derives the Schr\"odinger and Robertson
+uncertainty inequalities in finite dimension with exact $2\times 2$ and $3\times 3$
+unitary examples. \cref{sec:dynamics,sec:poke,sec:cascade} analyze temporal attention
+drift (periodic vs. augmented Markov representations), projective poke collapse vs. exit
+renormalization, and finite social-graph cascades. \cref{sec:conjecture,sec:symmetry}
+develop the Attractiveness-Optionality Conjecture with heterogeneous and capacity-bounded
+extensions plus relabeling symmetry. \cref{sec:simulations,sec:verification} document
+synthetic simulations, invariant tests, and the $20$-module Lean~4 suite, followed by
+\cref{sec:hypotheses,sec:scope,sec:limitations,sec:discussion} on falsifiable predictions,
+scope conditions, failure modes, and limitations. Detailed proofs, an extended role
+catalogue, a glossary, reproduction instructions, and an unadministered survey protocol
+appear in \cref{app:proofs,app:roles,app:glossary,app:reproducibility,app:instrument}.
 
 Throughout, American English spelling is used consistently. All quantitative plots
 and numerical tables in \cref{sec:simulations} are synthetic outputs produced by the
 deterministic scripts in \texttt{scripts/}, with exact random seeds recorded inline.
 Machine-checked claims in \cref{sec:verification} are restricted strictly to theorems
-verified by \texttt{lake build} with zero unfinished proofs.
+verified by \texttt{lake build} across \texttt{lean/RST/} with zero unfinished proofs.
 
 \begin{table}[htbp]
 \centering
@@ -104,21 +125,21 @@ Symbol & Domain & Interpretation \\
 $W$ & Focal agent & Observed individual maintaining concurrent connections \\
 $\partnerset = \{G_1, \dots, G_n\}$ & Finite set, $\abs{\partnerset} = n$ & Set of active or viable partners \\
 $\roleset = \{r_1, \dots, r_m\}$ & Finite set, $\abs{\roleset} = m$ & Orthonormal basis of relational functions (roles) \\
+$M, \tilde{M}$ & $\Rnum_{\ge 0}^{n \times m}$ & Raw and zero-safe column-normalized role performance matrices \\
+$G_i(\boldsymbol{\alpha})$ & $\Rnum_{\ge 0}$ & Linear composite score under role weighting $\boldsymbol{\alpha} \in \Delta^{m-1}$ \\
+$w_i, r_i$ & $[0,1], \{1,\dots,n\}$ & Partner weight and competition ordinal rank $1 + \#\{j : w_j > w_i\}$ \\
 $\ket{G_i}$ & $\vspaceR \cong \Cnum^m$ & Normalized role-superposition state vector of partner $G_i$ \\
 $c_{ij}$ & $\Cnum$, $\sum_{j=1}^m \abs{c_{ij}}^2 = 1$ & Role amplitude of partner $G_i$ in role $r_j$ \\
-$\ket{\Psi}$ & $\vspaceG \cong \Cnum^n$ (or $\vspaceTot$) & Full relational state vector of the system \\
-$a_i$ & $\Cnum$, $\sum_{i=1}^n \abs{a_i}^2 = 1$ & System amplitude of partner $G_i$; weight $w_i = \abs{a_i}^2$ \\
-$\opR, \opL$ & Hermitian operators & Rank-measuring and role-measuring observables \\
-$\expect{\opR}{\Psi}, \var{\opR}{\Psi}$ & $\Rnum$, $\Rnum_{\ge 0}$ & Expectation and variance of observable $\opR$ in state $\ket{\Psi}$ \\
+$\ket{\Psi}$ & $\vspaceG \cong \Cnum^n$ (or $\vspaceTot$) & Full relational state vector of the system; $w_i = \abs{a_i}^2$ \\
+$\opR, \opL$ & Hermitian operators & Rank-measuring and context-rotated role-measuring observables \\
 $\Delta R, \Delta L$ & $\Rnum_{\ge 0}$ & Dispersion (standard deviation) in rank and role \\
-$\comm{\opR}{\opL}$ & Operator $\opR\opL - \opL\opR$ & Commutator quantifying measurement order sensitivity \\
-$\kappaS$ & $\Rnum_{> 0}$ & Situationship constant bounding $\Delta R \cdot \Delta L$ \\
-$\poke$ & Projection / measurement & Direct status query (``poke'') forcing state collapse \\
-$P^{(r)}$ & Stochastic matrix & Attention transition kernel under regime $r$ \\
-$\pi$ & Probability vector & Stationary attention distribution over partners \\
-$H(\mathbf{w})$ & $\Rnum_{\ge 0}$ (bits) & Shannon entropy of partner weight distribution $\mathbf{w}$ \\
+$\comm{\opR}{\opL}, \{\opR',\opL'\}$ & Operators & Commutator $\opR\opL - \opL\opR$ and centered anticommutator \\
+$B_S(\Psi), \kappa_R$ & $\Rnum_{\ge 0}$ & Schr\"odinger covariance-inclusive bound and Robertson commutator bound $\kappaS$ \\
+$\poke, P_k$ & Projector & Direct status query (``poke'') and subspace projection operator \\
+$P^{(r)}, P_{\mathrm{aug}}$ & Stochastic matrices & Regime transition kernels and $12\times 12$ joint `(partner, regime)` kernel \\
+$\pi, H(\mathbf{w})$ & $\Delta^{n-1}, \Rnum_{\ge 0}$ & Stationary attention distribution and Shannon entropy (bits) \\
 $G_{\mathrm{soc}} = (V, E)$ & Undirected graph & Shared social-friend graph among partners \\
-$q, p_{\mathrm{tx}}, q_c$ & $[0, 1]$ & Friend-edge density, note-sharing probability, cascade threshold \\
+$q, p_{\mathrm{tx}}, R_0$ & $[0, 1], \Rnum_{\ge 0}$ & Friend-edge density, note-sharing probability, branching reproduction number \\
 $A, n(A), p$ & $\Rnum_{\ge 0}, \Nnum, [0, 1]$ & Perceived attractiveness, viable pool size, retention probability \\
 \bottomrule
 \end{tabularx}

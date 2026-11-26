@@ -1,0 +1,105 @@
+\section{Falsifiable Predictions and Empirical Research Pathway}
+\label{sec:hypotheses}
+
+Although \RST{} is framed around a satirical premise, its structural mechanisms make
+concrete empirical claims whenever real-world relational portfolios behave analogously
+to the model. Because Lean proofs and synthetic simulations can only verify mathematical
+consistency, all behavioral propositions remain empirically unestablished until tested
+against observational data. Below we formulate four falsifiable empirical hypotheses, each
+following an explicit eight-part specification.
+
+\subsection{Hypothesis H1: Option-Supply Mediation of Concurrent Portfolios}
+\label{subsec:hyp-h1}
+
+\noindent\layerempiric{}
+\begin{description}[leftmargin=1.4em,nosep]
+  \item[Hypothesis statement:] Equilibrium prevalence of sustained multi-partner portfolios
+        ($n_{\mathrm{eff}} \ge 2$) increases monotonically with perceived attractiveness $A$,
+        and this association is predominantly mediated by viable incoming option count $n(A)$.
+  \item[Construct operationalization:] Attractiveness $A_i$ via out-of-sample panel ratings
+        (standardized composite); $N_i$ via $14$-day incoming unique dating interest
+        (\texttt{OPT\_INCOMING}); superposition $Y_{it} = \mathbf{1}\{\texttt{W\_ACTIVE\_N}_{it} \ge 2\}$
+        for $\ge 3$ consecutive weeks (\cref{app:instrument}).
+  \item[Null hypothesis:] Neither $\beta_1$ (unadjusted $A_i$ slope) nor $\beta_2$ (mediated
+        $\log(1 + N_i)$ slope) in~\eqref{eq:instrument-regression} differs from zero.
+  \item[Minimal study design:] Longitudinal $8$-week diary cohort ($N_{\mathrm{subj}} \ge 400$
+        single adults) with weekly passive/diary interaction logs avoiding explicit ranking prompts.
+  \item[Exclusion and bias risks:] Social desirability under-reporting of multiple chats;
+        attrition skewed toward newly committed participants exiting early.
+  \item[Confounders:] Sociosexual orientation, attachment avoidance, geographic density,
+        and endogenous selective filtering (high-$A$ selectivity offsetting higher $N_i$).
+  \item[Confirmation criteria:] Significant $\beta_2 > 0$ ($p < 0.01$) alongside sharp
+        attenuation ($>50\%$) of direct coefficient $\beta_1$ once $\log(1 + N_i)$ is entered.
+  \item[Falsification conditions:] Zero or negative partial association ($\beta_2 \le 0$)
+        or persistent strong $\beta_1 > 0$ wholly unmediated by incoming option volume $N_i$.
+\end{description}
+
+\subsection{Hypothesis H2: Query-Order Asymmetry Under Direct Status Inquiries}
+\label{subsec:hyp-h2}
+
+\noindent\layerempiric{}
+\begin{description}[leftmargin=1.4em,nosep]
+  \item[Hypothesis statement:] Asking ``where do I rank?'' prior to ``what functional role
+        do I fill?'' yields systematically different classification stability and commitment
+        shifts than asking role before rank (\cref{subsec:poke-sequential}).
+  \item[Construct operationalization:] Randomized vignette or behavioral audit assignment to
+        order $R \to L$ vs.\ $L \to R$, measuring post-prompt categorical agreement and
+        response latency.
+  \item[Null hypothesis:] Joint conditional answer distributions match within sampling noise
+        ($\Prob(r,\ell \mid R\to L) = \Prob(r,\ell \mid L\to R)$).
+  \item[Minimal study design:] Randomized two-arm survey experiment ($N_{\mathrm{subj}} \ge 300$)
+        among respondents currently managing $\ge 2$ ambiguous romantic chats.
+  \item[Exclusion and bias risks:] Demand characteristics and hypothetical vignette detachment.
+  \item[Confounders:] Prior conversation salience, baseline ambiguity tolerance, recency
+        of last contact.
+  \item[Confirmation criteria:] Statistically significant Jensen-Shannon divergence between
+        $R\to L$ and $L\to R$ joint contingency tables ($p < 0.01$ via permutation test).
+  \item[Falsification conditions:] Symmetric joint response distributions across both query
+        orders consistent with commuting classical evaluation.
+\end{description}
+
+\subsection{Hypothesis H3: Social-Graph Density Amplifies Simultaneous Dissolution}
+\label{subsec:hyp-h3}
+
+\noindent\layerempiric{}
+\begin{description}[leftmargin=1.4em,nosep]
+  \item[Hypothesis statement:] Holding active partner count $n$ fixed, higher pairwise friend
+        edge density $q$ increases the hazard of simultaneous multi-partner exit within $14$ days
+        of a conflictual poke (\cref{sec:cascade}).
+  \item[Construct operationalization:] Baseline network density $\bar{q}_i$ computed from
+        \texttt{NET\_OVERLAP}; simultaneous dissolution coded as $\ge 2$ partners dropping to
+        zero weekly contact inside $14$ days following any \texttt{P\_POKE\_EVENT}.
+  \item[Null hypothesis:] Edge density coefficient $\beta_3 = 0$ after adjusting for $n$.
+  \item[Minimal study design:] Sub-cohort event-history analysis tracking post-poke $14$-day
+        retention windows conditional on baseline overlap matrix $G_{\mathrm{soc}}$.
+  \item[Exclusion and bias risks:] Hidden digital cross-talk via anonymous social feeds
+        unmeasured in self-reported acquaintance matrices.
+  \item[Confounders:] Partner impulsivity, shared workplace norms, visibility of public outings.
+  \item[Confirmation criteria:] Positive hazard ratio for $\bar{q}_i$ predicting multi-partner
+        dissolution ($\ge 2$ exits) over single-partner exit.
+  \item[Falsification conditions:] Multi-partner exits occurring independently of measured
+        friend overlap ($\beta_3 \approx 0$) or decreasing with shared social embeddedness due
+        to reputational coordination.
+\end{description}
+
+\subsection{Hypothesis H4: Regime Switching Dissociates Messaging Share from Stated Rank}
+\label{subsec:hyp-h4}
+
+\noindent\layerempiric{}
+\begin{description}[leftmargin=1.4em,nosep]
+  \item[Hypothesis statement:] Day-of-week and stress-period transitions create systematic
+        rank reversals in empirical messaging share relative to self-reported priority
+        (\cref{sec:dynamics}).
+  \item[Construct operationalization:] Passive timestamps grouped into weekday, weekend, and
+        self-reported stress blocks vs.\ baseline importance scores; entropy $H(\mathbf{w}(t))$
+        per $14$-day rolling bin.
+  \item[Null hypothesis:] Conditional partner share $w_i(t \mid r)$ is invariant across regimes $r$.
+  \item[Minimal study design:] Longitudinal time-series panel comparing regime-conditioned
+        transition frequencies against homogeneous null transition matrices.
+  \item[Exclusion and bias risks:] Missing offline interactions distorting message-count weights.
+  \item[Confounders:] Partner availability schedules (shift work) rather than focal agent preference.
+  \item[Confirmation criteria:] Rejection of regime-homogeneity ($\chi^2$ test across transition
+        tables) matching qualitative role-regime specialization.
+  \item[Falsification conditions:] Constant transition shares across weekday, weekend, and
+        stress windows.
+\end{description}

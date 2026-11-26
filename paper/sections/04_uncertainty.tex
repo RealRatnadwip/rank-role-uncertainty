@@ -1,362 +1,304 @@
-\section{The Rank-Role Uncertainty Principle}
+\section{Rank and Role Observables and the Uncertainty Inequality}
 \label{sec:uncertainty}
 
-Having established the state-vector space, we now formalize rank and role
-queries as linear operators and derive the central constraint of Relational
-Superposition Theory: the Rank-Role Inequality.
+This section models ``where do I stand?'' (rank) and ``what am I to you?'' (role) as
+Hermitian operators on a finite-dimensional complex inner-product space and derives
+the uncertainty bounds relating their dispersions. All operator identities and
+inequalities in this section are classical finite-dimensional Hilbert-space mathematics
+due to \citet{robertson1929uncertainty}, \citet{schrodinger1930unscharfeprinzip}, and
+\citet{vonneumann1955mathematical}; \RST{}'s contribution is the behavioral interpretation
+and explicit matrix construction relating diagonal rank to unitarily rotated role context.
 
-\subsection{Inner-Product Geometry and Hermitian Observables}
+\subsection{Rank and Role as Hermitian Observables}
 \label{subsec:unc-operators}
 
-Let $\vspaceTot$ be a finite-dimensional complex inner-product space of dimension
-$d \ge 2$ equipped with the conjugate-linear-in-first-argument inner product
+\noindent\layermath{} Let $\mathcal{H} \cong \Cnum^d$ be a $d$-dimensional complex
+inner-product space ($d \ge 2$) equipped with the standard inner product linear in the
+second slot:
 \begin{equation}
-  \braket{u}{v} = \sum_{k=1}^{d} u_k^* v_k,
+  \braket{u}{v} = \sum_{i=1}^{d} u_i^* v_i,
   \qquad \norm{u} = \sqrt{\braket{u}{u}}.
   \label{eq:inner-product}
 \end{equation}
-A linear operator $\hat{A} : \vspaceTot \to \vspaceTot$ is \emph{Hermitian}
-(self-adjoint) if $\braket{u}{\hat{A} v} = \braket{\hat{A} u}{v}$ for all
-$u, v \in \vspaceTot$~\citep{axler2024linear,halmos1958finite,horn2012matrix}.
-Every Hermitian operator admits real eigenvalues, an orthonormal eigenbasis,
-and real expectation values on every normalized state $\ket{\Psi}$ ($\braket{\Psi}{\Psi} = 1$).
+A linear operator $\hat{A} : \mathcal{H} \to \mathcal{H}$ is \emph{Hermitian}
+($\hat{A}^\dagger = \hat{A}$) if $\braket{u}{\hat{A} v} = \braket{\hat{A} u}{v}$ for all
+$u, v \in \mathcal{H}$. Real-valued spectra guarantee real measurement expectations and
+real outcome averages.
 
-\begin{definition}[Expectation, centered operator, and dispersion]
+\begin{definition}[Expectation, variance, and dispersion; \layermath]
 \label{def:dispersion}
-For any Hermitian operator $\hat{A}$ and normalized state $\ket{\Psi} \in \vspaceTot$,
-define:
-\begin{enumerate}[nosep]
-  \item the \emph{expectation value} $\expect{\hat{A}}{\Psi} = \braket{\Psi}{\hat{A}\Psi} \in \Rnum$;
-  \item the \emph{centered operator} $\tilde{A}_{\Psi} = \hat{A} - \expect{\hat{A}}{\Psi}\opI$;
-  \item the \emph{variance} $\var{\hat{A}}{\Psi} = \norm{\tilde{A}_{\Psi}\ket{\Psi}}^2 = \braket{\Psi}{\tilde{A}_{\Psi}^2 \Psi} \ge 0$;
-  \item the \emph{dispersion} (standard deviation) $\Delta A = \sqrt{\var{\hat{A}}{\Psi}}$.
-\end{enumerate}
+For any Hermitian observable $\hat{A}$ and unit state vector $\ket{\Psi} \in \mathcal{H}$
+($\norm{\Psi} = 1$), the expectation value, centered operator $\hat{A}'$, variance, and
+\emph{dispersion} (standard deviation) are
+\begin{align*}
+  \expect{\hat{A}}{\Psi} &= \braket{\Psi}{\hat{A}\Psi} \in \Rnum, &
+  \hat{A}' &= \hat{A} - \expect{\hat{A}}{\Psi}\opI, \\
+  \var{\hat{A}}{\Psi} &= \norm{\hat{A}'\Psi}^2 = \expect{(\hat{A}')^2}{\Psi}, &
+  \Delta_{\Psi} A &= \sqrt{\var{\hat{A}}{\Psi}}.
+\end{align*}
 \end{definition}
 
-We represent rank elicitation (``where does he stand?'') by a Hermitian rank
-operator $\opR$ and role elicitation (``what does he do?'') by a Hermitian
-role operator $\opL$. In a $d$-dimensional state space representing either a
-single partner's rank-role coupling or a $n$-partner system state:
-\begin{itemize}[nosep]
-  \item $\opR$ assigns distinct real rank scores $\{\lambda_1, \dots, \lambda_d\}$
-        to an ordered priority basis $\{\ket{e_1}, \dots, \ket{e_d}\}$ (for example,
-        $\opR = \diag(1, 2, \dots, n)$ in the ideal rank basis, plus weak
-        cross-partner coupling terms);
-  \item $\opL$ assigns functional role scores in the role basis $\{\ket{r_j}\}$
-        and maps between priority frames because role specialization mixes
-        priority rankings across contexts.
-\end{itemize}
+When context is fixed, we write $\Delta R = \Delta_{\Psi} R$ and $\Delta L = \Delta_{\Psi} L$.
+Notice that $\Delta_{\Psi} A = 0$ if and only if $\hat{A}\ket{\Psi} = \expect{\hat{A}}{\Psi}\ket{\Psi}$,
+i.e., when $\ket{\Psi}$ is an exact eigenstate with zero outcome uncertainty.
 
-\subsection{Why Rank and Role Do Not Commute}
+\noindent\layerformal{} In the canonical diagonal rank basis $\{\ket{e_1}, \dots, \ket{e_d}\}$,
+the idealized \emph{rank operator} $\opR = D_R = \diag(1, 2, \dots, d)$ assigns eigenvalue $k$
+to slot $k$. Similarly, a canonical role evaluation matrix $D_L$ in its native context
+assigns numerical role scores (for instance $\diag(-1, \dots, +1)$ from contingency to
+primary visibility). As formalized in \cref{prop:diag-commute}, two operators diagonal in
+the same basis always commute. Non-commutativity enters specifically when role interpretation
+is evaluated relative to a rotated conversational context $U(\gamma)$:
+\begin{equation}
+  \opR = D_R, \qquad
+  \opL(\gamma) = U(\gamma)^\dagger D_L U(\gamma),
+  \label{eq:rotated-role}
+\end{equation}
+where $U(\gamma)$ is unitary ($U(\gamma)^\dagger U(\gamma) = I_d$) with $U(0) = I_d$.
+Because matrix conjugation preserves Hermiticity (\texttt{conjugateBy\_\allowbreak{}hermitian} in
+\texttt{Uncertainty.Commutator}), $\opL(\gamma)$ remains a valid real-spectrum observable
+for every $\gamma$.
+
+\subsection{The Commutator, Anticommutator, and Basis Alignment}
 \label{subsec:unc-commutator}
 
-\begin{definition}[Commutator]
+\begin{definition}[Commutator and centered anticommutator; \layermath]
 \label{def:commutator}
-The \emph{commutator} of two linear operators $\opR$ and $\opL$ on $\vspaceTot$ is
+For two linear operators $\opR, \opL$ on $\mathcal{H}$, the \emph{commutator} and the
+\emph{centered anticommutator} (with respect to state $\ket{\Psi}$) are
 \begin{equation}
-  \comm{\opR}{\opL} = \opR\opL - \opL\opR.
+  \comm{\opR}{\opL} = \opR\opL - \opL\opR,
+  \qquad
+  \{\opR', \opL'\} = \opR'\opL' + \opL'\opR'.
   \label{eq:commutator}
 \end{equation}
 \end{definition}
 
-By standard spectral theory~\citep{axler2024linear,horn2012matrix}, two Hermitian
-operators share a complete orthonormal eigenbasis if and only if
-$\comm{\opR}{\opL} = 0$. Whenever $\comm{\opR}{\opL} \neq 0$, no simultaneous
-eigenbasis exists: the order in which rank and role are queried changes the
-post-query state and outcome distribution.
+\begin{proposition}[Diagonal operators commute identically; \layermath]
+\label{prop:diag-commute}
+If $\opR = \diag(a_1, \dots, a_d)$ and $\opL = \diag(b_1, \dots, b_d)$ in the same basis,
+then $\comm{\opR}{\opL} = 0$. Consequently, at zero context rotation ($\gamma = 0$),
+$\opL(0) = D_L$ commutes with $\opR = D_R$ and the commutator uncertainty bound vanishes.
+\end{proposition}
+\begin{proof}
+Componentwise, $(D_a D_b \Psi)_i = a_i b_i \Psi_i = b_i a_i \Psi_i = (D_b D_a \Psi)_i$,
+verified formally in \texttt{diagMat\_commute}.
+\end{proof}
 
-Operationally, asking a partner ``what are you to me?'' (applying $\opL$) before
-asking ``where do you stand?'' (applying $\opR$) projects the state onto a
-functional subspace first and yields a different conditional rank distribution
-than asking ``where do I rank?'' before inquiring about role.
-
-\begin{lemma}[Anti-Hermiticity and imaginary expectation of the commutator]
+\begin{lemma}[Expectation decomposition of $\braket{\opR'\Psi}{\opL'\Psi}$; \layermath]
 \label{lem:comm-antiherm}
-If $\opR$ and $\opL$ are Hermitian on $\vspaceTot$, then $\comm{\opR}{\opL}$
-is anti-Hermitian: $\braket{u}{\comm{\opR}{\opL}v} = -\braket{\comm{\opR}{\opL}u}{v}$.
-Consequently, for every $\ket{\Psi} \in \vspaceTot$, the commutator expectation
-$\braket{\Psi}{\comm{\opR}{\opL}\Psi}$ is purely imaginary:
+If $\opR$ and $\opL$ are Hermitian, then for every $\ket{\Psi} \in \mathcal{H}$ with $\norm{\Psi} = 1$:
 \begin{equation}
-  \RePart\braket{\Psi}{\comm{\opR}{\opL}\Psi} = 0,
+  2\,\ImPart\braket{\opR'\Psi}{\opL'\Psi} = \ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi},
   \qquad
-  \braket{\Psi}{\comm{\opR}{\opL}\Psi} = i\,\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}.
+  2\,\RePart\braket{\opR'\Psi}{\opL'\Psi} = \RePart\braket{\Psi}{\{\opR',\opL'\}\Psi}.
   \label{eq:comm-imag}
 \end{equation}
+Moreover, $\comm{\opR}{\opL}$ is anti-Hermitian ($\comm{\opR}{\opL}^\dagger = -\comm{\opR}{\opL}$),
+so $\braket{\Psi}{\comm{\opR}{\opL}\Psi}$ is purely imaginary, while $\{\opR',\opL'\}$ is
+Hermitian, so $\braket{\Psi}{\{\opR',\opL'\}\Psi}$ is purely real.
 \end{lemma}
 \begin{proof}
-Using the Hermitian property of $\opR$ and $\opL$,
-\begin{equation*}
-  \braket{\Psi}{\opR\opL\Psi}^*
-  = \braket{\opR\opL\Psi}{\Psi}
-  = \braket{\opL\Psi}{\opR\Psi}
-  = \braket{\Psi}{\opL\opR\Psi}.
-\end{equation*}
-Hence $\braket{\Psi}{\comm{\opR}{\opL}\Psi} = \braket{\Psi}{\opR\opL\Psi} - \braket{\Psi}{\opR\opL\Psi}^*
-= 2i\,\ImPart\braket{\Psi}{\opR\opL\Psi}$, which has zero real part.
+Because $\opR'$ and $\opL'$ are Hermitian, $\braket{\opR'\Psi}{\opL'\Psi} = \braket{\Psi}{\opR'\opL'\Psi}$
+and its complex conjugate is $\braket{\opL'\Psi}{\opR'\Psi} = \braket{\Psi}{\opL'\opR'\Psi}$.
+Taking $\frac{1}{2}(\opR'\opL' + \opL'\opR')$ yields the real part (twice the covariance
+$\mathrm{Cov}_\Psi(\opR,\opL) = \frac{1}{2}\braket{\Psi}{\{\opR',\opL'\}\Psi}$), while
+taking $\frac{1}{2i}(\opR'\opL' - \opL'\opR')$ cancels the scalar shifts $\expect{\opR}{\Psi},
+\expect{\opL}{\Psi}$ since identity multiples commute with all operators, leaving
+$\comm{\opR'}{\opL'} = \comm{\opR}{\opL}$ and proving both identities in~\eqref{eq:comm-imag}.
+Both identities are formally verified as \texttt{centered\_\allowbreak{}comm\_im} and
+\texttt{centered\_\allowbreak{}anticomm\_re} in \texttt{RST.Uncertainty.\allowbreak{}Robertson}.
 \end{proof}
 
-Notice why complex amplitudes in~\eqref{eq:partner-state} and~\eqref{eq:system-state}
-are structurally essential here: on a purely real inner-product space, every
-anti-symmetric matrix satisfies $\braket{\Psi}{\comm{\opR}{\opL}\Psi} = 0$
-identically, whereas complex phase coherence between roles allows
-$\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi} \neq 0$.
-
-\subsection{Derivation of the Rank-Role Inequality}
+\subsection{Derivation of the Schr\"odinger and Robertson Bounds}
 \label{subsec:unc-derivation}
 
-We now prove the central theorem of \RST{}, giving our own derivation via the
-Cauchy-Schwarz inequality in $\vspaceTot$.
-
-\begin{theorem}[The Rank-Role Inequality]
+\begin{theorem}[Schr\"odinger and Robertson Rank-Role Inequalities; \layermath]
 \label{thm:rank-role-inequality}
-Let $\opR$ and $\opL$ be Hermitian operators on a finite-dimensional complex
-inner-product space $\vspaceTot$, and let $\ket{\Psi} \in \vspaceTot$ be any
-normalized state. Then the dispersions $\Delta R$ and $\Delta L$ satisfy
+Let $\opR$ and $\opL$ be Hermitian operators on $\mathcal{H} \cong \Cnum^d$ and let
+$\ket{\Psi} \in \mathcal{H}$ satisfy $\norm{\Psi} = 1$. Writing the symmetric covariance
+term $\mathrm{Cov}_{\Psi}(\opR,\opL) = \frac{1}{2}\braket{\Psi}{\{\opR',\opL'\}\Psi}$, the
+dispersions $\Delta R$ and $\Delta L$ obey the \emph{Schr\"odinger uncertainty bound}~\citep{schrodinger1930unscharfeprinzip}:
 \begin{equation}
-  \Delta R \cdot \Delta L \;\ge\; \frac{1}{2}\,\abs{\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}},
-  \label{eq:rank-role-inequality}
-\end{equation}
-or equivalently in squared variance form,
-\begin{equation}
-  4\,\var{\opR}{\Psi}\,\var{\opL}{\Psi} \;\ge\; \bigl(\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}\bigr)^2.
+  (\Delta R)^2 (\Delta L)^2
+  \;\ge\; \bigl(\mathrm{Cov}_{\Psi}(\opR,\opL)\bigr)^2
+  + \frac{1}{4}\bigl\lvert \braket{\Psi}{\comm{\opR}{\opL}\Psi} \bigr\rvert^2,
   \label{eq:rank-role-inequality-sq}
 \end{equation}
-\end{theorem}
-
-\begin{proof}
-Let $r = \expect{\opR}{\Psi} \in \Rnum$ and $l = \expect{\opL}{\Psi} \in \Rnum$,
-and define the centered vectors
-\begin{equation*}
-  \ket{u} = \tilde{R}_{\Psi}\ket{\Psi} = (\opR - r\opI)\ket{\Psi},
-  \qquad
-  \ket{v} = \tilde{L}_{\Psi}\ket{\Psi} = (\opL - l\opI)\ket{\Psi}.
-\end{equation*}
-By \cref{def:dispersion}, $\norm{u}^2 = \var{\opR}{\Psi} = (\Delta R)^2$ and
-$\norm{v}^2 = \var{\opL}{\Psi} = (\Delta L)^2$. Applying the Cauchy-Schwarz
-inequality~\citep{axler2024linear,halmos1958finite} to $\ket{u}$ and $\ket{v}$
-gives
+or equivalently $\Delta R \cdot \Delta L \ge B_S(\Psi)$, where
 \begin{equation}
-  (\Delta R)^2 (\Delta L)^2 = \norm{u}^2 \norm{v}^2 \;\ge\; \abs{\braket{u}{v}}^2
-  = \bigl(\RePart\braket{u}{v}\bigr)^2 + \bigl(\ImPart\braket{u}{v}\bigr)^2
-  \;\ge\; \bigl(\ImPart\braket{u}{v}\bigr)^2.
-  \label{eq:cs-step}
-\end{equation}
-Next, compute $\braket{u}{v} - \braket{v}{u}$ directly. Since $\tilde{R}_{\Psi}$
-and $\tilde{L}_{\Psi}$ are Hermitian and scalar shifts commute with all
-operators,
-\begin{equation*}
-  \braket{u}{v} = \braket{\tilde{R}_{\Psi}\Psi}{\tilde{L}_{\Psi}\Psi} = \braket{\Psi}{\tilde{R}_{\Psi}\tilde{L}_{\Psi}\Psi},
-  \qquad
-  \braket{v}{u} = \braket{\Psi}{\tilde{L}_{\Psi}\tilde{R}_{\Psi}\Psi}.
-\end{equation*}
-Subtracting yields
-\begin{equation*}
-  \braket{u}{v} - \braket{v}{u}
-  = \braket{\Psi}{\comm{\tilde{R}_{\Psi}}{\tilde{L}_{\Psi}}\Psi}
-  = \braket{\Psi}{\comm{\opR - r\opI}{\opL - l\opI}\Psi}
-  = \braket{\Psi}{\comm{\opR}{\opL}\Psi},
-\end{equation*}
-because $\comm{r\opI}{\opL} = \comm{\opR}{l\opI} = \comm{r\opI}{l\opI} = 0$.
-On the other hand, since $\braket{v}{u} = \braket{u}{v}^*$, we have
-\begin{equation*}
-  \braket{u}{v} - \braket{v}{u} = \braket{u}{v} - \braket{u}{v}^* = 2i\,\ImPart\braket{u}{v}.
-\end{equation*}
-Equating imaginary parts gives
-\begin{equation}
-  2\,\ImPart\braket{u}{v} = \ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}.
-  \label{eq:im-identity}
-\end{equation}
-Substituting~\eqref{eq:im-identity} into~\eqref{eq:cs-step} yields
-$4\,\var{\opR}{\Psi}\,\var{\opL}{\Psi} \ge (\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi})^2$.
-Taking non-negative square roots yields~\eqref{eq:rank-role-inequality},
-verified in Lean~4 over $\Qnum[i]^d$ as \texttt{RST.rank\_role\_uncertainty}.
-\end{proof}
-
-\begin{principle}[Rank-Role Uncertainty and the Situationship Constant]
-\label{prin:uncertainty}
-For any superposed relational state $\ket{\Psi}$ in which rank and role exhibit
-non-vanishing commutator expectation, define the state-dependent \emph{situationship
-constant}
-\begin{equation}
-  \kappaS(\Psi; \opR, \opL) = \frac{1}{2}\,\abs{\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}} > 0.
-  \label{eq:kappa-def}
-\end{equation}
-Then $\Delta R \cdot \Delta L \ge \kappaS$. In plain terms: \textbf{you cannot
-know a guy's rank and his role at the same time.}
-\end{principle}
-
-\begin{remark}[Stronger covariance bound]
-\label{rem:covariance-bound}
-Inspection of~\eqref{eq:cs-step} shows that dropping $(\RePart\braket{u}{v})^2$
-discarded the symmetric rank-role covariance term
-$C_{RL}(\Psi) = \RePart\braket{u}{v} = \frac{1}{2}\braket{\Psi}{(\tilde{R}_{\Psi}\tilde{L}_{\Psi} + \tilde{L}_{\Psi}\tilde{R}_{\Psi})\Psi}$.
-Retaining both terms yields the tighter inequality
-\begin{equation}
-  (\Delta R)^2 (\Delta L)^2 \;\ge\; C_{RL}(\Psi)^2 + \kappaS(\Psi; \opR, \opL)^2,
+  B_S(\Psi) = \sqrt{\bigl(\mathrm{Cov}_{\Psi}(\opR,\opL)\bigr)^2
+  + \frac{1}{4}\bigl\lvert \braket{\Psi}{\comm{\opR}{\opL}\Psi} \bigr\rvert^2}.
   \label{eq:tighter-bound}
 \end{equation}
-which shows that correlated fluctuations in rank and role further elevate the
-uncertainty product above $\kappaS$ unless $C_{RL}(\Psi) = 0$.
+Dropping the non-negative covariance square yields the weaker \emph{Robertson commutator
+bound}~\citep{robertson1929uncertainty}:
+\begin{equation}
+  \Delta R \cdot \Delta L
+  \;\ge\; \frac{1}{2}\bigl\lvert \braket{\Psi}{\comm{\opR}{\opL}\Psi} \bigr\rvert
+  \;=\; \kappa_R(\Psi).
+  \label{eq:rank-role-inequality}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Set $\ket{u} = \opR'\ket{\Psi}$ and $\ket{v} = \opL'\ket{\Psi}$. By Cauchy-Schwarz
+(\texttt{cauchy\_schwarz\_cpx} in Lean~4; proof in \cref{app:proof-cs}),
+\begin{equation}
+  (\Delta R)^2 (\Delta L)^2
+  = \norm{u}^2 \norm{v}^2
+  \;\ge\; \abs{\braket{u}{v}}^2
+  = \bigl(\RePart\braket{u}{v}\bigr)^2 + \bigl(\ImPart\braket{u}{v}\bigr)^2.
+  \label{eq:cs-step}
+\end{equation}
+Substituting the anticommutator and commutator identities from \cref{lem:comm-antiherm}
+gives
+\begin{equation}
+  4\,(\Delta R)^2(\Delta L)^2
+  \;\ge\; \bigl(\RePart\braket{\Psi}{\{\opR',\opL'\}\Psi}\bigr)^2
+  + \bigl(\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}\bigr)^2,
+  \label{eq:im-identity}
+\end{equation}
+which divides by $4$ to establish~\eqref{eq:rank-role-inequality-sq} and~\eqref{eq:tighter-bound}.
+Since $(\mathrm{Cov}_\Psi(\opR,\opL))^2 \ge 0$, omitting it proves~\eqref{eq:rank-role-inequality}.
+Both~\eqref{eq:im-identity} and its Robertson corollary are machine-checked without division
+as \texttt{schrodinger\_\allowbreak{}uncertainty} and \texttt{robertson\_\allowbreak{}uncertainty}.
+\end{proof}
+
+\begin{principle}[Situationship constant $\kappaS$; \layerformal{} / \layersatire]
+\label{prin:uncertainty}
+For fixed non-commuting operators $(\opR, \opL)$ and state $\ket{\Psi}$, define the
+state-dependent situationship bound
+\begin{equation}
+  \kappaS = \kappa_R(\Psi) = \frac{1}{2}\bigl\lvert \ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi} \bigr\rvert.
+  \label{eq:kappa-def}
+\end{equation}
+Whenever $\kappaS > 0$, $\Delta R \cdot \Delta L \ge B_S(\Psi) \ge \kappaS > 0$: rank
+uncertainty and role uncertainty cannot simultaneously vanish.
+\end{principle}
+
+\begin{remark}[Why both Robertson and Schr\"odinger matter; \layermath]
+\label{rem:covariance-bound}
+In v1.0, the anticommutator covariance term was noted only in passing, leaving large slack
+when $[\opR,\opL]$ has small expectation alongside strong correlation between $\opR$ and $\opL$.
+In Experiment~5 (\cref{sec:simulations}), across $3{,}200$ random operator pairs, Robertson's
+median bound for nonzero $\gamma$ is $0.1087$ against a median observed product of $0.4996$,
+whereas Schr\"odinger's bound~\eqref{eq:tighter-bound} reaches median $0.4409$, closing most
+of the gap between commutator lower bound and actual dispersion product.
 \end{remark}
 
-\begin{proposition}[Spectral spread upper bound]
+\begin{proposition}[Spectral upper bound on uncertainty products; \layermath]
 \label{prop:popoviciu}
-Let $\opR$ and $\opL$ have extremal eigenvalues $r_{\min} \le r_{\max}$ and
-$l_{\min} \le l_{\max}$, respectively. Then for every normalized state $\ket{\Psi}$,
+If the eigenvalues of $\opR$ lie in $[r_{\min}, r_{\max}]$ and those of $\opL$ lie in
+$[\ell_{\min}, \ell_{\max}]$, then for every normalized state $\ket{\Psi}$:
 \begin{equation}
-  \kappaS(\Psi; \opR, \opL) \;\le\; \Delta R \cdot \Delta L
-  \;\le\; \frac{1}{4}\,(r_{\max} - r_{\min})(l_{\max} - l_{\min}).
+  \Delta R \;\le\; \frac{r_{\max} - r_{\min}}{2},
+  \qquad
+  \Delta L \;\le\; \frac{\ell_{\max} - \ell_{\min}}{2},
+  \qquad
+  \Delta R \cdot \Delta L \;\le\; \frac{(r_{\max} - r_{\min})(\ell_{\max} - \ell_{\min})}{4}.
   \label{eq:spectral-cap}
 \end{equation}
 \end{proposition}
 \begin{proof}
-For any bounded real random variable $X \in [a, b]$ induced by the spectral
-measure of a Hermitian operator on $\ket{\Psi}$,
-\begin{equation*}
-  \var{X}{} = \E\bigl[(X - a)(b - X)\bigr] - (\E[X] - a)(b - \E[X])
-  \le \frac{(b - a)^2}{4},
-\end{equation*}
-since $(x - a)(b - x) \le \frac{1}{4}(b - a)^2$ for all $x \in [a, b]$ and
-the subtracted term is non-negative. Taking square roots gives
-$\Delta R \le \frac{1}{2}(r_{\max} - r_{\min})$ and
-$\Delta L \le \frac{1}{2}(l_{\max} - l_{\min})$. Multiplying and combining
-with~\eqref{eq:rank-role-inequality} yields~\eqref{eq:spectral-cap}.
+Shifting $\opR$ by $c = (r_{\max} + r_{\min})/2$ preserves variance, while every eigenvalue
+of $\opR - c\opI$ has magnitude at most $(r_{\max} - r_{\min})/2$. Thus
+$\var{\opR}{\Psi} = \expect{(\opR - \expect{\opR}{\Psi}\opI)^2}{\Psi}
+\le \expect{(\opR - c\opI)^2}{\Psi} \le (r_{\max} - r_{\min})^2 / 4$.
+Applying the identical bound to $\opL$ and multiplying gives~\eqref{eq:spectral-cap}.
 \end{proof}
 
-\subsection{Necessary and Sufficient Conditions for Tightness}
+\subsection{Minimum-Uncertainty States and Commutative Special Cases}
 \label{subsec:unc-tightness}
 
-When does equality $\Delta R \cdot \Delta L = \kappaS$ hold? Analyzing the two
-inequalities inside~\eqref{eq:cs-step} yields a complete characterization.
-
-\begin{proposition}[Minimum-uncertainty relational states]
+\begin{proposition}[Minimum-uncertainty saturation criterion; \layermath]
 \label{prop:minimum-uncertainty}
-Assume $\Delta R > 0$ and $\Delta L > 0$. Equality $\Delta R \cdot \Delta L = \kappaS$
-holds in~\eqref{eq:rank-role-inequality} if and only if:
-\begin{enumerate}[nosep]
-  \item $\ket{u} = \tilde{R}_{\Psi}\ket{\Psi}$ and $\ket{v} = \tilde{L}_{\Psi}\ket{\Psi}$
-        are linearly dependent over $\Cnum$, i.e., $\ket{v} = \zeta \ket{u}$ for
-        some $\zeta \in \Cnum$ (saturating Cauchy-Schwarz); and
-  \item $\RePart\braket{u}{v} = 0$, which forces $\zeta = i\beta$ to be purely
-        imaginary ($\beta \in \Rnum \setminus \{0\}$).
-\end{enumerate}
-Equivalently, $\ket{\Psi}$ satisfies the minimum-uncertainty eigenvalue equation
+Equality holds in Schr\"odinger's bound~\eqref{eq:rank-role-inequality-sq} if and only if
+$\opR'\ket{\Psi}$ and $\opL'\ket{\Psi}$ are $\Cnum$-linearly dependent (so Cauchy-Schwarz is
+tight). Equality holds in Robertson's bound~\eqref{eq:rank-role-inequality} if and only if
+$\opR'\ket{\Psi} = i\lambda \opL'\ket{\Psi}$ for some $\lambda \in \Rnum$ (with zero
+covariance $\mathrm{Cov}_\Psi(\opR,\opL) = 0$). In particular, in dimension $d = 2$, every
+pure normalized state automatically saturates Schr\"odinger's inequality because the
+orthogonal complement of $\ket{\Psi}$ is one-dimensional:
 \begin{equation}
-  (\opL - i\beta \opR)\ket{\Psi} = (l - i\beta r)\ket{\Psi},
-  \qquad \beta \in \Rnum \setminus \{0\}.
+  (\Delta R)^2 (\Delta L)^2 = \bigl(\mathrm{Cov}_\Psi(\opR,\opL)\bigr)^2 + \kappa_R(\Psi)^2
+  \qquad (d = 2,\ \norm{\Psi} = 1).
   \label{eq:min-unc-eq}
 \end{equation}
 \end{proposition}
 \begin{proof}
-In~\eqref{eq:cs-step}, equality holds throughout if and only if
-$\norm{u}^2 \norm{v}^2 = \abs{\braket{u}{v}}^2$ and $\RePart\braket{u}{v} = 0$.
-Since $\norm{u} = \Delta R > 0$, Cauchy-Schwarz holds with equality if and only
-if $\ket{v} = \zeta \ket{u}$ for some $\zeta \in \Cnum$. Then
-$\braket{u}{v} = \zeta \norm{u}^2$, so $\RePart\braket{u}{v} = (\RePart \zeta)\norm{u}^2 = 0$
-if and only if $\RePart \zeta = 0$, i.e., $\zeta = i\beta$ with $\beta \in \Rnum$.
-Since $\Delta L > 0$, $\beta \neq 0$. Substituting $\ket{v} = (\opL - l\opI)\ket{\Psi}$
-and $\ket{u} = (\opR - r\opI)\ket{\Psi}$ into $\ket{v} = i\beta\ket{u}$ gives
-$(\opL - i\beta\opR)\ket{\Psi} = (l - i\beta r)\ket{\Psi}$.
+By orthogonality $\braket{\Psi}{\opR'\Psi} = \braket{\Psi}{\opL'\Psi} = 0$, both $\opR'\ket{\Psi}$
+and $\opL'\ket{\Psi}$ lie in $\mathrm{span}(\ket{\Psi})^\perp$. Equality in Cauchy-Schwarz
+occurs iff they are proportional ($\opR'\ket{\Psi} = \alpha\opL'\ket{\Psi}$, or one vanishes);
+the real part $\mathrm{Cov}_\Psi$ vanishes iff $\alpha \in i\Rnum$. When $d = 2$,
+$\dim(\mathrm{span}(\ket{\Psi})^\perp) = 1$, forcing proportionality for every pure state.
 \end{proof}
 
-\subsection{Special Cases and Boundary Regimes}
-\label{subsec:unc-special}
-
-\paragraph{Case 1: Pure rank eigenstate ($\Delta R = 0$).}
-Suppose partner $G_k$ is placed unambiguously in rank~$1$, so $\ket{\Psi}$ is
-an eigenstate of $\opR$ with $\opR\ket{\Psi} = r\ket{\Psi}$ and $\Delta R = 0$.
-Then $\tilde{R}_{\Psi}\ket{\Psi} = 0$, so $\braket{\Psi}{\comm{\opR}{\opL}\Psi} = 0$
-and $\kappaS = 0$ on that eigenstate. However, whenever $\opR$ and $\opL$ do not
-commute, an eigenstate of $\opR$ cannot simultaneously be an eigenstate of $\opL$:
-\begin{equation*}
-  \opL\ket{\Psi} \neq l\ket{\Psi} \implies \Delta L > 0.
-\end{equation*}
-Fixing a partner's rank completely leaves his functional role smeared across
-multiple obligations (for example, ``the official partner'' is simultaneously
-expected to cover emotional labor, public visibility, and weekend logistics).
-
-\paragraph{Case 2: Pure role eigenstate ($\Delta L = 0$).}
-Suppose a partner is pinned strictly to a single functional role (for example,
-``purely emotional support''), so $\opL\ket{\Psi} = l\ket{\Psi}$ and $\Delta L = 0$.
-If $\ket{\Psi}$ is not an eigenstate of $\opR$, then $\Delta R > 0$: his ordinal
-position relative to other specialized partners remains indeterminate.
-
-\paragraph{Case 3: Maximally superposed state.}
-When partner amplitudes and role phases vary across all basis vectors,
-both $\Delta R > 0$ and $\Delta L > 0$, and $\kappaS > 0$ enforces a strict
-joint floor on simultaneous rank-role precision.
-
-\subsection{Explicit Worked Matrix Derivations}
+\subsection{Explicit Rational and Complex Unitary Witnesses}
 \label{subsec:unc-worked}
 
-\begin{example}[Exact $2\times 2$ non-commuting witness]
+To make the commutator, covariance, and bound tightness completely concrete, we give
+two exact rational/Gaussian-rational witnesses derived by unitary rotation and formally
+verified in \texttt{RST.Uncertainty.Robertson}, followed by a $4\times 4$ rank-shift example.
+
+\begin{example}[Exact $2\times 2$ witness (\textnormal{\texttt{ex\_2d\_\allowbreak{}schrodinger\_verified}}); \layerformal]
 \label{ex:uncertainty-2x2}
-Consider a two-partner subspace ($d = 2$) with the Hermitian operators verified
-in Lean~4 (\texttt{RST.exRank}, \texttt{RST.exRole}):
+Let $D_{R,2} = \diag(1, 2)$, $D_{L,2} = \diag(-1, 1)$, and apply the exact unitary context
+rotation $U_2 = \frac{1}{5}\begin{psmallmatrix} 3 & 4i \\ 4i & 3 \end{psmallmatrix}$
+($U_2^\dagger U_2 = I_2$, proved as \texttt{U2\_unitary}):
 \begin{equation*}
-  \opR = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix},
+  \opL_2 = U_2^\dagger D_{L,2} U_2 =
+  \frac{1}{25}\begin{pmatrix} 7 & -24i \\ 24i & -7 \end{pmatrix},
   \qquad
-  \opL = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix},
-  \qquad
-  \comm{\opR}{\opL} = \opR\opL - \opL\opR = \begin{pmatrix} 0 & i \\ i & 0 \end{pmatrix} \neq 0.
+  \comm{D_{R,2}}{\opL_2} =
+  \frac{1}{25}\begin{pmatrix} 0 & 24i \\ 24i & 0 \end{pmatrix}.
 \end{equation*}
-\begin{enumerate}[nosep]
-  \item \emph{Rank eigenstate} $\ket{\Psi_0} = (1, 0)^\top$:
-        Here $\expect{\opR}{\Psi_0} = 1$, $\Delta R = 0$, while
-        $\opL\ket{\Psi_0} = (0, i)^\top$ gives $\expect{\opL}{\Psi_0} = 0$ and
-        $\Delta L = 1$. The commutator satisfies $\comm{\opR}{\opL}\ket{\Psi_0} = (0, i)^\top \neq 0$,
-        though its expectation vanishes on the pure rank eigenstate.
-  \item \emph{Superposed state} $\ket{\Psi_s} = (\tfrac{3}{5}, \tfrac{4}{5})^\top$:
-        Here $w_1 = \tfrac{9}{25} = 0.36$ and $w_2 = \tfrac{16}{25} = 0.64$.
-        Direct calculation gives:
-        \begin{align*}
-          \expect{\opR}{\Psi_s} &= 1\cdot\frac{9}{25} + 2\cdot\frac{16}{25} = \frac{41}{25} = 1.64, \\
-          \var{\opR}{\Psi_s} &= \left(1 - \frac{41}{25}\right)^2\frac{9}{25} + \left(2 - \frac{41}{25}\right)^2\frac{16}{25}
-          = \frac{144}{625} = 0.2304, \qquad \Delta R = \frac{12}{25} = 0.48.
-        \end{align*}
-        For the role operator, $\opL\ket{\Psi_s} = (-\tfrac{4}{5}i, \tfrac{3}{5}i)^\top$,
-        so $\expect{\opL}{\Psi_s} = 0$ and $\var{\opL}{\Psi_s} = \norm{\opL\ket{\Psi_s}}^2 = 1$,
-        giving $\Delta L = 1$. Finally,
-        \begin{equation*}
-          \comm{\opR}{\opL}\ket{\Psi_s} = \begin{pmatrix} \tfrac{4}{5}i \\ \tfrac{3}{5}i \end{pmatrix},
-          \qquad
-          \braket{\Psi_s}{\comm{\opR}{\opL}\Psi_s} = \frac{24}{25}i = 0.96i,
-        \end{equation*}
-        whence $\kappaS = \frac{1}{2}\abs{\ImPart(0.96i)} = 0.48$. Notice that
-        $\Delta R \cdot \Delta L = 0.48 \times 1 = 0.48 = \kappaS$: this superposed
-        state achieves exact equality in~\eqref{eq:rank-role-inequality}!
-        Indeed, $(\opL - i\beta\opR)\ket{\Psi_s} \propto \ket{\Psi_s}$ holds with
-        $\beta = 25/12$. Checking directly, $\ket{u} = (-48/125, 36/125)^\top$
-        and $\ket{v} = (-4i/5, 3i/5)^\top = \frac{25}{12}i\,\ket{u}$, confirming
-        \cref{prop:minimum-uncertainty}.
-\end{enumerate}
+Evaluate on the unit state $\ket{\Psi_2} = \frac{1}{5}(3, 4)^\top$:
+\begin{align*}
+  \expect{D_{R,2}}{\Psi_2} &= \frac{41}{25}, &
+  \var{D_{R,2}}{\Psi_2} &= \frac{144}{625}, &
+  \expect{\opL_2}{\Psi_2} &= -\frac{49}{625}, &
+  \var{\opL_2}{\Psi_2} &= \frac{388{,}224}{390{,}625},
+\end{align*}
+with commutator expectation $\braket{\Psi_2}{\comm{D_{R,2}}{\opL_2}\Psi_2} = \frac{576}{625}i$
+and centered anticommutator $\RePart\braket{\Psi_2}{\{\opR',\opL'\}\Psi_2} = -\frac{4{,}032}{15{,}625}$.
+Direct multiplication gives
+\begin{equation*}
+  4\,\var{D_{R,2}}{\Psi_2}\var{\opL_2}{\Psi_2}
+  = \frac{223{,}617{,}024}{244{,}140{,}625}
+  = \left(\frac{576}{625}\right)^2 + \left(-\frac{4{,}032}{15{,}625}\right)^2,
+\end{equation*}
+confirming exact Schr\"odinger saturation ($\Delta R \cdot \Delta L = B_S \approx 0.47852 > \kappa_R = 0.46080$)
+in $d = 2$ as predicted by \cref{prop:minimum-uncertainty}.
 \end{example}
 
-\begin{example}[Four-partner coupled system ($d = 4$)]
+\begin{example}[Exact $3\times 3$ unitary witness with strict slack (\textnormal{\texttt{ex\_3d\_\allowbreak{}schrodinger\_verified}}); \layerformal]
+\label{ex:uncertainty-3x3}
+Extend $U_2$ onto three partners via $U_3 = U_2 \oplus [1]$, $D_{R,3} = \diag(1, 2, 3)$,
+and $D_{L,3} = \diag(-1, 0, 1)$. Then
+\begin{equation*}
+  \opL_3 = U_3^\dagger D_{L,3} U_3 =
+  \frac{1}{25}\begin{pmatrix} -9 & -12i & 0 \\ 12i & -16 & 0 \\ 0 & 0 & 25 \end{pmatrix}.
+\end{equation*}
+Evaluating on the normalized vector $\ket{\Psi_3} = \bigl(\frac{9}{25}, \frac{12}{25}, \frac{4}{5}\bigr)^\top$
+yields $\var{D_{R,3}}{\Psi_3} = \frac{198{,}864}{390{,}625}$, $\var{\opL_3}{\Psi_3} = \frac{155{,}101{,}536}{244{,}140{,}625}$,
+$\ImPart\braket{\Psi_3}{\comm{D_{R,3}}{\opL_3}\Psi_3} = \frac{2{,}592}{15{,}625}$, and
+$\RePart\braket{\Psi_3}{\{\opR',\opL'\}\Psi_3} = \frac{8{,}966{,}304}{9{,}765{,}625}$. Hence:
+\begin{equation*}
+  \Delta R \cdot \Delta L \approx 0.56870
+  \;>\; B_S(\Psi_3) \approx 0.46651
+  \;>\; \kappa_R(\Psi_3) = 0.08294.
+\end{equation*}
+Here the commutator alone captures less than $15\%$ of the uncertainty product, whereas
+including the anticommutator covariance lifts the lower bound to over $82\%$ of $\Delta R \cdot \Delta L$.
+\end{example}
+
+\begin{example}[Four-partner cyclic shift operator; \layerformal]
 \label{ex:uncertainty-4x4}
-Take $d = 4$ partners with weights $\mathbf{w} = (0.38, 0.29, 0.18, 0.15)$ from
-\cref{ex:quartet}, amplitude vector $\ket{\Psi} = (\sqrt{0.38}, \sqrt{0.29}, \sqrt{0.18}, \sqrt{0.15})^\top$,
-rank matrix $\opR = \diag(1, 2, 3, 4)$, and tridiagonal role-transition operator
-\begin{equation*}
-  \opL = \begin{pmatrix}
-    0 & -i & 0 & 0 \\
-    i & 0 & -i & 0 \\
-    0 & i & 0 & -i \\
-    0 & 0 & i & 0
-  \end{pmatrix}.
-\end{equation*}
-Then $\expect{\opR}{\Psi} = 2.10$, $\expect{\opR^2}{\Psi} = 5.56$, so
-$\var{\opR}{\Psi} = 5.56 - 2.10^2 = 1.150$ and $\Delta R \approx 1.0724$.
-For $\opL$, $\expect{\opL}{\Psi} = 0$ by real-amplitude antisymmetry, while
-$\norm{\opL\ket{\Psi}}^2 = 0.29 + (0.38 + 0.18) + (0.29 + 0.15) + 0.18 = 1.47$,
-giving $\Delta L = \sqrt{1.47} \approx 1.2124$ and $\Delta R \cdot \Delta L \approx 1.3002$.
-Meanwhile, since $(\comm{\opR}{\opL})_{jk} = (j - k)\opL_{jk}$ has $+i$ on the
-subdiagonal and $+i$ on the superdiagonal,
-\begin{equation*}
-  \ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}
-  = 2\bigl(\sqrt{0.38\cdot 0.29} + \sqrt{0.29\cdot 0.18} + \sqrt{0.18\cdot 0.15}\bigr)
-  \approx 1.4495,
-\end{equation*}
-yielding $\kappaS \approx 0.7248 < 1.3002 = \Delta R \cdot \Delta L$, cleanly
-satisfying~\eqref{eq:rank-role-inequality} with strict positive slack.
+Let $d = 4$, $\opR = \diag(1, 2, 3, 4)$, and $\opL = \frac{i}{2}(S - S^\dagger)$ where $S$
+is the cyclic shift $S\ket{e_k} = \ket{e_{k+1 \bmod 4}}$ (indices $0,\dots,3$). On the
+three-partner uniform state $\ket{\Psi_3'} = \frac{1}{\sqrt{3}}(1, 1, 1, 0)^\top$
+(dropping the fourth contingency slot), $\expect{\opR}{\Psi_3'} = 2$,
+$\expect{\opL}{\Psi_3'} = 0$, $\Delta R = \sqrt{2/3} \approx 0.8165$, and
+$\Delta L = \sqrt{1/6} \approx 0.4082$, while $\mathrm{Cov}_{\Psi_3'}(\opR,\opL) = 0$ and
+$\Delta R \cdot \Delta L = \frac{1}{3} = \kappa_R$, yielding exact Robertson saturation.
 \end{example}

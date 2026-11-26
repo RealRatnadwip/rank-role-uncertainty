@@ -55,19 +55,21 @@ procedure CASCADE_TRIAL(n, q, topology, p_tx=0.72, theta=0.60):
     return (frac >= theta), frac
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Pseudocode for Hermitian rank-role operator uncertainty sweep (Seed \texttt{202604}).},label={lst:uncertainty-algo}]
+\begin{lstlisting}[caption={Pseudocode for Hermitian unitary-rotation uncertainty sweep (Seed \texttt{202604}).},label={lst:uncertainty-algo}]
 procedure UNCERTAINTY_SAMPLE(d, gamma):
-    R0 <- diag(1, 2, ..., d)
-    L0 <- diag(linspace(-1, 1, d))
-    H_R <- normalized_random_hermitian(d)
-    H_L <- normalized_random_hermitian(d)
-    R <- R0 + 0.15 * gamma * H_R
-    L <- L0 + gamma * H_L
-    psi <- random_unit_complex_vector(d)
-    Delta_R <- norm((R - real(<psi, R psi>) * I) * psi)
-    Delta_L <- norm((L - real(<psi, L psi>) * I) * psi)
-    kappa <- 0.5 * abs(imag(<psi, (R*L - L*R) * psi>))
-    return Delta_R, Delta_L, Delta_R * Delta_L, kappa
+    D_R <- diag(1, 2, ..., d)
+    D_L <- diag(linspace(-1, 1, d))
+    H <- normalized_random_hermitian(d)
+    U <- exp(i * gamma * H)
+    L <- U^\dagger * D_L * U
+    psi <- random_haar_unit_vector(d)
+    r <- real(<psi, D_R * psi>); l <- real(<psi, L * psi>)
+    Delta_R <- norm((D_R - r * I) * psi)
+    Delta_L <- norm((L - l * I) * psi)
+    robertson_bound <- 0.5 * abs(imag(<psi, (D_R*L - L*D_R) * psi>))
+    cov_term <- real(<(D_R - r*I)*psi, (L - l*I)*psi>)
+    schrodinger_bound <- sqrt(cov_term^2 + robertson_bound^2)
+    return Delta_R * Delta_L, robertson_bound, cov_term, schrodinger_bound
 \end{lstlisting}
 
 \subsection{Full Build and Verification Commands}
@@ -76,7 +78,8 @@ procedure UNCERTAINTY_SAMPLE(d, gamma):
 From the repository root, the entire pipeline regenerates deterministically via:
 \begin{lstlisting}
 make figures   # writes data CSVs, summary.json, and PDF/SVG figures
-make lean      # runs lake build in lean/ (12 jobs, zero sorry)
+make lean      # runs lake build in lean/ (44 jobs, 20 modules, zero sorry)
+make test      # runs python3 -m unittest discover -s tests -v
 make pdf       # compiles paper/main.tex to paper/output/
 \end{lstlisting}
-Running \texttt{make all} executes all three stages sequentially.
+Running \texttt{make all} executes all four stages sequentially.

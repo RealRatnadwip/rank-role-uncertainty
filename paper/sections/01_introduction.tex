@@ -79,40 +79,49 @@ perceived attractiveness and social reach, motivating the structural link betwee
 optionality and superposition rather than purely moral or personality-based
 explanations.
 
-\subsection{Summary of Contributions}
+\subsection{Epistemic Architecture and Contributions}
 \label{subsec:intro-contributions}
 
-This monograph develops \RST{} as a self-contained mathematical and computational
-framework. Its specific contributions are:
+The premise of \RST{} is intentionally satirical: it turns linear algebra,
+Schr\"odinger-Robertson uncertainty relations, Markov chains, and percolation
+theory onto the mundane instability of non-exclusive modern dating. Humor in the
+premise, however, never excuses ambiguity in the algebra. To ensure the mathematics
+can be audited line by line, every section separates five distinct epistemic layers:
+(1)~\emph{established mathematics} borrowed cleanly from standard literature,
+(2)~\emph{\RST{} formalization} constructed specifically for multi-partner portfolios,
+(3)~\emph{behavioral assumptions} linking psychological interaction to mathematical
+primitives, (4)~\emph{empirical hypotheses} whose truth cannot be settled by proof
+or simulation, and (5)~\emph{satirical interpretation}.
+
+Its concrete technical contributions in Version~1.1 are:
 \begin{enumerate}[nosep]
-  \item \textbf{Order-theoretic diagnosis (\cref{sec:background}).} We show how
-        functional role partitioning induces strict comparability failures that
-        prevent representation by a single weak or total order.
-  \item \textbf{State-vector formalism (\cref{sec:framework}).} We construct the
-        finite-dimensional partner state space $\vspaceR$ and system state vector
-        $\ket{\Psi}$, define relational superposition, and prove that no partner
-        occupies rank one prior to collapse.
-  \item \textbf{Operator derivation of uncertainty (\cref{sec:uncertainty}).} We
-        formulate rank and role as non-commuting Hermitian operators $\opR$ and
-        $\opL$, derive the Rank-Role Inequality $\Delta R \cdot \Delta L \ge \kappaS$
-        via Cauchy-Schwarz, characterize minimum-uncertainty states, and work out
-        exact $2\times 2$ and $4\times 4$ examples.
-  \item \textbf{Attention-drift dynamics (\cref{sec:dynamics}).} We model weekday,
-        weekend, and emotional-stress transitions as a time-inhomogeneous Markov
-        chain and characterize its stationary distribution.
-  \item \textbf{Poke collapse and social percolation (\cref{sec:poke,sec:cascade}).}
-        We formalize the Poke Rule, post-collapse renormalization, irreversibility,
-        and a bond-percolation threshold $q_c$ governing social-graph cascades.
-  \item \textbf{Optionality and symmetry (\cref{sec:conjecture,sec:symmetry}).}
-        We formalize the Attractiveness-Optionality Conjecture under a binomial
-        retention model, prove monotonicity, propose an unadministered empirical
-        design, and establish gender symmetry.
-  \item \textbf{Reproducible simulation and formal proofs (\cref{sec:simulations,sec:verification}).}
-        We report deterministic synthetic Monte Carlo studies across $2{,}400$ operator
-        samples, $90$-day attention trajectories, optionality curves, and graph
-        cascades, alongside machine-checked Lean~4 proofs of normalization,
-        absence of a primary winner, optionality monotonicity, and the finite-dimensional
-        uncertainty bound.
+  \item \textbf{Multi-criteria diagnosis (\cref{sec:background}).} We show how
+        functional role partitioning induces strict Pareto incomparability and
+        weighting sensitivity, preventing representation by a canonical total order.
+  \item \textbf{Role matrices, ranking, and maximality (\cref{sec:framework}).} We
+        construct the raw role matrix $M$, zero-safe column normalization, competition
+        ordinal rank $r_i = 1 + \#\{j : w_j > w_i\}$, and both classical and complex
+        Hilbert-space state formalisms. Explicitly resolving a flaw in v1.0, we
+        demonstrate via $\mathbf{w} = (0.99, 0.01)$ that distributed positive weights
+        (\emph{DistributedWeights}) only imply $w_k < 1$ and do not preclude a unique
+        maximum, introducing \emph{SharedMaximum} indeterminacy as the sharper condition.
+  \item \textbf{Operator uncertainty (\cref{sec:uncertainty}).} Crediting Robertson
+        (1929) and Schr\"odinger (1930), we formulate rank $\opR$ and context-rotated
+        role $\opL = U^\dagger D_L U$ as Hermitian operators, derive the covariance-inclusive
+        Schr\"odinger bound $B_S(\Psi)$ alongside Robertson's commutator bound $\kappa_R$,
+        show exact diagonal commutation at zero context mixing, and work out exact
+        $2\times 2$ and $3\times 3$ rational witnesses.
+  \item \textbf{Attention-drift and collapse dynamics (\cref{sec:dynamics,sec:poke,sec:cascade}).}
+        We formulate both periodic weekly stroboscopic kernels and a $12$-state
+        homogeneous `(partner, regime)` Markov chain, separate projective poke selection
+        from exit renormalization, and isolate asymptotic branching reproduction number
+        $R_0$ from finite-network percolation crossovers across $p_{\mathrm{tx}}$ and topology.
+  \item \textbf{Optionality, falsifiability, and formal verification (\cref{sec:conjecture,sec:symmetry,sec:simulations,sec:verification,sec:hypotheses,sec:scope}).}
+        We state the Attractiveness-Optionality Conjecture alongside heterogeneous
+        Poisson-binomial and capacity-constrained extensions, specify structured falsifiable
+        hypotheses, run $3{,}200$ operator states and five deterministic simulations
+        verified by automated invariant tests, and machine-check core algebraic results
+        across $20$ modular Lean~4 files with zero unfinished proofs.
 \end{enumerate}
 
 \begin{remark}[Pronoun convention]

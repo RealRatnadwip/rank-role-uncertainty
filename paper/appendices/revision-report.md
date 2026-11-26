@@ -17,10 +17,10 @@ and theorem-to-artifact status mapping introduced in the v1.1 revision of
      zero-safe column normalization, strict dimension dominance, linear aggregation
      $G_i(\boldsymbol{\alpha})$, and rank-reversal sensitivity (`4 x 5` example +
      1,000 Dirichlet weights).
-3. **Explicit Epistemic Separation (5 Layers)**:
-   - Tagged definitions, theorems, assumptions, hypotheses, and commentary throughout
+3. **Explicit Epistemic Separation (4 Layers)**:
+   - Tagged definitions, theorems, assumptions, and hypotheses throughout
      the monograph with `Established Math`, `RST Formalization`, `Behavioral Assumption`,
-     `Empirical Hypothesis`, and `Satirical Interpretation`.
+     and `Empirical Hypothesis`.
    - Honestly scoped complex phases in $\ket{\Psi} \in \Cnum^n \otimes \Cnum^m$ as an
      algebraic mechanism enabling non-commuting context rotations rather than measured
      psychometric data, explicitly contrasting classical simplex states $\Delta^{n-1}$.

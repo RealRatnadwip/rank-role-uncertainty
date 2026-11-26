@@ -2,57 +2,69 @@
 \hypersetup{pageanchor=false}
 \thispagestyle{empty}
 \centering
-\vspace*{1.4cm}
+\vspace*{0.75cm}
 
 {\small\scshape\color{mutedgray} Technical Monograph \textbullet\ Relational Superposition Theory \par}
-\vspace{0.85cm}
+\vspace{0.70cm}
 
 {\Huge\bfseries\color{inkblack} The Rank-Role Uncertainty Principle\par}
-\vspace{0.45cm}
+\vspace{0.40cm}
 {\Large\color{slateink} A Formal Theory of Relational Superposition\par}
 
-\vspace{1.1cm}
+\vspace{0.90cm}
 {\color{rulegray}\rule{0.35\textwidth}{0.6pt}}
-\vspace{0.9cm}
+\vspace{0.75cm}
 
-{\large\bfseries Ratnadwip Sarkar\par}
-\vspace{0.25cm}
+{\large\bfseries
+\mbox{Ratnadwip Sarkar$^{1,*}$},\quad
+\mbox{Koushik Mondal$^{1}$},\quad
+\mbox{Himanshu Malik$^{1}$},\quad
+\mbox{Saswata Howladar$^{1}$}\par}
+\vspace{0.35cm}
 {\small\color{slateink}
-\url{https://github.com/RealRatnadwip} \quad\textbar\quad \url{https://ratnadwip.com}
+$^{1}$Department of Computer Science and Engineering (B.Tech Program)\\
+Hooghly Engineering \& Technology College, West Bengal, India
+\par}
+\vspace{0.30cm}
+{\footnotesize\color{mutedgray}
+$^*$Corresponding author: \texttt{me@ratnadwip.com}
+\quad\textbar\quad ORCID: \href{https://orcid.org/0009-0004-9098-8696}{\texttt{0009-0004-9098-8696}}\\
+Co-authors: \texttt{koushikmondal0069@gmail.com},\ \texttt{hello@himanshum.com},\ \texttt{nwolf8014@gmail.com}\\
+Repository: \url{https://github.com/RealRatnadwip/rank-role-uncertainty}
 \par}
 
-\vspace{0.75cm}
+\vspace{0.60cm}
 {\small\color{mutedgray} Version 1.1 \quad\textbullet\quad \today\par}
 
-\vspace{1.3cm}
+\vspace{0.95cm}
 \begin{minipage}{0.90\textwidth}
 \small
 \noindent\textbf{Abstract.}\;
-We develop \emph{Relational Superposition Theory} (\RST), a formal mathematical
-framework that deliberately applies finite-dimensional Hilbert-space operator theory,
-multi-criteria decision analysis, Markov chains, graph percolation, and discrete
-probability to a satirical relational domain: concurrent, non-exclusive dating
-arrangements in which a focal individual maintains several partners across specialized
-functional roles. The theory does not claim novelty for the underlying linear-algebraic
-or stochastic machinery; rather, it embeds the familiar ambiguity of a situationship
-inside an auditable formal specification separating established mathematics, RST
-constructions, behavioral assumptions, empirical hypotheses, and satirical interpretation.
-Prior to observation, a distributed weight vector over partners ($\sum_i w_i = 1$)
-merely ensures no partner holds unit weight; we show by explicit counterexample
-$\mathbf{w} = (0.99, 0.01)$ that positive distributed weights do not preclude a unique
-maximum, and we resolve the distinction through explicit competition ordinal ranks
-and a \emph{SharedMaximum} indeterminacy model. Modeling rank and context-rotated
-role evaluation as non-commuting Hermitian operators on $\Cnum^d$, we invoke the
-classical Robertson (1929) and Schr\"odinger (1930) uncertainty relations to bound
-joint dispersion, characterize attention drift through both periodic and time-homogeneous
-augmented Markov kernels, separate projective poke selection from exit renormalization
-and finite social-graph cascades, and formalize the \emph{Attractiveness-Optionality
-Conjecture} with heterogeneous and budget-constrained extensions. All numerical figures
-are produced by deterministic scripts, invariant tests verify algebraic bounds, and
-core finite-dimensional theorems are machine-checked across $20$ modular Lean~4 files.
+Classical models of interpersonal partner choice presuppose a complete preference
+ranking over candidates prior to commitment. Yet in many contemporary non-exclusive
+relational configurations, a focal agent coordinates multiple concurrent connections
+that specialize across distinct functional niches (public visibility, emotional support,
+practical provision, weekend companionship, and low-cadence contingency) without
+maintaining an invariant ordinal list. We formalize this regime as \emph{Relational
+Superposition Theory} (\RST). Grounding partner contributions in a non-negative
+role matrix with zero-safe column normalization, we demonstrate that multi-attribute
+specialization permits frequent rank reversals under context-weight shifts and distinguish
+sub-unit distributed weights from genuine ordinal rank ties via explicit competition
+ranks and the counterexample $\mathbf{w} = (0.99, 0.01)$. Representing rank and
+context-rotated role evaluation as non-commuting Hermitian operators on $\Cnum^d$, we
+apply the finite-dimensional Schr\"odinger and Robertson uncertainty relations to prove
+that joint rank-role dispersion obeys a positive lower bound whenever conversational
+contexts fail to commute. We couple static indeterminacy with periodic and homogeneous
+augmented Markov attention-drift kernels, model direct status inquiries (``pokes'') as
+projective subspace selections paired with guarded exit renormalization, analyze
+cross-partner information spread as finite-network percolation, and state the
+\emph{Attractiveness-Optionality Conjecture} alongside heterogeneous and capacity-capped
+extensions. All numerical experiments are deterministically scripted, key invariants
+pass automated verification tests, and core finite-dimensional results are formally
+proved in Lean~4 across $20$ self-contained modules.
 \end{minipage}
 
-\vspace{0.9cm}
+\vspace{0.75cm}
 \begin{minipage}{0.90\textwidth}
 \small
 \noindent\textbf{Keywords:} relational superposition, situationship, rank, role,
@@ -71,13 +83,40 @@ uncertainty, collapse, decoherence, optionality, social-graph cascade, formal ve
 \listoftables
 \clearpage
 
+\section*{Acknowledgments, Origin Note, and Author Contributions}
+\markboth{Acknowledgments, Origin Note, and Author Contributions}{}%
+\addcontentsline{toc}{section}{Acknowledgments, Origin Note, and Author Contributions}
+
+\noindent\textbf{Origin of the Work.}\;
+The conceptual kernel of this monograph originated on November~9, 2026, during a
+prolonged traffic halt inside an auto-rickshaw in Mumbai following the authors'
+participation in ETH Global~2026 (November~5--8, 2026). Unable to move in dense
+congestion, the primary author articulated the initial hypothesis regarding
+functional role partitioning and non-commuting status queries to Koushik Mondal,
+motivating the first formal outline relating relational ambiguity to finite-dimensional
+operator non-commutativity.
+
+\medskip
+\noindent\textbf{Author Contributions.}\;
+All four authors are undergraduate candidates pursuing a B.Tech degree in Computer
+Science and Engineering at Hooghly Engineering \& Technology College. Ratnadwip Sarkar
+conceived the central framework, derived the mathematical formalisms, developed the
+deterministic simulation suite, authored the Lean~4 proofs, and drafted the manuscript.
+Koushik Mondal contributed to early problem formulation and shaping the motivating
+conceptual structure. Himanshu Malik refined the theoretical exposition and improved
+conceptual clarity across the formal definitions. Saswata Howladar conducted logical
+stress-testing of boundary cases, counterexamples, and structural arguments.
+
+\clearpage
+
 \section*{Reader's Guide, Epistemic Layers, and Notation}
+\markboth{Reader's Guide, Epistemic Layers, and Notation}{}%
 \addcontentsline{toc}{section}{Reader's Guide, Epistemic Layers, and Notation}
 
-This revision (v1.1) separates formal mathematical content from behavioral assumptions
-and satirical framing so that any reader can audit every derivation independently of
-the narrative premise. Throughout the monograph, propositions and modeling discussions
-are tagged with five explicit epistemic markers:
+This revision (v1.1) explicitly separates proven mathematical machinery from
+behavioral idealizations and untested population claims so that every derivation can
+be audited cleanly against its underlying hypotheses. Throughout the monograph,
+definitions, propositions, and modeling assumptions carry four epistemic tags:
 \begin{itemize}[nosep]
   \item \layermath: standard results from linear algebra, operator theory, multi-criteria
         decision analysis, Markov chains, graph percolation, or discrete probability.
@@ -87,7 +126,6 @@ are tagged with five explicit epistemic markers:
         real human situation onto the mathematical objects.
   \item \layerempiric: falsifiable claims about human populations that cannot be settled
         by proof or synthetic simulation and require future observational data.
-  \item \layersatire: deadpan academic commentary layered over formal statements.
 \end{itemize}
 
 \cref{sec:introduction,sec:background} motivate the failure of classical total-order

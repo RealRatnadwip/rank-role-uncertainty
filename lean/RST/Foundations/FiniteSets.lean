@@ -1,6 +1,5 @@
 /-
-  Finite-dimensional weight vectors, amplitude normalization,
-  and post-removal renormalization for Relational Superposition Theory.
+  Finite-index summation, double-sum swapping, and counting helpers over `Fin n`.
 -/
 
 namespace RST
@@ -15,30 +14,12 @@ def sumFin : {n : Nat} → (Fin n → Rat) → Rat
 @[simp] theorem sumFin_succ {n : Nat} (f : Fin (n + 1) → Rat) :
     sumFin f = f 0 + sumFin (fun i => f i.succ) := rfl
 
-theorem rat_sq_nonneg (x : Rat) : 0 ≤ x * x := by
-  by_cases hx : 0 ≤ x
-  · exact Rat.mul_nonneg hx hx
-  · have hneg : 0 ≤ -x := by grind
-    have hprod : (-x) * (-x) = x * x := by grind
-    rw [← hprod]
-    exact Rat.mul_nonneg hneg hneg
-
-theorem rat_sq_pos {x : Rat} (hx : x ≠ 0) : 0 < x * x := by
-  have hge := rat_sq_nonneg x
-  have hne : x * x ≠ 0 := by grind
-  grind
-
-theorem rat_div_nonneg {a b : Rat} (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a / b := by
-  have hinv : 0 < b⁻¹ := by
-    by_cases h : b⁻¹ ≤ 0
-    · have : b * b⁻¹ ≤ 0 := by
-        have h1 : b * b⁻¹ ≤ b * 0 := Rat.mul_le_mul_of_nonneg_left h (by grind)
-        grind
-      have hmul : b * b⁻¹ = 1 := Rat.mul_inv_cancel b (by grind)
+theorem sumFin_zero_fun : ∀ {d : Nat}, sumFin (fun _ : Fin d => (0 : Rat)) = 0
+  | 0 => rfl
+  | k + 1 => by
+      simp only [sumFin_succ]
+      rw [sumFin_zero_fun (d := k)]
       grind
-    · grind
-  rw [Rat.div_def]
-  exact Rat.mul_nonneg ha (by grind)
 
 theorem sumFin_add : ∀ {n : Nat} (f g : Fin n → Rat),
     sumFin (fun i => f i + g i) = sumFin f + sumFin g
@@ -143,91 +124,80 @@ theorem sumFin_zero_single : ∀ {n : Nat} (f : Fin n → Rat) (k : Fin n),
         have ih := sumFin_zero_single (n := n) (fun i => f i.succ) j
         grind
 
-/-- A normalized probability weight distribution over `n` partners. -/
-structure Weights (n : Nat) where
-  w : Fin n → Rat
-  nonneg : ∀ i, 0 ≤ w i
-  sum_one : sumFin w = 1
+theorem sumFin_swap : ∀ {m n : Nat} (F : Fin m → Fin n → Rat),
+    sumFin (fun i => sumFin (fun j => F i j)) =
+      sumFin (fun j => sumFin (fun i => F i j))
+  | 0, n, F => by
+      simp only [sumFin_zero]
+      induction n with
+      | zero => simp
+      | succ k ih =>
+          simp only [sumFin_succ]
+          have h := ih (fun i j => F i j.succ)
+          grind
+  | m + 1, n, F => by
+      simp only [sumFin_succ]
+      have ih := sumFin_swap (m := m) (n := n) (fun i j => F i.succ j)
+      rw [ih, ← sumFin_add]
 
-/-- A unit-norm real amplitude vector over `n` partners. -/
-structure Amplitudes (n : Nat) where
-  a : Fin n → Rat
-  unit_norm : sumFin (fun i => a i * a i) = 1
+/-- Count how many indices in `Fin n` satisfy a boolean predicate `p`. -/
+def countFin : {n : Nat} → (Fin n → Bool) → Nat
+  | 0, _ => 0
+  | _ + 1, p => (if p 0 then 1 else 0) + countFin (fun i => p i.succ)
 
-/-- Squared amplitudes form a valid collapse probability distribution. -/
-def Amplitudes.toWeights {n : Nat} (A : Amplitudes n) : Weights n where
-  w := fun i => A.a i * A.a i
-  nonneg := fun i => rat_sq_nonneg (A.a i)
-  sum_one := A.unit_norm
+@[simp] theorem countFin_zero (p : Fin 0 → Bool) : countFin p = 0 := rfl
 
-theorem collapse_probs_sum_one {n : Nat} (A : Amplitudes n) :
-    sumFin A.toWeights.w = 1 :=
-  A.unit_norm
+@[simp] theorem countFin_succ {n : Nat} (p : Fin (n + 1) → Bool) :
+    countFin p = (if p 0 then 1 else 0) + countFin (fun i => p i.succ) := rfl
 
-/-- Weight vector obtained after removing partner `k` and renormalizing. -/
-def removePartner {n : Nat} (W : Weights n) (k : Fin n) : Fin n → Rat :=
-  fun i => if i = k then 0 else W.w i / (1 - W.w k)
+theorem countFin_le_len : ∀ {n : Nat} (p : Fin n → Bool), countFin p ≤ n
+  | 0, _ => Nat.le_refl 0
+  | n + 1, p => by
+      simp only [countFin_succ]
+      have ih := countFin_le_len (n := n) (fun i => p i.succ)
+      cases hp : p 0
+      · simp_all; omega
+      · simp_all; omega
 
-theorem removePartner_self {n : Nat} (W : Weights n) (k : Fin n) :
-    removePartner W k k = 0 := by
-  simp [removePartner]
+theorem countFin_pos_of_true : ∀ {n : Nat} (p : Fin n → Bool) (k : Fin n),
+    p k = true → 0 < countFin p
+  | 0, _, k, _ => Fin.elim0 k
+  | n + 1, p, k, hk => by
+      revert hk
+      refine Fin.cases ?_ ?_ k
+      · intro h0
+        simp [countFin_succ, h0]
+        omega
+      · intro j hj
+        have ih := countFin_pos_of_true (n := n) (fun i => p i.succ) j hj
+        simp only [countFin_succ]
+        omega
 
-theorem removePartner_nonneg {n : Nat} (W : Weights n) (k : Fin n)
-    (hk : W.w k < 1) (i : Fin n) :
-    0 ≤ removePartner W k i := by
-  unfold removePartner
-  split
-  · exact Rat.le_refl
-  · exact rat_div_nonneg (W.nonneg i) (by grind)
-
-theorem removePartner_sum_one {n : Nat} (W : Weights n) (k : Fin n)
-    (hk : W.w k < 1) :
-    sumFin (removePartner W k) = 1 := by
-  have hden_ne : 1 - W.w k ≠ 0 := by grind
-  have hfun : removePartner W k =
-      (fun i => (if i = k then 0 else W.w i) / (1 - W.w k)) := by
-    funext i
-    unfold removePartner
-    split <;> simp [Rat.div_def]
-  rw [hfun, sumFin_div_const]
-  have hz := sumFin_zero_single W.w k
-  rw [W.sum_one] at hz
-  have hnum : sumFin (fun i => if i = k then 0 else W.w i) = 1 - W.w k := by grind
-  rw [hnum, Rat.div_def, Rat.mul_inv_cancel _ hden_ne]
-
-/-- Packaged valid `Weights n` distribution after removing partner `k`. -/
-def renormAfterRemoval {n : Nat} (W : Weights n) (k : Fin n) (hk : W.w k < 1) :
-    Weights n where
-  w := removePartner W k
-  nonneg := removePartner_nonneg W k hk
-  sum_one := removePartner_sum_one W k hk
-
-/-- Generalized renormalization over an arbitrary retained subset `keep`. -/
-def renormMask {n : Nat} (W : Weights n) (keep : Fin n → Bool) : Fin n → Rat :=
-  fun i =>
-    let mass := sumFin (fun j => if keep j then W.w j else 0)
-    if keep i then W.w i / mass else 0
-
-theorem renormMask_valid {n : Nat} (W : Weights n) (keep : Fin n → Bool)
-    (hmass : 0 < sumFin (fun i => if keep i then W.w i else 0)) :
-    (∀ i, 0 ≤ renormMask W keep i) ∧
-    (∀ i, keep i = false → renormMask W keep i = 0) ∧
-    sumFin (renormMask W keep) = 1 := by
-  have hne : sumFin (fun j => if keep j then W.w j else 0) ≠ 0 := by grind
-  refine ⟨?_, ?_, ?_⟩
-  · intro i
-    dsimp [renormMask]
-    cases h : keep i
-    · simp
-    · simp [rat_div_nonneg (W.nonneg i) hmass]
-  · intro i hi
-    dsimp [renormMask]
-    simp [hi]
-  · have hfun : renormMask W keep =
-        (fun i => (if keep i then W.w i else 0) / sumFin (fun j => if keep j then W.w j else 0)) := by
-      funext i
-      dsimp [renormMask]
-      cases keep i <;> simp [Rat.div_def]
-    rw [hfun, sumFin_div_const, Rat.div_def, Rat.mul_inv_cancel _ hne]
+theorem countFin_ge_two_of_two_true : ∀ {n : Nat} (p : Fin n → Bool) (i j : Fin n),
+    i ≠ j → p i = true → p j = true → 2 ≤ countFin p
+  | 0, _, i, _, _, _, _ => Fin.elim0 i
+  | n + 1, p, i, j, hij, hi, hj => by
+      revert hij hi hj
+      refine Fin.cases ?_ ?_ i
+      · intro hij hi0 hj
+        revert hij hj
+        refine Fin.cases ?_ ?_ j
+        · intro hne _; exact absurd rfl hne
+        · intro j' _ hj'
+          have h1 := countFin_pos_of_true (fun k => p k.succ) j' hj'
+          simp [countFin_succ, hi0]
+          omega
+      · intro i' hij hi' hj
+        revert hij hi' hj
+        refine Fin.cases ?_ ?_ j
+        · intro _ hi' hj0
+          have h1 := countFin_pos_of_true (fun k => p k.succ) i' hi'
+          simp [countFin_succ, hj0]
+          omega
+        · intro j' hij hi' hj'
+          have hne : i' ≠ j' := fun h => hij (congrArg Fin.succ h)
+          have ih := countFin_ge_two_of_two_true (n := n) (fun k => p k.succ) i' j' hne hi' hj'
+          simp only [countFin_succ]
+          omega
 
 end RST

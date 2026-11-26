@@ -1,8 +1,9 @@
 /-
-  Formalization of the Attractiveness-Optionality Conjecture retention model:
-  monotonicity of superposition probability in the viable option count `n`
-  and in perceived attractiveness `A`.
+  Binomial moments, exact superposition probability P(K >= 2), marginal step identity,
+  monotonicity in n and in attractiveness A.
 -/
+
+import RST.Optionality.Bernoulli
 
 namespace RST
 
@@ -13,9 +14,6 @@ def powRat (x : Rat) : Nat → Rat
 
 @[simp] theorem powRat_zero (x : Rat) : powRat x 0 = 1 := rfl
 @[simp] theorem powRat_succ (x : Rat) (n : Nat) : powRat x (n + 1) = x * powRat x n := rfl
-
-theorem natCast_rat_nonneg (n : Nat) : (0 : Rat) ≤ (n : Rat) :=
-  Rat.natCast_nonneg
 
 theorem natCast_rat_succ (n : Nat) : ((n + 1 : Nat) : Rat) = (n : Rat) + 1 := by
   apply Rat.ext
@@ -36,15 +34,32 @@ theorem powRat_pos {x : Rat} (hx : 0 < x) : ∀ n : Nat, 0 < powRat x n
       simp only [powRat_succ]
       exact Rat.mul_pos hx (powRat_pos hx n)
 
-theorem powRat_le_one {x : Rat} (hx0 : 0 ≤ x) (hx1 : x ≤ 1) : ∀ n : Nat, powRat x n ≤ 1
-  | 0 => by simp
-  | n + 1 => by
-      simp only [powRat_succ]
-      have h1 := powRat_le_one hx0 hx1 n
-      have h0 := powRat_nonneg hx0 n
-      have hmul : x * powRat x n ≤ 1 * powRat x n :=
-        Rat.mul_le_mul_of_nonneg_right hx1 h0
-      grind
+def binomialMean (n : Nat) (p : Rat) : Rat := (n : Rat) * p
+
+def binomialVar (n : Nat) (p : Rat) : Rat := (n : Rat) * p * (1 - p)
+
+theorem binomialMean_mono_n {n₁ n₂ : Nat} (hn : n₁ ≤ n₂) {p : Rat} (hp : 0 ≤ p) :
+    binomialMean n₁ p ≤ binomialMean n₂ p := by
+  unfold binomialMean
+  exact Rat.mul_le_mul_of_nonneg_right (Rat.natCast_le_natCast.mpr hn) hp
+
+theorem binomialMean_mono_p (n : Nat) {p₁ p₂ : Rat} (hp : p₁ ≤ p₂) :
+    binomialMean n p₁ ≤ binomialMean n p₂ := by
+  unfold binomialMean
+  exact Rat.mul_le_mul_of_nonneg_left hp Rat.natCast_nonneg
+
+theorem binomialVar_nonneg (n : Nat) {p : Rat} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
+    0 ≤ binomialVar n p := by
+  unfold binomialVar
+  exact Rat.mul_nonneg (Rat.mul_nonneg Rat.natCast_nonneg hp0) (by grind)
+
+theorem binomialVar_le_n_quarter (n : Nat) (p : Rat) :
+    binomialVar n p ≤ (n : Rat) / 4 := by
+  unfold binomialVar
+  have h1 : p * (1 - p) ≤ 1 / 4 := bernoulliVar_le_quarter p
+  have h2 : (n : Rat) * (p * (1 - p)) ≤ (n : Rat) * (1 / 4) :=
+    Rat.mul_le_mul_of_nonneg_left h1 Rat.natCast_nonneg
+  grind
 
 /-- Probability that at least 2 of `n` independent viable options stabilize
     concurrently, each with retention probability `p`. -/
@@ -58,7 +73,7 @@ def superpositionProb (p : Rat) (n : Nat) : Rat :=
 @[simp] theorem superpositionProb_one (p : Rat) : superpositionProb p 1 = 0 := by
   simp [superpositionProb]
 
-/-- Exact discrete marginal gain from adding one viable partner (`n ≥ 1`). -/
+/-- Exact discrete marginal gain from adding one viable partner (`n >= 1`). -/
 theorem superpositionProb_step (p : Rat) : ∀ n : Nat, 1 ≤ n →
     superpositionProb p (n + 1) - superpositionProb p n =
       (n : Rat) * p * p * powRat (1 - p) (n - 1)
@@ -84,19 +99,17 @@ theorem superpositionProb_step_nonneg {p : Rat} (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
     superpositionProb p n ≤ superpositionProb p (n + 1) := by
   have hdiff := superpositionProb_step p n hn
   have hq : 0 ≤ powRat (1 - p) (n - 1) := powRat_nonneg (by grind) (n - 1)
-  have hn0 : (0 : Rat) ≤ (n : Rat) := natCast_rat_nonneg n
+  have hn0 : (0 : Rat) ≤ (n : Rat) := Rat.natCast_nonneg
   have hpp : 0 ≤ p * p := Rat.mul_nonneg hp0 hp0
   have hm1 : 0 ≤ (n : Rat) * (p * p) := Rat.mul_nonneg hn0 hpp
   have hm2 : 0 ≤ (n : Rat) * (p * p) * powRat (1 - p) (n - 1) := Rat.mul_nonneg hm1 hq
   grind
 
-/-- Monotonicity: superposition probability is nondecreasing in partner count `n`. -/
 theorem superpositionProb_mono {p : Rat} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
     ∀ {n m : Nat}, n ≤ m → superpositionProb p n ≤ superpositionProb p m
   | 0, 0, _ => by simp
   | 0, m + 1, _ => by
-      have hstep : superpositionProb p 0 ≤ superpositionProb p 1 := by
-        simp
+      have hstep : superpositionProb p 0 ≤ superpositionProb p 1 := by simp
       have hind : superpositionProb p 1 ≤ superpositionProb p (m + 1) := by
         induction m with
         | zero => exact Rat.le_refl
@@ -125,12 +138,11 @@ theorem superpositionProb_le_one {p : Rat} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (n : 
   · decide
   · have h1 : 0 ≤ powRat (1 - p) n := powRat_nonneg (by grind) n
     have h2 : 0 ≤ powRat (1 - p) (n - 1) := powRat_nonneg (by grind) (n - 1)
-    have hn : (0 : Rat) ≤ (n : Rat) := natCast_rat_nonneg n
+    have hn : (0 : Rat) ≤ (n : Rat) := Rat.natCast_nonneg
     have hterm : 0 ≤ (n : Rat) * p * powRat (1 - p) (n - 1) :=
       Rat.mul_nonneg (Rat.mul_nonneg hn hp0) h2
     grind
 
-/-- Strict monotonicity when `0 < p < 1` and `n ≥ 1`. -/
 theorem superpositionProb_strict_step {p : Rat} (hp0 : 0 < p) (hp1 : p < 1)
     {n : Nat} (hn : 1 ≤ n) :
     superpositionProb p n < superpositionProb p (n + 1) := by
@@ -144,9 +156,10 @@ theorem superpositionProb_strict_step {p : Rat} (hp0 : 0 < p) (hp1 : p < 1)
   have hm2 : 0 < (n : Rat) * (p * p) * powRat (1 - p) (n - 1) := Rat.mul_pos hm1 hq
   grind
 
-/-- Attractiveness-Optionality composition theorem: if viable partner count `nOfA`
-    is nondecreasing in attractiveness `A`, superposition probability is nondecreasing
-    in `A`. -/
+/-- Conditional monotonicity theorem: if option count `nOfA` is nondecreasing
+    in attractiveness `A`, then `superpositionProb p (nOfA A)` is nondecreasing in `A`.
+    (Mathematical property of the Binomial model, separate from the empirical hypothesis
+    that attractiveness increases option count.) -/
 theorem conjecture_mono_in_attractiveness {p : Rat} (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
     (nOfA : Rat → Nat) (hA : ∀ A₁ A₂ : Rat, A₁ ≤ A₂ → nOfA A₁ ≤ nOfA A₂)
     {A₁ A₂ : Rat} (hle : A₁ ≤ A₂) :

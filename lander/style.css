@@ -733,6 +733,10 @@ code {
 
 /* Tablet */
 @media (max-width: 960px) {
+  .specimen-plate {
+    display: none;
+  }
+
   .hero-grid,
   .two-col,
   .three-col,
@@ -754,10 +758,6 @@ code {
   }
 
   .top-nav a:not(.nav-cta) {
-    display: none;
-  }
-
-  .specimen-plate {
     display: none;
   }
 

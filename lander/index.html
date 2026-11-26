@@ -25,10 +25,10 @@
         <span class="brand-code">RST // v1.1</span>
       </a>
       <nav class="top-nav" aria-label="Primary navigation">
-        <a href="#dilemma">Dilemma</a>
-        <a href="#paper">Model</a>
-        <a href="#lean">Lean 4</a>
-        <a href="#hypotheses">Hypotheses</a>
+        <a href="#dilemma" class="nav-link">Dilemma</a>
+        <a href="#paper" class="nav-link">Model</a>
+        <a href="#lean" class="nav-link">Lean 4</a>
+        <a href="#hypotheses" class="nav-link">Hypotheses</a>
         <a href="https://github.com/RealRatnadwip/rank-role-uncertainty/blob/main/paper/output/rank-role-uncertainty.pdf" class="nav-cta" target="_blank" rel="noopener noreferrer">PDF</a>
       </nav>
     </div>
@@ -81,17 +81,18 @@
               <line x1="180" y1="16" x2="180" y2="204" stroke="#343438" stroke-width="1" stroke-dasharray="3 4" />
               <circle cx="180" cy="110" r="78" stroke="#242428" stroke-width="1" />
               <circle cx="180" cy="110" r="42" stroke="#303036" stroke-width="1" stroke-dasharray="2 4" />
+              <circle id="collapseRing" cx="180" cy="110" r="14" stroke="#FFFFFF" stroke-width="1" opacity="0" />
 
-              <path id="arc1" d="M 180,110 L 82,56" stroke="#EAEAEA" stroke-width="1.4" />
-              <path id="arc2" d="M 180,110 L 284,62" stroke="#BDBDC2" stroke-width="1.15" />
-              <path id="arc3" d="M 180,110 L 94,166" stroke="#8C8C92" stroke-width="1" />
-              <path id="arc4" d="M 180,110 L 270,164" stroke="#76767C" stroke-width="1" />
+              <path id="arc1" class="vec-arc" d="M 180,110 L 82,56" stroke="#EAEAEA" stroke-width="1.4" />
+              <path id="arc2" class="vec-arc" d="M 180,110 L 284,62" stroke="#BDBDC2" stroke-width="1.15" />
+              <path id="arc3" class="vec-arc" d="M 180,110 L 94,166" stroke="#8C8C92" stroke-width="1" />
+              <path id="arc4" class="vec-arc" d="M 180,110 L 270,164" stroke="#76767C" stroke-width="1" />
 
               <circle cx="180" cy="110" r="3.5" fill="#FFFFFF" />
-              <circle id="node1" cx="82" cy="56" r="4" fill="#FFFFFF" />
-              <circle id="node2" cx="284" cy="62" r="4" fill="#D4D4D8" />
-              <circle id="node3" cx="94" cy="166" r="3.5" fill="#A1A1AA" />
-              <circle id="node4" cx="270" cy="164" r="3.5" fill="#8A8A90" />
+              <circle id="node1" class="vec-node" cx="82" cy="56" r="4" fill="#FFFFFF" />
+              <circle id="node2" class="vec-node" cx="284" cy="62" r="4" fill="#D4D4D8" />
+              <circle id="node3" class="vec-node" cx="94" cy="166" r="3.5" fill="#A1A1AA" />
+              <circle id="node4" class="vec-node" cx="270" cy="164" r="3.5" fill="#8A8A90" />
 
               <text x="294" y="124" fill="#6F6F75" font-family="'Space Mono', monospace" font-size="8.5">AXIS R</text>
               <text x="188" y="24" fill="#6F6F75" font-family="'Space Mono', monospace" font-size="8.5">AXIS L</text>
@@ -132,14 +133,13 @@
 
           <div class="plate-controls">
             <button type="button" class="ctrl-btn" id="pokeBtn">Issue Poke P</button>
-            <button type="button" class="ctrl-btn ctrl-muted" id="resetBtn">Reset</button>
           </div>
         </aside>
       </div>
     </section>
 
     <!-- 01 // THE PROBLEM & DILEMMA -->
-    <section id="dilemma" class="section-block">
+    <section id="dilemma" class="section-block reveal">
       <div class="section-header">
         <span class="section-index">01 // THE PROBLEM &amp; DILEMMA</span>
         <h2 class="section-title">Why classical total orders fail</h2>
@@ -182,7 +182,7 @@
     </section>
 
     <!-- 02 // PAPER ARCHITECTURE -->
-    <section id="paper" class="section-block">
+    <section id="paper" class="section-block reveal">
       <div class="section-header">
         <span class="section-index">02 // MONOGRAPH ARCHITECTURE</span>
         <h2 class="section-title">Drift, projective collapse, and social cascades</h2>
@@ -220,7 +220,7 @@
     </section>
 
     <!-- 03 // FORMAL VERIFICATION IN LEAN 4 -->
-    <section id="lean" class="section-block">
+    <section id="lean" class="section-block reveal">
       <div class="section-header">
         <span class="section-index">03 // FORMAL VERIFICATION (LEAN 4.36.0)</span>
         <h2 class="section-title">Auditable algebra, separated from behavioral claims</h2>
@@ -256,7 +256,7 @@
     </section>
 
     <!-- 04 // UNSOLVED HYPOTHESES -->
-    <section id="hypotheses" class="section-block">
+    <section id="hypotheses" class="section-block reveal">
       <div class="section-header">
         <span class="section-index">04 // UNSOLVED EMPIRICAL HYPOTHESES</span>
         <h2 class="section-title">Open claims awaiting observational data</h2>
@@ -307,10 +307,10 @@
     <div class="footer-inner">
       <div>
         <p class="footer-authors">
-          <a href="mailto:me@ratnadwip.com">Ratnadwip Sarkar</a>,
-          <a href="mailto:koushikmondal0069@gmail.com">Koushik Mondal</a>,
-          <a href="mailto:hello@himanshum.com">Himanshu Malik</a>,
-          <a href="mailto:nwolf8014@gmail.com">Saswata Howladar</a>
+          <a href="mailto:me@ratnadwip.com" target="_blank" rel="noopener noreferrer">Ratnadwip Sarkar</a>,
+          <a href="mailto:koushikmondal0069@gmail.com" target="_blank" rel="noopener noreferrer">Koushik Mondal</a>,
+          <a href="mailto:hello@himanshum.com" target="_blank" rel="noopener noreferrer">Himanshu Malik</a>,
+          <a href="mailto:nwolf8014@gmail.com" target="_blank" rel="noopener noreferrer">Saswata Howladar</a>
         </p>
         <p class="footer-affil">
           ORCID <a href="https://orcid.org/0009-0004-9098-8696" target="_blank" rel="noopener noreferrer">0009-0004-9098-8696</a>
@@ -318,8 +318,8 @@
       </div>
 
       <div class="footer-right">
-        <p class="footer-status" id="updateStatus" data-fallback-ts="2026-11-26T23:12:10Z">
-          Last updated: 2026-11-26 23:12:10 UTC (v1.1)
+        <p class="footer-status" id="updateStatus" data-fallback-ts="2026-11-26T23:18:46Z">
+          Last updated: 2026-11-26 23:18:46 UTC (v1.1)
         </p>
         <p class="footer-links">
           <a href="https://github.com/RealRatnadwip/rank-role-uncertainty/blob/main/paper/output/rank-role-uncertainty.pdf" target="_blank" rel="noopener noreferrer">Download PDF</a>

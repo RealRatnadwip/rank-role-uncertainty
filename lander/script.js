@@ -1,4 +1,4 @@
-/* Relational Superposition Theory // Monochrome Plate & Live Status */
+/* Relational Superposition Theory // Monochrome Plate, Subtle Reveal & Live Status */
 
 (function () {
   "use strict";
@@ -12,10 +12,17 @@
   const entropyEl = document.getElementById("entropyReadout");
   const regimeEl = document.getElementById("regimeReadout");
   const pokeBtn = document.getElementById("pokeBtn");
-  const resetBtn = document.getElementById("resetBtn");
+  const collapseRing = document.getElementById("collapseRing");
 
   function shannonEntropy(weights) {
     return weights.reduce((acc, w) => (w <= 0 ? acc : acc - w * Math.log2(w)), 0);
+  }
+
+  function triggerPulse() {
+    if (!collapseRing) return;
+    collapseRing.classList.remove("is-pulsing");
+    void collapseRing.getBoundingClientRect();
+    collapseRing.classList.add("is-pulsing");
   }
 
   function renderPlate() {
@@ -41,6 +48,7 @@
       }
       if (bar) {
         bar.style.width = `${Math.round(w * 100)}%`;
+        bar.style.opacity = w > 0 ? "1" : "0.2";
       }
       if (pct) {
         pct.textContent = w.toFixed(2);
@@ -62,6 +70,15 @@
         badgeEl.classList.remove("is-collapsed");
       }
     }
+    if (pokeBtn) {
+      if (collapsedIndex !== null) {
+        pokeBtn.textContent = "Reset Superposition";
+        pokeBtn.classList.add("is-reset");
+      } else {
+        pokeBtn.textContent = "Issue Poke P";
+        pokeBtn.classList.remove("is-reset");
+      }
+    }
   }
 
   function sampleOutcome(weights) {
@@ -74,21 +91,39 @@
     return 0;
   }
 
+  /* Single smooth toggle button: Poke -> Collapse -> Reset */
   if (pokeBtn) {
     pokeBtn.addEventListener("click", () => {
-      const winner = sampleOutcome(currentWeights);
-      collapsedIndex = winner;
-      currentWeights = currentWeights.map((_, idx) => (idx === winner ? 1.0 : 0.0));
+      if (collapsedIndex === null) {
+        const winner = sampleOutcome(currentWeights);
+        collapsedIndex = winner;
+        currentWeights = currentWeights.map((_, idx) => (idx === winner ? 1.0 : 0.0));
+        triggerPulse();
+      } else {
+        collapsedIndex = null;
+        currentWeights = [...BASE_WEIGHTS];
+      }
       renderPlate();
     });
   }
 
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-      currentWeights = [...BASE_WEIGHTS];
-      collapsedIndex = null;
-      renderPlate();
-    });
+  /* Subtle scroll reveal for sections */
+  const revealNodes = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08 }
+    );
+    revealNodes.forEach((node) => io.observe(node));
+  } else {
+    revealNodes.forEach((node) => node.classList.add("is-visible"));
   }
 
   function pad2(n) {
@@ -97,7 +132,7 @@
 
   function formatUtc24(isoStr) {
     const d = new Date(isoStr);
-    if (Number.isNaN(d.getTime())) return "2026-11-26 23:12:10 UTC";
+    if (Number.isNaN(d.getTime())) return "2026-11-26 23:18:46 UTC";
     const datePart = `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
     const timePart = `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())}`;
     return `${datePart} ${timePart} UTC`;
@@ -106,7 +141,7 @@
   /* Dynamically update footer timestamp (24h HH:MM:SS) from GitHub repository */
   const statusEl = document.getElementById("updateStatus");
   if (statusEl) {
-    const fallbackIso = statusEl.getAttribute("data-fallback-ts") || "2026-11-26T23:12:10Z";
+    const fallbackIso = statusEl.getAttribute("data-fallback-ts") || "2026-11-26T23:18:46Z";
     const fallbackFormatted = formatUtc24(fallbackIso);
 
     if (typeof fetch === "function") {

@@ -1,7 +1,222 @@
 \section{Synthetic Simulation Study}
 \label{sec:simulations}
 
-To evaluate the quantitative behavior of Relational Superposition Theory, we
-conduct synthetic Monte Carlo experiments with fixed pseudorandom seeds. All
-empirical quantities reported in this section are simulated under the formal
-model and labeled as such.
+To examine the quantitative behavior of Relational Superposition Theory across
+parameter regimes where analytic closed forms are unavailable or involve finite-size
+effects, we conduct four deterministic Monte Carlo experiments using
+\texttt{scripts/run\_simulations.py}. Every datum, summary table, and plot in
+this section is \emph{synthetic}, generated from the formal mathematical models
+of \cref{sec:framework,sec:uncertainty,sec:dynamics,sec:poke,sec:cascade,sec:conjecture}
+with fixed PCG64 pseudorandom seeds. No empirical human subject data is used
+or implied.
+
+\subsection{Experimental Protocol and Seed Ledger}
+\label{subsec:sim-protocol}
+
+All simulations execute under Python~3.13 with NumPy~2.2.4, reading parameters
+hardcoded in \texttt{scripts/run\_simulations.py} and writing reproducible
+CSV tables and \texttt{summary.json} to \texttt{paper/data/}. \cref{tab:seeds}
+records the exact random seeds, sample sizes, and output files.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Deterministic simulation ledger for all synthetic datasets in \texttt{paper/data/}.}
+\label{tab:seeds}
+\begin{tabularx}{\textwidth}{@{}llrLL@{}}
+\toprule
+Experiment & Output CSV & Seed & Sample size & Primary measured quantities \\
+\midrule
+Attention drift & \texttt{markov\_drift.csv} & \texttt{202601} & $180$ steps ($20{,}000$ wk) & Weights $w_i(t)$, $H_{\mathrm{rank}}$, stationary $\pi$ \\
+Optionality scaling & \texttt{optionality\_vs\_n.csv} & \texttt{202602} & $4{,}000$ trials / $n$ & Superposition prob., $30$-day hazard \\
+Attractiveness sweep & \texttt{optionality\_vs\_A.csv} & \texttt{202602} & $4{,}000$ trials / $A$ & Mean Poisson pool, superposition prob. \\
+Graph percolation & \texttt{cascade\_percolation.csv} & \texttt{202603} & $1{,}500$ trials / pt & Cascade prob., mean exposed fraction \\
+Uncertainty sweep & \texttt{uncertainty\_sweep.csv} & \texttt{202604} & $2{,}400$ states & $\Delta R$, $\Delta L$, $\Delta R\cdot\Delta L$, $\kappa_{\mathrm{comm}}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Experiment 1: Periodic Attention Drift and Ergodic Convergence}
+\label{subsec:sim-markov}
+
+In Experiment~1 (seed \texttt{202601}), we simulate a four-partner portfolio
+$\{G_1, G_2, G_3, G_4\}$ over $90$ days ($180$ half-day intervals) using
+regime-specific transition matrices $P^{(\mathrm{wd})}$, $P^{(\mathrm{we})}$,
+and $P^{(\mathrm{st})}$ (full matrices in \cref{app:reproducibility}), stress
+probability $p_{\mathrm{st}} = 0.15$, and EMA smoothing $\alpha = 0.16$.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Comparison of exact weekly stationary eigenvector $\pi_{\mathrm{theory}}$
+against $20{,}000$-week Monte Carlo occupancy (seed \texttt{202601}).}
+\label{tab:markov-stationary}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Metric & $G_1$ (Primary) & $G_2$ (Emotional) & $G_3$ (Financial) & $G_4$ (Weekend) \\
+\midrule
+Initial weight $w_i(0)$ & $0.3400$ & $0.2600$ & $0.2000$ & $0.2000$ \\
+Theoretical $\pi_i$ & $0.2511$ & $0.2248$ & $0.1462$ & $0.3779$ \\
+Empirical ($20{,}000$ wk) & $0.2516$ & $0.2200$ & $0.1439$ & $0.3846$ \\
+Absolute discrepancy & $0.0005$ & $0.0048$ & $0.0023$ & $0.0067$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As reported in \cref{tab:markov-stationary} and plotted earlier in
+\cref{fig:markov-drift}, theoretical and empirical stationary weights agree
+to within $0.007$ across all four partners. Notice a structurally revealing
+artifact of periodic weekend forcing: although $G_1$ starts with the largest
+baseline weight ($0.3400$), weekend transitions concentrate strongly enough on
+$G_4$ that $G_4$ attains the highest long-run occupancy ($0.3779$), while rank
+ambiguity entropy stabilizes at $1.450$ bits at day~$90$.
+
+\subsection{Experiment 2: Superposition Prevalence and Collapse Hazard}
+\label{subsec:sim-optionality}
+
+Experiment~2 (seed \texttt{202602}) tests the binomial and Poisson retention
+models of \cref{sec:conjecture} across partner counts $n \in \{1, \dots, 10\}$
+and attractiveness indices $A \in [0, 10]$, using $4{,}000$ independent trials
+per parameter setting. Alongside superposition prevalence, we evaluate a
+synthetic $30$-day poke hazard model
+\begin{equation}
+  h_{30}(n) = 1 - \exp\!\bigl(-0.08\,n\,[1 + 0.12(n - 1)]\bigr),
+  \label{eq:sim-hazard}
+\end{equation}
+capturing both linear individual inquiry risk and quadratic pairwise visibility
+friction as partner count expands.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Selected synthetic outputs from \texttt{optionality\_vs\_n.csv}
+(seed \texttt{202602}, $4{,}000$ trials per $n$).}
+\label{tab:optionality-sim}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+$n$ & Exact ($p=0.25$) & MC ($p=0.25$) & Exact ($p=0.45$) & MC ($p=0.45$) & $30$-day hazard \\
+\midrule
+$1$ & $0.0000$ & $0.0000$ & $0.0000$ & $0.0000$ & $0.0769$ \\
+$2$ & $0.0625$ & $0.0563$ & $0.2025$ & $0.2073$ & $0.1641$ \\
+$3$ & $0.1563$ & $0.1515$ & $0.4253$ & $0.4218$ & $0.2574$ \\
+$5$ & $0.3672$ & $0.3683$ & $0.7438$ & $0.7318$ & $0.4468$ \\
+$7$ & $0.5551$ & $0.5665$ & $0.9029$ & $0.9033$ & $0.6184$ \\
+$10$ & $0.7560$ & $0.7640$ & $0.9767$ & $0.9775$ & $0.8106$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\cref{tab:optionality-sim} confirms that Monte Carlo counts track exact binomial
+probabilities within sampling error ($\pm 0.012$) while illustrating the
+central stability tradeoff (\cref{fig:collapse-vs-n-A}): high optionality makes
+entering superposition nearly inevitable ($0.977$ at $n = 10, p = 0.45$), yet
+raises $30$-day collapse hazard from $0.164$ ($n = 2$) to $0.811$ ($n = 10$).
+
+\subsection{Experiment 3: Social-Graph Percolation Across Topologies}
+\label{subsec:sim-cascade}
+
+Experiment~3 (seed \texttt{202603}) compares total decoherence probability
+(fraction of partners informed $\ge 0.60$) across $n = 8$ partners and edge
+densities $q \in [0, 1]$ under homogeneous, clustered, and hub-mediated
+networks (\cref{fig:cascade-percolation}). Numerical checkpoints appear in
+\cref{tab:cascade-sim}.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Simulated cascade probability and mean exposed partner fraction for
+$n = 8$, $p_{\mathrm{tx}} = 0.72$, $\theta = 0.60$ (seed \texttt{202603}).}
+\label{tab:cascade-sim}
+\begin{tabular}{@{}ccccccc@{}}
+\toprule
+\multirow{2}{*}{Density $q$} & \multicolumn{3}{c}{Cascade probability} & \multicolumn{3}{c}{Mean exposed fraction} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & Homogeneous & Clustered & Hub-mediated & Homogeneous & Clustered & Hub-mediated \\
+\midrule
+$0.10$ & $0.0567$ & $0.0720$ & $0.0973$ & $0.2145$ & $0.2367$ & $0.2286$ \\
+$0.20$ & $0.2933$ & $0.2780$ & $0.3053$ & $0.4050$ & $0.3999$ & $0.3958$ \\
+$0.30$ & $0.6067$ & $0.5567$ & $0.4787$ & $0.6256$ & $0.5920$ & $0.5403$ \\
+$0.40$ & $0.8087$ & $0.7667$ & $0.6300$ & $0.7793$ & $0.7524$ & $0.6540$ \\
+$0.60$ & $0.9753$ & $0.9420$ & $0.8220$ & $0.9410$ & $0.9036$ & $0.8053$ \\
+$0.80$ & $0.9987$ & $0.9927$ & $0.9187$ & $0.9857$ & $0.9679$ & $0.8920$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two qualitative lessons emerge from \cref{tab:cascade-sim}. First, below the
+analytic homogeneous threshold $q_c \approx 0.1984$, hub-mediated networks
+suffer the highest cascade probability ($0.0973$ vs $0.0567$ at $q = 0.10$)
+because a single highly connected partner bridges otherwise disjoint peers.
+Second, above $q = 0.30$, homogeneous graphs overtake both structured variants,
+reaching $0.9753$ cascade probability by $q = 0.60$ while hub-mediated graphs
+retain partial peripheral insulation ($0.8220$).
+
+\subsection{Experiment 4: Empirical Verification of the Uncertainty Bound}
+\label{subsec:sim-uncertainty}
+
+Experiment~4 (seed \texttt{202604}) samples $2{,}400$ random Hermitian rank-role
+operator pairs $(\opR, \opL)$ and normalized complex superposed states
+$\ket{\Psi}$ across dimensions $d \in \{2, 3, 4, 5\}$ and role-mixing coupling
+strengths $\gamma \in \{0.25, 0.75, 1.50\}$. For each state, we evaluate
+$\Delta R$, $\Delta L$, their product $\Delta R \cdot \Delta L$, and the
+commutator lower bound $\kappa_{\mathrm{comm}} = \frac{1}{2}\abs{\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi}}$.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{figures/fig_uncertainty_bound.pdf}
+  \caption[Synthetic sweep of the Rank-Role Inequality across random operators]{Synthetic sweep over $2{,}400$ random Hermitian rank-role operator
+  pairs and normalized complex states (\texttt{scripts/run\_simulations.py},
+  seed \texttt{202604}). (a) Uncertainty product $\Delta R \cdot \Delta L$ vs
+  commutator lower bound $\kappa_{\mathrm{comm}}$, with zero points below the
+  dashed equality line $\Delta R \cdot \Delta L = \kappa$. (b) Distribution of
+  $\Delta R \cdot \Delta L$ across state dimension $d$.}
+  \label{fig:uncertainty-bound}
+\end{figure}
+
+Across all $2{,}400$ sampled systems, \textbf{zero violations} of~\eqref{eq:rank-role-inequality}
+occurred (\cref{fig:uncertainty-bound}a). The observed minimum ratio
+$(\Delta R \cdot \Delta L) / \kappa_{\mathrm{comm}}$ over states with
+$\kappa_{\mathrm{comm}} > 10^{-9}$ is $1.0000$, confirming that random $2$-dimensional
+states routinely approach the minimum-uncertainty boundary of
+\cref{prop:minimum-uncertainty}. Across the entire ensemble, the median
+uncertainty product is $0.6453$ and the median commutator floor is $0.0860$,
+while median dispersion grows systematically with partner count $d$
+(\cref{fig:uncertainty-bound}b).
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Stratified summary of synthetic uncertainty sweep (\texttt{uncertainty\_sweep.csv},
+seed \texttt{202604}, $200$ states per $(d, \gamma)$ cell, zero bound violations).}
+\label{tab:uncertainty-cells}
+\begin{tabular}{@{}ccrrrrrr@{}}
+\toprule
+$d$ & $\gamma$ & Med.\ $\Delta R$ & Med.\ $\Delta L$ & Med.\ $\Delta R\cdot\Delta L$ & Med.\ $\kappa_{\mathrm{comm}}$ & $95$th pct.\ prod. & Min.\ ratio \\
+\midrule
+$2$ & $0.25$ & $0.4221$ & $0.8479$ & $0.3569$ & $0.0275$ & $0.5178$ & $1.1790$ \\
+$2$ & $0.75$ & $0.4141$ & $0.8557$ & $0.3547$ & $0.0962$ & $0.6708$ & $1.0010$ \\
+$2$ & $1.50$ & $0.4144$ & $1.0648$ & $0.4147$ & $0.1699$ & $0.8959$ & $1.0000$ \\
+$3$ & $0.25$ & $0.6505$ & $0.6714$ & $0.4245$ & $0.0332$ & $0.9270$ & $1.8680$ \\
+$3$ & $0.75$ & $0.6852$ & $0.8145$ & $0.5470$ & $0.0884$ & $1.0631$ & $1.2245$ \\
+$3$ & $1.50$ & $0.6806$ & $1.0440$ & $0.6991$ & $0.2296$ & $1.3025$ & $1.0738$ \\
+$4$ & $0.25$ & $0.9894$ & $0.6584$ & $0.6485$ & $0.0323$ & $1.2344$ & $3.4040$ \\
+$4$ & $0.75$ & $0.9646$ & $0.7648$ & $0.7122$ & $0.1201$ & $1.4291$ & $1.4495$ \\
+$4$ & $1.50$ & $0.9707$ & $1.0653$ & $1.0270$ & $0.2314$ & $1.6454$ & $1.2170$ \\
+$5$ & $0.25$ & $1.2758$ & $0.6579$ & $0.8277$ & $0.0408$ & $1.4178$ & $3.7880$ \\
+$5$ & $0.75$ & $1.2904$ & $0.7498$ & $0.9676$ & $0.1582$ & $1.6593$ & $1.7094$ \\
+$5$ & $1.50$ & $1.2862$ & $1.0853$ & $1.3591$ & $0.2495$ & $2.3096$ & $1.1950$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\cref{tab:uncertainty-cells} reveals two geometric trends across the $12$
+dimension-coupling cells. First, median rank dispersion $\Delta R$ scales
+primarily with portfolio dimension $d$ ($0.42$ at $d=2$ to $1.29$ at $d=5$),
+whereas median role dispersion $\Delta L$ and commutator floor
+$\kappa_{\mathrm{comm}}$ scale strongly with role-mixing coupling $\gamma$
+(for $d=5$, median $\kappa_{\mathrm{comm}}$ increases sixfold from $0.0408$
+at $\gamma=0.25$ to $0.2495$ at $\gamma=1.50$). Second, minimum tightness
+ratios stay close to unity in low dimension ($1.0000$ at $d=2, \gamma=1.50$)
+and drift upward in higher dimensions because generic random vectors rarely
+lie inside the two-dimensional minimum-uncertainty manifold of
+\cref{prop:minimum-uncertainty}.

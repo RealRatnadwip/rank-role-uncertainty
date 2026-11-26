@@ -1,0 +1,29 @@
+# LaTeX build directory and temporary artifacts
+paper/build/
+paper/figures/*-tmp.*
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.synctex.gz
+
+# Lean build cache
+lean/.lake/
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.venv/
+
+# Editor and OS files
+.DS_Store
+*~
+*.swp
+*.swo
+.vscode/

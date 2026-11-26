@@ -1,0 +1,175 @@
+% Packages, typography, macros, and theorem environments for Relational Superposition Theory
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in,headheight=23pt]{geometry}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,multirow,array}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{needspace}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xurl}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,fit,backgrounds}
+
+% Color palette: restrained editorial ink and slate
+\definecolor{inkblack}{HTML}{141416}
+\definecolor{slateink}{HTML}{334155}
+\definecolor{mutedgray}{HTML}{64748B}
+\definecolor{rulegray}{HTML}{CBD5E1}
+\definecolor{accentink}{HTML}{2B3A67}
+\definecolor{plumink}{HTML}{5B3E6B}
+\definecolor{softtint}{HTML}{F8FAFC}
+\definecolor{codebg}{HTML}{F6F7F9}
+
+\setstretch{1.10}
+\widowpenalty=10000
+\clubpenalty=10000
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{1.2em}
+
+% Running headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{mutedgray}\nouppercase{\leftmark}}
+\fancyhead[R]{\small\color{mutedgray}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulegray}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+
+% Section formatting
+\titleformat{\section}
+  {\needspace{5\baselineskip}\Large\bfseries\color{inkblack}}
+  {\thesection}{0.8em}{}[\vspace{0.25em}{\color{rulegray}\titlerule[0.5pt]}]
+\titleformat{\subsection}
+  {\needspace{4\baselineskip}\large\bfseries\color{inkblack}}
+  {\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}
+  {\needspace{3\baselineskip}\normalsize\bfseries\color{slateink}}
+  {\thesubsubsection}{0.6em}{}
+
+% Caption styling
+\captionsetup{
+  font=small,
+  labelfont={bf,color=inkblack},
+  textfont={color=slateink},
+  margin=1em
+}
+
+% Listings styling for Lean 4 and pseudocode
+\lstdefinelanguage{Lean4}{
+  morekeywords={import,namespace,end,structure,inductive,def,noncomputable,theorem,lemma,proposition,example,where,let,in,if,then,else,match,with,by,have,show,calc,fun,forall,exists,open,section,variable,private,protected,deriving,instance,class},
+  sensitive=true,
+  morecomment=[l]{--},
+  morecomment=[s]{/-}{-/},
+  morestring=[b]"
+}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{rulegray},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0.8em,
+  xrightmargin=0.8em,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+
+% Hyperref and cleveref (cleveref must follow hyperref and precede theorem definitions)
+\usepackage[
+  colorlinks=true,
+  linkcolor=accentink,
+  citecolor=accentink,
+  urlcolor=accentink,
+  bookmarksnumbered=true,
+  pdftitle={The Rank-Role Uncertainty Principle: A Theory of Relational Superposition},
+  pdfauthor={Ratnadwip Sarkar},
+  pdfsubject={Relational Superposition Theory},
+  pdfkeywords={relational superposition, situationship, rank, role, uncertainty, collapse, decoherence, optionality}
+]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+% Theorem environments (numbered within section for clean cross-referencing)
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{principle}[theorem]{Principle}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Cleveref names
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{principle}{Principle}{Principles}
+\crefname{proposition}{Proposition}{Propositions}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{corollary}{Corollary}{Corollaries}
+\crefname{conjecture}{Conjecture}{Conjectures}
+\crefname{definition}{Definition}{Definitions}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{example}{Example}{Examples}
+\crefname{remark}{Remark}{Remarks}
+
+% Core mathematical macros
+\newcommand{\RST}{\textsc{rst}}
+\newcommand{\ket}[1]{\lvert #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 \rvert}
+\newcommand{\braket}[2]{\langle #1 \mid #2 \rangle}
+\newcommand{\ketbra}[2]{\lvert #1 \rangle\langle #2 \rvert}
+\newcommand{\expect}[2]{\langle #1 \rangle_{#2}}
+\newcommand{\var}[2]{\operatorname{Var}_{#2}(#1)}
+\newcommand{\std}[2]{\Delta_{#2} #1}
+\newcommand{\comm}[2]{[#1, #2]}
+\newcommand{\opR}{\hat{R}}
+\newcommand{\opL}{\hat{L}}
+\newcommand{\opI}{\hat{I}}
+\newcommand{\poke}{\mathcal{P}}
+\newcommand{\kappaS}{\kappa}
+\newcommand{\roleset}{\mathcal{R}}
+\newcommand{\partnerset}{\mathcal{G}}
+\newcommand{\vspaceR}{\mathcal{V}_{\mathcal{R}}}
+\newcommand{\vspaceG}{\mathcal{V}_{\mathcal{G}}}
+\newcommand{\vspaceTot}{\mathcal{V}}
+\newcommand{\Cnum}{\mathbb{C}}
+\newcommand{\Rnum}{\mathbb{R}}
+\newcommand{\Qnum}{\mathbb{Q}}
+\newcommand{\Znum}{\mathbb{Z}}
+\newcommand{\Nnum}{\mathbb{N}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\RePart}{\operatorname{Re}}
+\newcommand{\ImPart}{\operatorname{Im}}

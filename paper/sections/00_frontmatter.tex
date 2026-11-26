@@ -1,18 +1,19 @@
 \begin{titlepage}
+\hypersetup{pageanchor=false}
 \thispagestyle{empty}
 \centering
-\vspace*{1.6cm}
+\vspace*{1.4cm}
 
 {\small\scshape\color{mutedgray} Technical Monograph \textbullet\ Relational Superposition Theory \par}
-\vspace{0.9cm}
+\vspace{0.85cm}
 
 {\Huge\bfseries\color{inkblack} The Rank-Role Uncertainty Principle\par}
 \vspace{0.45cm}
 {\Large\color{slateink} A Formal Theory of Relational Superposition\par}
 
-\vspace{1.2cm}
+\vspace{1.1cm}
 {\color{rulegray}\rule{0.35\textwidth}{0.6pt}}
-\vspace{1.0cm}
+\vspace{0.9cm}
 
 {\large\bfseries Ratnadwip Sarkar\par}
 \vspace{0.25cm}
@@ -20,10 +21,10 @@
 \url{https://github.com/RealRatnadwip} \quad\textbar\quad \url{https://ratnadwip.com}
 \par}
 
-\vspace{0.9cm}
+\vspace{0.75cm}
 {\small\color{mutedgray} Version 1.0 \quad\textbullet\quad \today\par}
 
-\vspace{1.5cm}
+\vspace{1.3cm}
 \begin{minipage}{0.90\textwidth}
 \small
 \noindent\textbf{Abstract.}\;
@@ -35,32 +36,93 @@ partner holding a well-defined ordinal rank. Prior to observation, no partner is
 or second; each partner occupies a weighted combination of roles and contributes a
 probabilistic weight to the system state. We formalize rank and role as non-commuting
 operators on a finite-dimensional inner-product space and establish the central
-bound, the \emph{Rank-Role Inequality}: $\Delta R \cdot \Delta L \ge \kappa$, where
-$\kappa > 0$ is the situationship constant governed by the commutator expectation.
-We model the \emph{poke}, any direct status inquiry that forces projective collapse
-onto a single partner, analyze the three post-poke phases of silence, weight
-redistribution, and social-graph cascade (decoherence), and formalize the
-\emph{Attractiveness-Optionality Conjecture} alongside its gender-symmetric mirror
-configuration. Synthetic simulations and machine-checked Lean~4 proofs establish the
-internal consistency and quantitative behavior of the framework.
+bound, the \emph{Rank-Role Inequality}: $\Delta R \cdot \Delta L \ge \kappaS$, where
+$\kappaS > 0$ is the situationship constant governed by the commutator expectation.
+We formulate a Markovian attention-drift model over weekday, weekend, and emotional-stress
+regimes, characterize the \emph{poke} as a projective collapse operation governed by the
+Poke Rule, and analyze post-poke redistribution alongside social-graph cascade
+(decoherence) as a bond-percolation process. We state the
+\emph{Attractiveness-Optionality Conjecture}, prove monotonicity under an explicit
+binomial retention model, and establish symmetry under gender inversion. Quantitative
+behavior is evaluated through deterministic synthetic simulations, and core algebraic,
+normalization, monotonicity, and uncertainty results are machine-checked in Lean~4.
 \end{minipage}
 
-\vspace{1.0cm}
+\vspace{0.9cm}
 \begin{minipage}{0.90\textwidth}
 \small
 \noindent\textbf{Keywords:} relational superposition, situationship, rank, role,
-uncertainty, collapse, decoherence, optionality, social-graph cascade.
+uncertainty, collapse, decoherence, optionality, social-graph cascade, formal verification.
 \end{minipage}
 
 \vfill
 \end{titlepage}
 
 \clearpage
+\hypersetup{pageanchor=true}
 \pagenumbering{roman}
 \tableofcontents
 \clearpage
 \listoffigures
 \listoftables
 \clearpage
-\pagenumbering{arabic}
 
+\section*{Reader's Guide and Notation}
+\addcontentsline{toc}{section}{Reader's Guide and Notation}
+
+This monograph is structured so that theoretical foundations, dynamical extensions,
+synthetic computational experiments, and formal verification artifacts remain clearly
+separated. \cref{sec:introduction,sec:background} motivate the failure of classical
+total-order dating models from order-theoretic first principles.
+\cref{sec:framework,sec:uncertainty} develop the core linear-algebraic state space
+and prove the Rank-Role Inequality together with tightness conditions and explicit
+matrix calculations. \cref{sec:dynamics,sec:poke,sec:cascade} introduce
+temporal attention drift, projective collapse under the poke, and social-graph
+percolation. \cref{sec:conjecture,sec:symmetry} state the Attractiveness-Optionality
+Conjecture and prove invariance under gender inversion. \cref{sec:simulations}
+presents synthetic Monte Carlo simulations generated with fixed seeds, and
+\cref{sec:verification} maps formally verified theorems to their Lean~4 declarations.
+\cref{sec:limitations,sec:discussion} examine threats to validity and open problems.
+Detailed derivations, an expanded role taxonomy, a glossary, simulation pseudocode,
+and a proposed unadministered survey instrument appear in \cref{app:proofs,app:roles,app:glossary,app:reproducibility,app:instrument}.
+
+Throughout, American English spelling is used consistently. All quantitative plots
+and numerical tables in \cref{sec:simulations} are synthetic outputs produced by the
+deterministic scripts in \texttt{scripts/}, with exact random seeds recorded inline.
+Machine-checked claims in \cref{sec:verification} are restricted strictly to theorems
+verified by \texttt{lake build} with zero unfinished proofs.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Summary of recurring mathematical notation used throughout the paper.}
+\label{tab:notation}
+\begin{tabularx}{\textwidth}{@{}llX@{}}
+\toprule
+Symbol & Domain & Interpretation \\
+\midrule
+$W$ & Focal agent & Observed individual maintaining concurrent connections \\
+$\partnerset = \{G_1, \dots, G_n\}$ & Finite set, $\abs{\partnerset} = n$ & Set of active or viable partners \\
+$\roleset = \{r_1, \dots, r_m\}$ & Finite set, $\abs{\roleset} = m$ & Orthonormal basis of relational functions (roles) \\
+$\ket{G_i}$ & $\vspaceR \cong \Cnum^m$ & Normalized role-superposition state vector of partner $G_i$ \\
+$c_{ij}$ & $\Cnum$, $\sum_{j=1}^m \abs{c_{ij}}^2 = 1$ & Role amplitude of partner $G_i$ in role $r_j$ \\
+$\ket{\Psi}$ & $\vspaceG \cong \Cnum^n$ (or $\vspaceTot$) & Full relational state vector of the system \\
+$a_i$ & $\Cnum$, $\sum_{i=1}^n \abs{a_i}^2 = 1$ & System amplitude of partner $G_i$; weight $w_i = \abs{a_i}^2$ \\
+$\opR, \opL$ & Hermitian operators & Rank-measuring and role-measuring observables \\
+$\expect{\opR}{\Psi}, \var{\opR}{\Psi}$ & $\Rnum$, $\Rnum_{\ge 0}$ & Expectation and variance of observable $\opR$ in state $\ket{\Psi}$ \\
+$\Delta R, \Delta L$ & $\Rnum_{\ge 0}$ & Dispersion (standard deviation) in rank and role \\
+$\comm{\opR}{\opL}$ & Operator $\opR\opL - \opL\opR$ & Commutator quantifying measurement order sensitivity \\
+$\kappaS$ & $\Rnum_{> 0}$ & Situationship constant bounding $\Delta R \cdot \Delta L$ \\
+$\poke$ & Projection / measurement & Direct status query (``poke'') forcing state collapse \\
+$P^{(r)}$ & Stochastic matrix & Attention transition kernel under regime $r$ \\
+$\pi$ & Probability vector & Stationary attention distribution over partners \\
+$H(\mathbf{w})$ & $\Rnum_{\ge 0}$ (bits) & Shannon entropy of partner weight distribution $\mathbf{w}$ \\
+$G_{\mathrm{soc}} = (V, E)$ & Undirected graph & Shared social-friend graph among partners \\
+$q, p_{\mathrm{tx}}, q_c$ & $[0, 1]$ & Friend-edge density, note-sharing probability, cascade threshold \\
+$A, n(A), p$ & $\Rnum_{\ge 0}, \Nnum, [0, 1]$ & Perceived attractiveness, viable pool size, retention probability \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\clearpage
+\pagenumbering{arabic}

@@ -1,4 +1,120 @@
 \section{Extended Proofs}
 \label{app:proofs}
 
-Detailed derivations of auxiliary lemmas appear here.
+This appendix records complete step-by-step proofs for auxiliary mathematical
+results invoked in \cref{sec:uncertainty,sec:dynamics,sec:cascade,sec:conjecture}.
+
+\subsection{Division-Free Complex Cauchy-Schwarz Proof}
+\label{app:proof-cs}
+
+In \cref{sec:uncertainty}, \cref{thm:rank-role-inequality} relies on the
+complex Cauchy-Schwarz inequality $\abs{\braket{u}{v}}^2 \le \norm{u}^2 \norm{v}^2$.
+To align directly with the constructive formalization in \texttt{lean/RST/Uncertainty.lean}
+(which avoids case-splitting on division inside algebraic rewrites), we give
+the division-free polynomial proof.
+
+\begin{lemma}[Division-free Cauchy-Schwarz]
+\label{lem:app-cs}
+For any $u, v \in \Cnum^d$, $\abs{\braket{u}{v}}^2 \le \norm{u}^2 \norm{v}^2$.
+\end{lemma}
+\begin{proof}
+Set $s = \norm{v}^2 = \braket{v}{v} \ge 0$. If $s = 0$, positive definiteness of
+the inner product yields $v = 0$, hence $\braket{u}{v} = 0$ and $0 \le 0$.
+Assume therefore $s > 0$, and set $c = \braket{v}{u} = \braket{u}{v}^*$.
+Consider the vector $w = s u - c v \in \Cnum^d$. By non-negativity of the norm,
+\begin{align*}
+  0 \le \norm{w}^2 = \braket{w}{w}
+  &= \braket{s u - c v}{s u - c v} \\
+  &= s^2 \braket{u}{u} - s c \braket{u}{v} - s c^* \braket{v}{u} + \abs{c}^2 \braket{v}{v} \\
+  &= s^2 \norm{u}^2 - s \abs{\braket{u}{v}}^2 - s \abs{\braket{u}{v}}^2 + \abs{\braket{u}{v}}^2 s \\
+  &= s \bigl(s \norm{u}^2 - \abs{\braket{u}{v}}^2\bigr).
+\end{align*}
+Since $s > 0$, dividing both sides by $s$ yields $s \norm{u}^2 - \abs{\braket{u}{v}}^2 \ge 0$,
+i.e., $\abs{\braket{u}{v}}^2 \le \norm{u}^2 \norm{v}^2$.
+\end{proof}
+
+\subsection{Doeblin Minorization and Geometric Mixing of the Weekly Kernel}
+\label{app:proof-doeblin}
+
+In \cref{sec:dynamics}, \cref{prop:stationary} claims geometric convergence to a
+unique stationary attention distribution $\pi$ whenever $P_{\mathrm{week}}$ has
+strictly positive entries.
+
+\begin{lemma}[Explicit total-variation contraction rate]
+\label{lem:app-doeblin}
+Let $P$ be an $n \times n$ row-stochastic matrix satisfying
+$\varepsilon_0 = \min_{i,j} P_{ij} > 0$. Then for any two probability
+distributions $\mu, \nu \in \Delta^{n-1}$ and every integer $k \ge 1$,
+\begin{equation}
+  d_{\mathrm{TV}}\bigl(\mu^\top P^k, \nu^\top P^k\bigr)
+  \;\le\; (1 - n\varepsilon_0)^k\, d_{\mathrm{TV}}(\mu, \nu),
+  \label{eq:doeblin-rate}
+\end{equation}
+where $d_{\mathrm{TV}}(\mu, \nu) = \frac{1}{2}\sum_{i=1}^n \abs{\mu_i - \nu_i}$.
+\end{lemma}
+\begin{proof}
+Define the uniform distribution $\mathbf{u} = (1/n, \dots, 1/n)$. Because
+$P_{ij} \ge \varepsilon_0 = (n\varepsilon_0) u_j$ for all $i, j$, the matrix
+$P$ decomposes as $P = (1 - n\varepsilon_0) Q + (n\varepsilon_0) \mathbf{1}\mathbf{u}^\top$,
+where $Q_{ij} = (P_{ij} - \varepsilon_0)/(1 - n\varepsilon_0) \ge 0$ is row-stochastic
+whenever $n\varepsilon_0 < 1$ (if $n\varepsilon_0 = 1$, $P$ has identical rows
+and contraction holds with factor $0$). For any $\mu, \nu$,
+\begin{equation*}
+  \mu^\top P - \nu^\top P
+  = (1 - n\varepsilon_0)(\mu - \nu)^\top Q + n\varepsilon_0 \underbrace{(\mu^\top \mathbf{1} - \nu^\top \mathbf{1})}_{=0}\mathbf{u}^\top
+  = (1 - n\varepsilon_0)(\mu - \nu)^\top Q.
+\end{equation*}
+Since $Q$ is row-stochastic, $\sum_j \abs{((\mu - \nu)^\top Q)_j} \le \sum_i \abs{\mu_i - \nu_i}\sum_j Q_{ij} = \sum_i \abs{\mu_i - \nu_i}$,
+giving $d_{\mathrm{TV}}(\mu^\top P, \nu^\top P) \le (1 - n\varepsilon_0) d_{\mathrm{TV}}(\mu, \nu)$.
+Induction on $k$ yields~\eqref{eq:doeblin-rate}.
+\end{proof}
+
+\subsection{Poisson Thinning Derivation for Option Pools}
+\label{app:proof-poisson}
+
+In \cref{sec:conjecture}, \cref{eq:poisson-superposition} expresses the
+superposition probability when the viable partner pool is random with mean
+$\lambda(A)$.
+
+\begin{lemma}[Poisson-binomial superposition formula]
+\label{lem:app-poisson}
+Let $N \sim \operatorname{Poisson}(\lambda)$ with $\lambda > 0$, and conditional
+on $N = n$, let $K \mid N = n \sim \operatorname{Binomial}(n, p)$ with
+$p \in [0, 1]$. Then unconditionally $K \sim \operatorname{Poisson}(p\lambda)$
+and $\Prob(K \ge 2) = 1 - e^{-p\lambda}(1 + p\lambda)$.
+\end{lemma}
+\begin{proof}
+For every integer $k \ge 0$, summing over $n \ge k$ gives
+\begin{align*}
+  \Prob(K = k)
+  &= \sum_{n=k}^{\infty} e^{-\lambda}\frac{\lambda^n}{n!}\binom{n}{k} p^k (1 - p)^{n-k} \\
+  &= e^{-\lambda}\frac{(p\lambda)^k}{k!} \sum_{m=0}^{\infty} \frac{\bigl((1 - p)\lambda\bigr)^m}{m!} \\
+  &= e^{-\lambda}\frac{(p\lambda)^k}{k!} e^{(1-p)\lambda}
+  = e^{-p\lambda}\frac{(p\lambda)^k}{k!}.
+\end{align*}
+Thus $K \sim \operatorname{Poisson}(p\lambda)$, and
+$\Prob(K \ge 2) = 1 - \Prob(K = 0) - \Prob(K = 1) = 1 - e^{-p\lambda}(1 + p\lambda)$.
+\end{proof}
+
+\subsection{Subcritical Cluster Bound in Social-Graph Percolation}
+\label{app:proof-percolation}
+
+In \cref{thm:percolation-threshold}, we bounded the expected informed partner
+cluster size below $q_c = \frac{1}{(n - 1)p_{\mathrm{tx}}}$.
+Specifically, exploring $C(i_0)$ via breadth-first generation layers
+$Z_0 = 1, Z_1, Z_2, \dots$, each vertex in generation $t$ tests at most
+$n - 1$ unvisited candidates independently with bond probability $q p_{\mathrm{tx}}$.
+Coupling the generation sizes to a Galton-Watson process $\tilde{Z}_t$ with
+offspring law $\operatorname{Binomial}(n - 1, q p_{\mathrm{tx}})$ yields
+$Z_t \le_{\mathrm{st}} \tilde{Z}_t$ for all $t \ge 0$, whence
+$\E[\tilde{Z}_t] = \bigl((n - 1) q p_{\mathrm{tx}}\bigr)^t$. Summing over
+$t \ge 0$ when $\mu = (n - 1) q p_{\mathrm{tx}} < 1$ gives
+\begin{equation*}
+  \E\bigl[\abs{C(i_0)}\bigr]
+  = \sum_{t=0}^{\infty} \E[Z_t]
+  \le \sum_{t=0}^{\infty} \mu^t
+  = \frac{1}{1 - (n - 1) q p_{\mathrm{tx}}}.
+\end{equation*}
+Consequently, by Markov's inequality, $\Prob(\abs{C(i_0)} \ge \theta n) \le (\theta n (1 - \mu))^{-1}$,
+which vanishes as $n \to \infty$ whenever $(n - 1) q p_{\mathrm{tx}}$ stays bounded
+strictly below~$1$.

@@ -1,5 +1,75 @@
 \section{Proposed Unadministered Survey Instrument}
 \label{app:instrument}
 
-A proposed longitudinal observational questionnaire, not administered in this
-study, is documented here for future empirical validation.
+Consistent with \cref{sec:limitations}, this instrument has \emph{not} been
+administered to human participants and no empirical claims in this monograph
+rely on survey responses. It is specified here solely as a concrete protocol
+for testing the Attractiveness-Optionality Conjecture (\cref{conj:optionality})
+without inducing measurement-driven collapse.
+
+\subsection{Anti-Reactivity Design Principles}
+\label{app:inst-principles}
+
+Direct status questions (``rank your current partners from 1 to $n$'') are
+excluded from participant prompts because they operationalize a poke $\poke$.
+Instead, the instrument captures:
+\begin{enumerate}[nosep]
+  \item \textbf{Behavioral interaction logs:} weekly partner counts (pseudonymized
+        tokens $P_1, P_2, \dots$), interaction frequency, and time-of-day blocks;
+  \item \textbf{Functional tag indicators:} non-exclusive checkboxes mapping
+        interactions onto the role basis $\{r_1, \dots, r_5\}$;
+  \item \textbf{Network overlap indicators:} whether each pair $(P_i, P_j)$
+        shares mutual acquaintances or group chats;
+  \item \textbf{Independent optionality proxies:} pre-study self-reported incoming
+        dates/invitations over a $30$-day baseline window and optional anonymized
+        peer-rated attractiveness scores by an external panel.
+\end{enumerate}
+
+\subsection{Weekly Cadence Diary Schema}
+\label{app:inst-schema}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Proposed weekly longitudinal log fields (unadministered).}
+\label{tab:instrument-fields}
+\begin{tabularx}{\textwidth}{@{}llL@{}}
+\toprule
+Field ID & Type & Prompt / Operational coding \\
+\midrule
+\texttt{W\_ACTIVE\_N} & Integer $\ge 0$ & Count of distinct non-exclusive romantic/quasi-romantic contacts exchanged $\ge 2$ messages with during the past $7$ days. \\
+\texttt{P\_ROLE\_TAGS} & Multi-select & For each pseudonym $P_i$: (a) public co-appearance or photo, (b) emotional/personal advice, (c) shared meal/financial favor, (d) weekend outing, (e) brief check-in only. \\
+\texttt{P\_TIME\_SLOT} & Categorical & Primary interaction window: daytime weekday, weekday evening, late night (after 11~p.m.), or weekend. \\
+\texttt{P\_POKE\_EVENT} & Binary + latency & Did $P_i$ ask directly for status definition this week? If yes, record response delay bracket ($<1$ h, $1$--$12$ h, $>12$ h) and outcome (exclusive, exit, unresolved). \\
+\texttt{NET\_OVERLAP} & Binary matrix & For active pairs $(P_i, P_j)$, do $P_i$ and $P_j$ share at least one mutual acquaintance or group chat? \\
+\texttt{OPT\_INCOMING} & Integer $\ge 0$ & Count of distinct new or dormant contacts initiating romantic interest in the past $14$ days. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Ethical and Privacy Safeguards}
+\label{app:inst-ethics}
+
+Any future administration requires institutional review approval, fully informed
+consent, local hashing of partner identifiers prior to storage so real names
+never enter the dataset, and automated deletion of raw message timestamps after
+aggregation into weekly cadence summaries.
+
+\subsection{Pre-Specified Statistical Analysis Plan}
+\label{app:inst-analysis}
+
+To test \cref{conj:optionality} without post-hoc data dredging, the primary
+confirmatory specification regresses an indicator of sustained superposition
+($Y_{it} = \mathbf{1}\{\texttt{W\_ACTIVE\_N}_{it} \ge 2 \text{ across } \ge 3\text{ consecutive weeks}\}$)
+on perceived attractiveness $A_i$ and viable pool proxy
+$N_i = \texttt{OPT\_INCOMING}_i$ via logistic mixed-effects modeling:
+\begin{equation}
+  \operatorname{logit}\,\Prob(Y_{it} = 1)
+  = \beta_0 + \beta_1 A_i + \beta_2 \log(1 + N_i) + \beta_3 \bar{q}_i + u_i,
+  \label{eq:instrument-regression}
+\end{equation}
+where $\bar{q}_i$ measures baseline social-graph edge density across active
+contacts and $u_i \sim \mathcal{N}(0, \sigma_u^2)$ is a participant random
+intercept. Under the option-mediation prediction (\cref{subsec:conj-design}),
+$\beta_2 > 0$ and $\beta_3 < 0$, while the direct attractiveness coefficient
+$\beta_1$ attenuates sharply once $\log(1 + N_i)$ is included.

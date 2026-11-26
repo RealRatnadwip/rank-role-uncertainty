@@ -1,69 +1,229 @@
-\section{A Formal Framework}
+\section{A Formal Framework of Relational Superposition}
 \label{sec:framework}
 
-\begin{definition}[Role]
-A \emph{role} is a function a partner performs for the observed person.
-We work with a finite role set $\roleset = \{r_1, \dots, r_m\}$.
+We now construct the state-space formalism of Relational Superposition Theory.
+The model represents both the functional composition of each individual partner
+and the system-wide priority distribution across all concurrent partners.
+
+\subsection{Primitive Objects: Roles, Ranks, and Pokes}
+\label{subsec:fw-primitives}
+
+\begin{definition}[Role and role basis]
+\label{def:role}
+A \emph{role} is an identifiable relational function performed by a partner for
+the focal person $W$. We model the set of elementary functions by a finite
+orthonormal basis $\roleset = \{r_1, \dots, r_m\}$ generating an $m$-dimensional
+complex inner-product space $\vspaceR \cong \Cnum^m$ with basis vectors
+$\{\ket{r_1}, \dots, \ket{r_m}\}$ satisfying $\braket{r_j}{r_\ell} = \delta_{j\ell}$.
 \end{definition}
 
 \begin{table}[htbp]
 \centering
-\caption{The basis roles used in this paper. The list is incomplete by design.}
+\caption{Canonical five-role basis used throughout the monograph. Additional
+sub-roles are catalogued in \cref{app:roles}.}
 \label{tab:roles}
-\begin{tabular}{@{}lll@{}}
+\begin{tabularx}{\textwidth}{@{}llX@{}}
 \toprule
-Symbol & Role & Typical observable \\
+Symbol & Role & Typical behavioral observable \\
 \midrule
-$r_1$ & Primary (``the main one'') & Appears in photos \\
-$r_2$ & Emotional support & Receives long voice notes \\
-$r_3$ & Financial support & Receives ``are you free?'' before dinner \\
-$r_4$ & Entertainment & Appears on weekends \\
-$r_5$ & Contingency (``just in case'') & Receives a message every few weeks \\
+$r_1$ & Primary (``the main one'') & Appears in public photos; introduced to inner circle \\
+$r_2$ & Emotional support & Receives long voice notes; contacted late at night \\
+$r_3$ & Financial support & Receives ``are you free?'' before dinner or errands \\
+$r_4$ & Entertainment & Appears on weekends, concerts, and social outings \\
+$r_5$ & Contingency (``just in case'') & Receives intermittent check-ins every few weeks \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \begin{definition}[Rank]
-The \emph{rank} of a partner is his position in the observed person's
-preference ordering. In a classical system rank is a well-defined integer.
-In a superposed system it is not.
+\label{def:rank}
+The \emph{rank} of partner $G_i$ is his ordinal position in $W$'s preference
+hierarchy. In a classical (collapsed) system, rank is a deterministic integer
+in $\{1, \dots, n\}$. In a superposed system, rank is represented by an
+observable operator whose outcome distribution depends on the current state
+vector.
 \end{definition}
 
 \begin{definition}[The poke]
-A \emph{poke}, denoted $\poke$, is any direct question or action that demands
-a definite answer about status, for example ``so what are we?''
+\label{def:poke}
+A \emph{poke}, denoted $\poke$, is any direct verbal inquiry, scheduling demand,
+or boundary ultimatum that requires $W$ to assign a definite relational status
+to one or more partners (for example, ``so what are we?'' or ``are we exclusive?'').
 \end{definition}
 
-Let the observed person have $n$ partners and let $\abs{\roleset} = m$ roles.
-The state of partner $G_i$ is the vector
+\subsection{Partner State Vectors and System State}
+\label{subsec:fw-states}
+
+Let $W$ maintain $n \ge 1$ concurrent partners $\partnerset = \{G_1, \dots, G_n\}$
+over a role basis of size $m = \abs{\roleset}$.
+
+\begin{definition}[Partner state vector]
+\label{def:partner-state}
+The functional state of partner $G_i$ is a unit vector $\ket{G_i} \in \vspaceR$,
 \begin{equation}
   \ket{G_i} = \sum_{j=1}^{m} c_{ij}\,\ket{r_j},
   \qquad \sum_{j=1}^{m} \abs{c_{ij}}^2 = 1,
   \label{eq:partner-state}
 \end{equation}
-where $\abs{c_{ij}}^2$ is the weight with which $G_i$ currently occupies role
-$r_j$. A partner is not \emph{in} a role; he is in a combination of roles.
+where $c_{ij} \in \Cnum$ is the role amplitude and $p_{ij} = \abs{c_{ij}}^2 \in [0, 1]$
+is the fraction of $G_i$'s functional interaction falling into role $r_j$.
+\end{definition}
 
-The full relational state of the system is
+The complex phase of $c_{ij}$ encodes relational timing and framing coherence
+between roles: two partners with identical role probabilities $\abs{c_{ij}}^2$
+can interfere differently under rank-role measurements if their cross-role
+phases differ. A partner is not strictly \emph{in} a single role unless
+$\abs{c_{ik}}^2 = 1$ for some $k$; in general, he occupies a superposition of roles.
+
+\begin{definition}[System state vector]
+\label{def:system-state}
+When partner states are embedded into the $n$-partner system space
+$\vspaceG \cong \Cnum^n$ with orthonormal basis $\{\ket{e_1}, \dots, \ket{e_n}\}$
+(or equivalently the composite space $\vspaceTot = \vspaceG \otimes \vspaceR$),
+the system state of $W$'s relational portfolio is
 \begin{equation}
-  \ket{\Psi} = \sum_{i=1}^{n} a_i \,\ket{G_i},
+  \ket{\Psi} = \sum_{i=1}^{n} a_i\,\ket{e_i} \otimes \ket{G_i},
   \qquad \sum_{i=1}^{n} \abs{a_i}^2 = 1,
   \label{eq:system-state}
 \end{equation}
-where $\abs{a_i}^2$ is the weight of $G_i$ as the primary partner.
+where $w_i = \abs{a_i}^2 \in [0, 1]$ is the primary-partner collapse weight of $G_i$.
+In compact notation, writing $\ket{G_i}$ for the dressed partner branch
+$\ket{e_i} \otimes \ket{G_i}$, Equation~\eqref{eq:system-state} reads
+$\ket{\Psi} = \sum_{i=1}^n a_i \ket{G_i}$.
+\end{definition}
+
+\begin{lemma}[Unit normalization of composite states]
+\label{lem:composite-norm}
+If $\sum_{i=1}^n \abs{a_i}^2 = 1$ and $\sum_{j=1}^m \abs{c_{ij}}^2 = 1$ for
+every $i \in \{1, \dots, n\}$, then $\ket{\Psi}$ in~\eqref{eq:system-state} is
+a unit vector in $\vspaceTot \cong \Cnum^{nm}$:
+\begin{equation}
+  \braket{\Psi}{\Psi} = \sum_{i=1}^{n} \sum_{j=1}^{m} \abs{a_i c_{ij}}^2 = 1.
+  \label{eq:composite-norm}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Since $\{\ket{e_i} \otimes \ket{r_j}\}$ is an orthonormal basis of $\vspaceTot$,
+\begin{equation*}
+  \braket{\Psi}{\Psi}
+  = \sum_{i=1}^{n}\sum_{k=1}^{n} a_i^* a_k \braket{e_i}{e_k}\braket{G_i}{G_k}
+  = \sum_{i=1}^{n} \abs{a_i}^2 \sum_{j=1}^{m} \abs{c_{ij}}^2
+  = \sum_{i=1}^{n} \abs{a_i}^2 \cdot 1 = 1. \qedhere
+\end{equation*}
+\end{proof}
+
+\subsection{Relational Superposition and Absence of a First Partner}
+\label{subsec:fw-superposition}
 
 \begin{definition}[Relational superposition]
 \label{def:superposition}
-The system is in \emph{relational superposition} if at least two of the
-amplitudes $a_i$ are nonzero, and no $\abs{a_i}^2$ equals $1$.
+A system state $\ket{\Psi}$ with partner weights $w_i = \abs{a_i}^2$ is in
+\emph{relational superposition} if at least two distinct partners $i \neq k$
+have strictly positive weights $w_i > 0$ and $w_k > 0$ (equivalently, $a_i \neq 0$
+and $a_k \neq 0$).
 \end{definition}
 
 \begin{proposition}[Absence of a first partner]
 \label{prop:nobody-first}
-In a system in relational superposition, ``who is first?'' has no
-well-defined answer prior to a poke.
+If a system is in relational superposition, then for every partner $k \in \{1, \dots, n\}$,
+the primary weight satisfies $w_k = \abs{a_k}^2 < 1$ and $w_k \neq 1$. Consequently,
+``who is first?'' has no deterministic answer prior to a poke.
 \end{proposition}
 \begin{proof}
-If $G_k$ were strictly first, then $\abs{a_k}^2 = 1$ and all other amplitudes
-would vanish, contradicting \cref{def:superposition}.
+By \cref{def:superposition}, there exist $i \neq j$ with $w_i > 0$ and $w_j > 0$.
+For any $k \in \{1, \dots, n\}$, at least one of $i$ or $j$ differs from $k$;
+denote that index by $m \neq k$, so $w_m > 0$. Since all weights are
+non-negative,
+\begin{equation*}
+  w_k = 1 - \sum_{\ell \neq k} w_\ell \le 1 - w_m < 1.
+\end{equation*}
+In particular $w_k \neq 1$, so no partner occupies the primary state with
+certainty. (Machine-checked in Lean~4 as \texttt{RST.nobody\_is\_first}.)
 \end{proof}
+
+\subsection{Matrix Representation, Marginal Role Load, and Entropy}
+\label{subsec:fw-matrix}
+
+Collecting the squared role amplitudes $P_{ij} = \abs{c_{ij}}^2$ yields an
+$n \times m$ row-stochastic \emph{role-weight matrix} $P$, while the system
+vector $\mathbf{w} = (w_1, \dots, w_n)$ gives the marginal partner weights.
+The aggregate role demand experienced by $W$ across the entire portfolio is
+the convex combination
+\begin{equation}
+  \bar{\mathbf{p}} = \mathbf{w}^\top P, \qquad
+  \bar{p}_j = \sum_{i=1}^{n} w_i \abs{c_{ij}}^2,
+  \qquad \sum_{j=1}^{m} \bar{p}_j = 1.
+  \label{eq:marginal-role}
+\end{equation}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/fig_weight_matrix.pdf}
+  \caption{Schematic of a four-partner, five-role weight matrix $P_{ij} = \abs{c_{ij}}^2$
+  paired with primary partner weights $\abs{a_i}^2$. Each row sums to $1.00$ across
+  functional roles, and the column vector $\mathbf{w}$ sums to $1.00$ across partners.}
+  \label{fig:weight-matrix}
+\end{figure}
+
+To quantify the degree of ambiguity in a superposed state, we use Shannon
+entropy~\citep{shannon1948mathematical,cover2006elements} in base~$2$ (bits).
+
+\begin{definition}[Rank and role entropies]
+\label{def:entropies}
+Given partner weight vector $\mathbf{w}$ and role matrix $P$, the
+\emph{rank ambiguity entropy} of the system and the \emph{role dispersion entropy}
+of partner $G_i$ are
+\begin{equation}
+  H_{\mathrm{rank}}(\mathbf{w}) = -\sum_{i=1}^{n} w_i \log_2 w_i,
+  \qquad
+  H_{\mathrm{role}}(G_i) = -\sum_{j=1}^{m} \abs{c_{ij}}^2 \log_2 \abs{c_{ij}}^2,
+  \label{eq:entropies}
+\end{equation}
+with the standard convention $0 \log_2 0 = 0$.
+\end{definition}
+
+Clearly $H_{\mathrm{rank}}(\mathbf{w}) = 0$ if and only if the system is
+collapsed ($w_k = 1$ for some $k$), and $H_{\mathrm{rank}}(\mathbf{w}) \le \log_2 n$
+with equality when weights are uniform ($w_i = 1/n$).
+
+\subsection{Worked Examples}
+\label{subsec:fw-examples}
+
+\begin{example}[Three-partner minimal triad]
+\label{ex:triad}
+Consider $n = 3$ partners over $m = 3$ active roles $\{r_1, r_2, r_4\}$ with
+system weights $\mathbf{w} = (0.45, 0.35, 0.20)$ and role matrix
+\begin{equation*}
+  P = \begin{pmatrix}
+    0.70 & 0.15 & 0.15 \\
+    0.15 & 0.75 & 0.10 \\
+    0.10 & 0.15 & 0.75
+  \end{pmatrix}.
+\end{equation*}
+Here $G_1$ leans toward public primary visibility ($0.70$), $G_2$ provides
+emotional support ($0.75$), and $G_3$ provides weekend entertainment ($0.75$).
+No partner has $w_i = 1$; by \cref{prop:nobody-first}, no one is first. The rank
+ambiguity entropy is
+\begin{equation*}
+  H_{\mathrm{rank}}(\mathbf{w})
+  = -(0.45\log_2 0.45 + 0.35\log_2 0.35 + 0.20\log_2 0.20)
+  \approx 1.513\text{ bits},
+\end{equation*}
+close to the three-partner maximum $\log_2 3 \approx 1.585$ bits. The aggregate
+portfolio demand~\eqref{eq:marginal-role} is
+$\bar{\mathbf{p}} = (0.3875, 0.3600, 0.2525)$, showing that $W$ achieves nearly
+balanced coverage of all three roles despite each individual partner being
+specialized.
+\end{example}
+
+\begin{example}[Four-partner, five-role portfolio]
+\label{ex:quartet}
+For the matrix displayed in \cref{fig:weight-matrix}, $\mathbf{w} = (0.38, 0.29, 0.18, 0.15)$.
+Here $G_4$ is primarily weekend-oriented ($0.52$) with secondary contingency
+weight ($0.24$), while $G_2$ concentrates on emotional support ($0.58$).
+Rank ambiguity entropy is $H_{\mathrm{rank}}(\mathbf{w}) \approx 1.884$ bits
+(out of $\log_2 4 = 2.000$ bits), and the aggregate portfolio coverage across
+$(r_1, r_2, r_3, r_4, r_5)$ is $(0.2454, 0.2732, 0.1728, 0.2030, 0.1056)$.
+Notice that no single partner carries weight above $0.38$, yet the aggregate
+role demand remains spread across all five functions.
+\end{example}

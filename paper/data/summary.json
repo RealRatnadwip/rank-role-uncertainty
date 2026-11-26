@@ -1,0 +1,44 @@
+{
+  "markov": {
+    "seed": 202601,
+    "n_steps": 180,
+    "stationary_theory": [
+      0.2511,
+      0.2248,
+      0.1462,
+      0.3779
+    ],
+    "stationary_empirical_weekly": [
+      0.2516,
+      0.22,
+      0.1439,
+      0.3846
+    ],
+    "final_entropy_bits": 1.450144
+  },
+  "optionality": {
+    "seed": 202602,
+    "n_trials": 4000,
+    "p_superposition_n5_p45_exact": 0.743782,
+    "p_superposition_n5_p45_mc": 0.73175,
+    "p_superposition_A2_p45": 0.03,
+    "p_superposition_A8_p45": 0.611
+  },
+  "cascade": {
+    "seed": 202603,
+    "n_partners": 8,
+    "n_trials": 1500,
+    "tx_prob": 0.72,
+    "q_crit_analytic": 0.1984,
+    "cascade_er_q02": 0.293333,
+    "cascade_er_q06": 0.975333
+  },
+  "uncertainty": {
+    "seed": 202604,
+    "total_samples": 2400,
+    "violations": 0,
+    "min_ratio_prod_over_bound": 1.0,
+    "median_product": 0.6453,
+    "median_kappa_bound": 0.086
+  }
+}

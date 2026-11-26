@@ -1,6 +1,173 @@
 \section{Temporal Dynamics and Attention Drift}
 \label{sec:dynamics}
 
-Prior to a poke, the amplitudes $a_i(t)$ and role coefficients $c_{ij}(t)$
-evolve continuously under routine schedules, weekend availability, and acute
-emotional events~\citep{feller1968introduction,ross1996stochastic,levin2017markov}.
+Prior to a poke, a superposed relational system is not static. Messages are
+exchanged on uneven schedules, weekends reorganize availability, and acute
+emotional stress shifts attention toward specific confidants. This section
+models the pre-poke evolution of partner weights as a finite-state Markovian
+attention process~\citep{feller1968introduction,ross1996stochastic,levin2017markov}.
+
+\subsection{Regime-Dependent Attention Transitions}
+\label{subsec:dyn-regimes}
+
+Let $\partnerset = \{G_1, \dots, G_n\}$ be the active partner set, and let
+$S_t \in \{1, \dots, n\}$ denote the partner receiving the focal individual
+$W$'s primary active attention slot during discrete half-day interval $t$.
+At each step, $W$ operates in one of three environmental regimes:
+\begin{enumerate}[nosep]
+  \item \textbf{Weekday routine} ($\mathrm{wd}$): structured work/study hours
+        favoring steady communication with $G_1$ (primary baseline) and practical
+        check-ins with $G_3$;
+  \item \textbf{Weekend leisure} ($\mathrm{we}$): Friday evening through Sunday,
+        shifting transition mass toward entertainment partner $G_4$ and social
+        outings;
+  \item \textbf{Acute emotional stress} ($\mathrm{st}$): triggered independently
+        with probability $p_{\mathrm{st}} \in (0, 1)$ per day, shifting
+        transition mass sharply toward emotional-support partner $G_2$.
+\end{enumerate}
+
+For each regime $r \in \{\mathrm{wd}, \mathrm{we}, \mathrm{st}\}$, transitions
+follow a row-stochastic $n \times n$ matrix $P^{(r)}$ with entries
+$P^{(r)}_{ij} = \Prob(S_{t+1} = j \mid S_t = i, \text{regime } r)$. Mixing the
+daily baseline kernel with stress probability $p_{\mathrm{st}}$ yields the
+effective weekday and weekend single-day kernels
+\begin{equation}
+  K_{\mathrm{wd}} = (1 - p_{\mathrm{st}}) P^{(\mathrm{wd})} + p_{\mathrm{st}} P^{(\mathrm{st})},
+  \qquad
+  K_{\mathrm{we}} = (1 - p_{\mathrm{st}}) P^{(\mathrm{we})} + p_{\mathrm{st}} P^{(\mathrm{st})}.
+  \label{eq:daily-kernels}
+\end{equation}
+
+\subsection{Periodic Weekly Operator and Stationary Distribution}
+\label{subsec:dyn-stationary}
+
+Because weekly schedules repeat with period $7$ days ($5$ weekdays followed by
+$2$ weekend days), the stroboscopic one-week transition matrix observed at a
+fixed weekly phase is
+\begin{equation}
+  P_{\mathrm{week}} = K_{\mathrm{wd}}^{5}\, K_{\mathrm{we}}^{2}.
+  \label{eq:weekly-kernel}
+\end{equation}
+
+\begin{proposition}[Existence and uniqueness of stationary attention weights]
+\label{prop:stationary}
+If $P_{\mathrm{week}}$ has strictly positive entries (for example, whenever each
+regime matrix $P^{(r)}$ is strictly positive or primitive), then $P_{\mathrm{week}}$
+is irreducible and aperiodic. Hence there exists a unique stationary probability
+vector $\pi = (\pi_1, \dots, \pi_n)$ satisfying $\pi^\top P_{\mathrm{week}} = \pi^\top$
+with $\pi_i > 0$ for all $i$ and $\sum_{i=1}^n \pi_i = 1$, and for any initial
+distribution $\mu_0$,
+\begin{equation}
+  \lim_{k \to \infty} \mu_0^\top P_{\mathrm{week}}^{k} = \pi^\top.
+  \label{eq:ergodic-limit}
+\end{equation}
+Moreover, if $\pi_i > 0$ for at least two distinct partners, the stationary
+regime preserves relational superposition indefinitely unless perturbed by a poke.
+\end{proposition}
+\begin{proof}
+Every matrix with strictly positive entries is primitive, hence irreducible and
+aperiodic~\citep{levin2017markov,ross1996stochastic}. By the convergence theorem
+for finite ergodic Markov chains, $P_{\mathrm{week}}$ admits a unique invariant
+distribution $\pi$ with strictly positive entries to which $\mu_0^\top P_{\mathrm{week}}^k$
+converges geometrically in total variation distance. Since $\pi_i > 0$ for at
+least two $i$ and $\sum_i \pi_i = 1$, no entry equals $1$, satisfying
+\cref{def:superposition}.
+\end{proof}
+
+To relate discrete attention slots $S_t$ to the continuous system weights
+$w_i(t) = \abs{a_i(t)}^2$ tracked by partners, we model perceived priority
+as an exponential moving average (EMA) with memory parameter $\alpha \in (0, 1)$:
+\begin{equation}
+  w_i(t + 1) = (1 - \alpha)\, w_i(t) + \alpha\,\mathbf{1}\{S_{t+1} = i\},
+  \qquad \sum_{i=1}^{n} w_i(t) = 1.
+  \label{eq:ema-weights}
+\end{equation}
+Taking expectations in stationarity gives $\E[w_i(t)] = \pi_i$, while the
+smoothing parameter $\alpha$ governs short-term volatility: small $\alpha$
+produces slow, reassuring drift, whereas large $\alpha$ produces weekend spikes
+that partners notice as alternating closeness and distance.
+
+\subsection{Stationary Weight Variance and Autocorrelation}
+\label{subsec:dyn-variance}
+
+Beyond the stationary mean $\E[w_i(t)] = \pi_i$, the perceived stability of a
+superposition depends on how strongly $w_i(t)$ fluctuates around $\pi_i$.
+To obtain closed-form insight, approximate the indicator sequence
+$X_t = \mathbf{1}\{S_t = i\}$ in a homogeneous stationary chain $P$ with
+eigendecomposition or lag-$k$ covariance
+$\gamma_i(k) = \operatorname{Cov}(X_t, X_{t+k}) = \pi_i (P^k_{ii} - \pi_i)$.
+Expanding the stationary solution of~\eqref{eq:ema-weights},
+$w_i(t) = \alpha \sum_{s=0}^{\infty} (1 - \alpha)^s X_{t-s}$, yields
+\begin{equation}
+  \operatorname{Var}\bigl(w_i(t)\bigr)
+  = \alpha^2 \sum_{s=0}^{\infty}\sum_{u=0}^{\infty} (1 - \alpha)^{s+u} \gamma_i(\abs{s - u})
+  = \frac{\alpha^2}{1 - (1 - \alpha)^2}\!\left[\gamma_i(0) + 2\sum_{k=1}^{\infty} (1 - \alpha)^k \gamma_i(k)\right].
+  \label{eq:ema-variance}
+\end{equation}
+For an i.i.d.\ slot sequence ($\gamma_i(k) = 0$ for $k \ge 1$),~\eqref{eq:ema-variance}
+reduces to $\frac{\alpha}{2 - \alpha}\pi_i(1 - \pi_i)$, vanishing linearly as
+$\alpha \to 0$. When transitions exhibit positive persistence ($P_{ii} > \pi_i$),
+positive serial covariance $\gamma_i(k) > 0$ inflates $\operatorname{Var}(w_i(t))$,
+producing multi-day attention streaks that amplify perceived exclusivity to the
+currently active partner while elevating neglect variance for idle partners.
+
+\begin{example}[Exact two-partner asymmetric transition chain]
+\label{ex:markov-2x2}
+Consider $n = 2$ partners with transition matrix
+$P = \begin{pmatrix} 1 - a & a \\ b & 1 - b \end{pmatrix}$ where
+$a, b \in (0, 1)$. Direct eigenvector solving gives stationary weights
+$\pi = \bigl(\frac{b}{a+b}, \frac{a}{a+b}\bigr)$ and second eigenvalue
+$\lambda_2 = 1 - a - b$, so $P^k_{11} - \pi_1 = \frac{a}{a+b}(1 - a - b)^k$.
+Substituting into~\eqref{eq:ema-variance} gives the closed-form stationary
+weight variance
+\begin{equation*}
+  \operatorname{Var}\bigl(w_1(t)\bigr)
+  = \frac{\alpha}{2 - \alpha}\,\frac{ab}{(a+b)^2}\,\frac{1 + (1 - \alpha)(1 - a - b)}{1 - (1 - \alpha)(1 - a - b)}.
+\end{equation*}
+For $a = 0.20$, $b = 0.30$ ($\pi_1 = 0.60$, $\lambda_2 = 0.50$), and
+$\alpha = 0.16$, $\operatorname{Var}(w_1(t)) \approx 0.0369$ (standard deviation
+$0.192$), meaning partner $G_1$'s perceived weight swings regularly across
+$[0.41, 0.79]$ without any structural change in $W$'s underlying preferences.
+\end{example}
+
+\subsection{Metastability Versus Spontaneous Concentration}
+\label{subsec:dyn-metastability}
+
+Let $\tau_{\mathrm{mix}}(\varepsilon)$ denote the mixing time of $P_{\mathrm{week}}$
+to total-variation tolerance $\varepsilon$~\citep{levin2017markov}, bounded via
+the spectral gap $1 - \lambda_*$ (where $\lambda_* = \max_{j \ge 2} \abs{\lambda_j}$
+is the second largest eigenvalue modulus of $P_{\mathrm{week}}$):
+\begin{equation}
+  \tau_{\mathrm{mix}}(\varepsilon) \;\le\; \frac{1}{1 - \lambda_*}\log\!\left(\frac{1}{\varepsilon \min_i \pi_i}\right).
+  \label{eq:mixing-bound}
+\end{equation}
+Two dynamical regimes emerge:
+\begin{itemize}[nosep]
+  \item \textbf{Metastable balanced superposition ($1 - \lambda_*$ large, $\min_i \pi_i$ bounded away from $0$).}
+        Attention cycles rapidly among partners across weekdays and weekends,
+        keeping rank ambiguity entropy $H_{\mathrm{rank}}(\mathbf{w}(t))$ high.
+  \item \textbf{Spontaneous drift toward concentration ($\pi_1 \gg \max_{i \ge 2}\pi_i$).}
+        One partner captures an overwhelming share of transitions; even without
+        a poke, secondary weights decay toward $0$, though residual non-zero
+        weights preserve technical superposition until an explicit boundary
+        event occurs.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.94\textwidth]{figures/fig_markov_drift.pdf}
+  \caption[Synthetic 90-day attention-weight trajectory under periodic regime switching]{Synthetic $90$-day attention-weight trajectory under the periodic
+  weekday, weekend, and stress Markov model (\texttt{scripts/run\_simulations.py},
+  seed \texttt{202601}, $\alpha = 0.16$, $p_{\mathrm{st}} = 0.15$). Top: smoothed
+  partner weights $w_i(t)$. Bottom: rank ambiguity entropy $H_{\mathrm{rank}}(\mathbf{w}(t))$
+  in bits relative to the four-partner uniform cap of $2.0$ bits.}
+  \label{fig:markov-drift}
+\end{figure}
+
+In the synthetic benchmark shown in \cref{fig:markov-drift} (seed \texttt{202601}),
+exact eigen-decomposition of $P_{\mathrm{week}}$ yields stationary distribution
+$\pi = (0.2511, 0.2248, 0.1462, 0.3779)$, matching a $20{,}000$-week Monte Carlo
+occupancy estimate of $(0.2516, 0.2200, 0.1439, 0.3846)$. Over the $90$-day
+window, rank ambiguity entropy remains above $1.2$ bits throughout (ending at
+$1.450$ bits), demonstrating that periodic routine switching sustains relational
+superposition without converging to a classical rank-$1$ state.

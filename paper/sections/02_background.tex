@@ -1,9 +1,109 @@
 \section{Background and Preference Orderings}
 \label{sec:background}
 
-Standard preference theory models choice over alternatives using complete,
-transitive binary relations~\citep{arrow1963social,sen2017collective,fishburn1970utility}.
-In two-sided matching~\citep{gale1962college,roth1990two}, each agent submits a
-strict total order over prospective partners. When a single individual partitions
-relational functions across concurrent partners, however, comparability fails
-across functional dimensions and ordinal rank ceases to be well-defined.
+Before introducing vector-valued relational states, it is necessary to show
+precisely why classical preference representations break down under concurrent
+functional partitioning. This section reviews standard ordinal structures from
+social choice and matching theory and establishes an impossibility result for
+multi-role partner portfolios.
+
+\subsection{Total Orders, Weak Orders, and Interval Orders}
+\label{subsec:bg-orders}
+
+Let $\partnerset = \{G_1, \dots, G_n\}$ denote a finite set of prospective or
+active partners. In classical decision theory~\citep{arrow1963social,fishburn1970utility,sen2017collective},
+the focal agent $W$ evaluates alternatives through a binary preference relation
+$\succsim$ on $\partnerset$, where $G_i \succsim G_j$ means ``$G_i$ is at least
+as preferred as $G_j$.'' Strict preference is defined by $G_i \succ G_j$ iff
+$G_i \succsim G_j$ and $\neg(G_j \succsim G_i)$, while indifference is
+$G_i \sim G_j$ iff $G_i \succsim G_j$ and $G_j \succsim G_i$.
+
+\begin{definition}[Classical preference hierarchies]
+\label{def:order-hierarchy}
+A binary relation $\succsim$ on $\partnerset$ is:
+\begin{enumerate}[nosep]
+  \item a \emph{preorder} if it is reflexive ($G_i \succsim G_i$) and transitive
+        ($G_i \succsim G_j$ and $G_j \succsim G_k \implies G_i \succsim G_k$);
+  \item a \emph{weak order} if it is a complete preorder (for all $i, j$, either
+        $G_i \succsim G_j$ or $G_j \succsim G_i$);
+  \item a \emph{strict total order} if it is an antisymmetric weak order,
+        inducing a unique bijection $\rho : \partnerset \to \{1, \dots, n\}$
+        giving each partner's integer rank.
+\end{enumerate}
+\end{definition}
+
+Two-sided matching models~\citep{gale1962college,roth1990two} typically assume
+strict total orders (or at weakest, weak orders with tie-breaking rules) so that
+every partner occupies a definite rank $\rho(G_i) \in \{1, \dots, n\}$. Even when
+utility theory relaxes strictness to \emph{semiorders} or \emph{interval orders}
+to accommodate just-noticeable-difference thresholds~\citep{fishburn1970utility},
+the underlying valuation remains one-dimensional: every partner is mapped to a
+real number or interval on a single scalar axis.
+
+\subsection{Ordinal Versus Cardinal Rank Under Multi-Attribute Tradeoffs}
+\label{subsec:bg-cardinal}
+
+Suppose instead that $W$ evaluates partners along $m \ge 2$ distinct functional
+criteria indexed by roles $\roleset = \{r_1, \dots, r_m\}$ (for instance, public
+compatibility, emotional attunement, material support, and weekend leisure).
+Each partner $G_i$ realizes a non-negative performance profile
+$\mathbf{u}(G_i) = (u_{i1}, \dots, u_{im}) \in \Rnum_{\ge 0}^m$, inducing $m$
+separate role-specific weak orders $\succsim_{r_1}, \dots, \succsim_{r_m}$ on
+$\partnerset$.
+
+Aggregating $\{\succsim_{r_j}\}_{j=1}^m$ into a single total order $\succsim$
+encounters the classic multi-criteria aggregation obstruction analogous to
+\citet{arrow1963social}. Specifically, if no single role is dictatorial, and if
+$W$ treats partners symmetrically across disjoint role specializations, then
+strict Pareto dominance fails to produce a complete ranking: partner $G_1$ leads
+on $r_1$, partner $G_2$ leads on $r_2$, and partner $G_3$ leads on $r_3$. None
+dominates the others vectorwise, leaving $\succsim$ strictly incomplete.
+
+\begin{proposition}[Failure of scalar rank under functional specialization]
+\label{prop:order-failure}
+Let $m \ge 2$ and $n \ge 2$. Suppose each partner $G_i \in \partnerset$ attains
+strict superiority in at least one distinct role $r_{\phi(i)}$ such that
+$u_{i,\phi(i)} > u_{k,\phi(i)}$ for all $k \neq i$. Then:
+\begin{enumerate}[nosep]
+  \item the Pareto dominance relation $\succsim_{\mathrm{Pareto}}$ has no
+        unique maximal element, and all pairs $(G_i, G_k)$ with $i \neq k$ are
+        incomparable;
+  \item any scalar rank assignment $\rho : \partnerset \to \{1, \dots, n\}$
+        compatible with $\succsim_{\mathrm{Pareto}}$ depends on an arbitrary
+        role-weighting vector $\boldsymbol{\alpha} \in \Delta^{m-1}$, and
+        distinct choices of $\boldsymbol{\alpha}$ permute which partner receives
+        rank~$1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For any $i \neq k$, $G_i$ strictly exceeds $G_k$ on coordinate $\phi(i)$, while
+$G_k$ strictly exceeds $G_i$ on coordinate $\phi(k)$. Hence neither
+$\mathbf{u}(G_i) \ge \mathbf{u}(G_k)$ nor $\mathbf{u}(G_k) \ge \mathbf{u}(G_i)$
+holds componentwise, proving (1). For (2), consider linear scalarizations
+$S_{\boldsymbol{\alpha}}(G_i) = \sum_{j=1}^m \alpha_j u_{ij}$ with
+$\alpha_j \ge 0$ and $\sum_j \alpha_j = 1$. Setting $\boldsymbol{\alpha}$ equal
+to the unit basis vector $\mathbf{e}_{\phi(i)}$ makes
+$S_{\boldsymbol{\alpha}}(G_i) = u_{i,\phi(i)} > u_{k,\phi(i)} = S_{\boldsymbol{\alpha}}(G_k)$
+for all $k \neq i$, placing $G_i$ uniquely at rank~$1$. Since this holds for
+every $i \in \{1, \dots, n\}$, no unique rank-1 partner is determined by the
+underlying attribute profiles alone.
+\end{proof}
+
+\subsection{Why Evasiveness Is Structural Rather Than Strategic}
+\label{subsec:bg-evasiveness}
+
+\cref{prop:order-failure} explains a recurring empirical regularity. In
+situationships, $W$ does not maintain a secret integer list $(G_{(1)}, G_{(2)}, \dots, G_{(n)})$
+that is merely concealed from the partners. Instead, $W$'s internal role weights
+$\boldsymbol{\alpha}(t)$ fluctuate across contexts: on Tuesday night during an
+interpersonal crisis, weight concentrates on $r_2$ (emotional support), making
+$G_2$ effectively primary; on Saturday night, weight concentrates on $r_4$
+(entertainment), making $G_4$ effectively primary; when bills or errands arise,
+weight shifts toward $r_3$.
+
+Asking ``who is first?'' without specifying a context or forcing a permanent
+scalarization $\boldsymbol{\alpha}$ is therefore asking for an invariant that
+does not exist prior to measurement. Formalizing this state requires replacing
+static integer rankings with linear combinations over a role basis and
+probabilistic weights over partners, which we construct in \cref{sec:framework}.

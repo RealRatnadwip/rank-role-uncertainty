@@ -1,31 +1,126 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Classical models of dating assume a total order: there is a first choice, a
-second choice, and so on. Such models are comfortable, intuitive, and, we argue,
-empirically inadequate for concurrent relational configurations.
+Classical models of romantic selection and matching assume a total order over
+prospective partners: there is a first choice, a second choice, a third choice,
+and so on~\citep{gale1962college,roth1990two}. Once an agent establishes that
+total order, commitment is modeled as matching with the highest-ranked available
+candidate, while all remaining candidates sit cleanly below on a single ordinal
+ladder. Such models are mathematically convenient, intuitive, and, we argue,
+empirically inadequate for a widespread class of contemporary relational
+configurations.
 
-Observation suggests a different picture. Consider a person $W$ who is in
-contact with several people $G_1, G_2, \dots, G_n$. One provides company on
-weekends. One provides a listening ear at 2~a.m. One provides practical,
-often financial, assistance. A fourth is kept ``in case.'' Ask $W$ which of
-them is \emph{the one}, and the answer is evasive, delayed, or itself a
-question. This evasiveness is not noise. It is the signature of a system in
-which the ranking has not been determined.
+Consider an individual $W$ who maintains regular contact with several people
+$G_1, G_2, \dots, G_n$ at the same time. The connections are not interchangeable
+substitutes waiting in a queue. Instead, they are functionally differentiated.
+One partner provides public visibility and shared weekend social appearances.
+Another provides late-night emotional processing and receives long voice notes
+at 2~a.m. A third provides practical coordination, meals, or financial support.
+A fourth is maintained at low cadence as an active contingency. If an external
+observer, or one of the partners, asks $W$ a seemingly elementary question, namely
+which of $\{G_1, \dots, G_n\}$ is \emph{the one}, the observed response is
+characteristically evasive, delayed, or deflected with a counter-question.
 
-The contributions of this paper are:
+Standard preference theory treats this evasiveness as measurement error,
+incomplete introspection, or strategic dishonesty. \emph{Relational Superposition
+Theory} (\RST) takes the opposite starting point: the evasiveness is not noise
+obscuring a hidden linear ranking. It is the observable signature of a system in
+which no linear ranking exists prior to inquiry. Because each partner occupies a
+distinct functional niche and holds a nontrivial share of $W$'s relational
+investment, the question ``who is first?'' has no well-defined answer until an
+intervention forces the system to select one.
+
+\subsection{Why Functional Partitioning Breaks Ordinal Rank}
+\label{subsec:intro-partition}
+
+In a single-attribute decision problem, ordering candidates requires only a scalar
+comparison. In a multi-partner relational system, however, value is distributed
+across incommensurable functional dimensions: public legitimacy, emotional
+attunement, material reliability, novelty, and availability. Optimizing one
+dimension frequently conflicts with optimizing another. Rather than collapsing
+those competing criteria onto a single person before commitment, a focal agent
+with sufficient options can partition functions across several concurrent
+connections.
+
+Once partitioning occurs, two structural consequences follow immediately. First,
+no single partner achieves unit primary weight; each partner holds an intermediate
+weight $w_i \in (0, 1)$ reflecting his share of attention and priority. Second,
+the question ``where do I stand?'' (rank) and the question ``what am I to you?''
+(role) cease to be jointly answerable with arbitrary precision. Pinning a partner
+firmly to a specialized role such as emotional confidant leaves his ordinal rank
+against the weekend companion or financial provider undefined. Conversely, forcing
+a strict rank declaration smears the chosen partner's role across obligations he
+did not originally occupy.
+
+\subsection{The Role of Perturbation and Social Coupling}
+\label{subsec:intro-perturbation}
+
+A superposed relational system can persist smoothly for weeks or months while
+routine communication continues. Its stability depends on keeping rank queries
+unasked and keeping partners separated in the broader social graph. Two distinct
+mechanisms break that stability:
+
 \begin{enumerate}[nosep]
-  \item a formal definition of relational superposition (\cref{sec:framework});
-  \item the Rank-Role Uncertainty Principle and its operator derivation (\cref{sec:uncertainty});
-  \item a stochastic model of attention drift (\cref{sec:dynamics});
-  \item a model of projective collapse under the poke (\cref{sec:poke});
-  \item a graph-percolation model of decoherence and cascade (\cref{sec:cascade});
-  \item the Attractiveness-Optionality Conjecture and symmetry analysis (\cref{sec:conjecture,sec:symmetry});
-  \item synthetic simulation benchmarks and machine-checked Lean~4 theorems (\cref{sec:simulations,sec:verification}).
+  \item \textbf{Internal perturbation (the poke).} Any direct status inquiry,
+        calendar confrontation, or boundary demand forces $W$ to resolve the
+        ambiguity in favor of one partner, collapsing the prior superposition
+        probabilistically according to pre-poke weights.
+  \item \textbf{External coupling (decoherence cascade).} If partners discover
+        one another through shared friends, group chats, or overlapping social
+        venues and compare notes, collapse propagates across the friend graph.
+        Rather than leaving one partner in the primary state, all active weights
+        can decay to zero simultaneously.
 \end{enumerate}
 
-\begin{remark}
-Throughout, we write ``partner'' for any member of the set $\{G_i\}$ and use
-the male pronoun for convenience, following the original observation.
-\cref{sec:symmetry} shows that nothing in the theory depends on this convention.
+The persistence of superposition is also unevenly distributed across populations.
+Maintaining several concurrent connections requires a supply of viable partners
+who tolerate partial availability. That supply varies systematically with
+perceived attractiveness and social reach, motivating the structural link between
+optionality and superposition rather than purely moral or personality-based
+explanations.
+
+\subsection{Summary of Contributions}
+\label{subsec:intro-contributions}
+
+This monograph develops \RST{} as a self-contained mathematical and computational
+framework. Its specific contributions are:
+\begin{enumerate}[nosep]
+  \item \textbf{Order-theoretic diagnosis (\cref{sec:background}).} We show how
+        functional role partitioning induces strict comparability failures that
+        prevent representation by a single weak or total order.
+  \item \textbf{State-vector formalism (\cref{sec:framework}).} We construct the
+        finite-dimensional partner state space $\vspaceR$ and system state vector
+        $\ket{\Psi}$, define relational superposition, and prove that no partner
+        occupies rank one prior to collapse.
+  \item \textbf{Operator derivation of uncertainty (\cref{sec:uncertainty}).} We
+        formulate rank and role as non-commuting Hermitian operators $\opR$ and
+        $\opL$, derive the Rank-Role Inequality $\Delta R \cdot \Delta L \ge \kappaS$
+        via Cauchy-Schwarz, characterize minimum-uncertainty states, and work out
+        exact $2\times 2$ and $4\times 4$ examples.
+  \item \textbf{Attention-drift dynamics (\cref{sec:dynamics}).} We model weekday,
+        weekend, and emotional-stress transitions as a time-inhomogeneous Markov
+        chain and characterize its stationary distribution.
+  \item \textbf{Poke collapse and social percolation (\cref{sec:poke,sec:cascade}).}
+        We formalize the Poke Rule, post-collapse renormalization, irreversibility,
+        and a bond-percolation threshold $q_c$ governing social-graph cascades.
+  \item \textbf{Optionality and symmetry (\cref{sec:conjecture,sec:symmetry}).}
+        We formalize the Attractiveness-Optionality Conjecture under a binomial
+        retention model, prove monotonicity, propose an unadministered empirical
+        design, and establish gender symmetry.
+  \item \textbf{Reproducible simulation and formal proofs (\cref{sec:simulations,sec:verification}).}
+        We report deterministic synthetic Monte Carlo studies across $2{,}400$ operator
+        samples, $90$-day attention trajectories, optionality curves, and graph
+        cascades, alongside machine-checked Lean~4 proofs of normalization,
+        absence of a primary winner, optionality monotonicity, and the finite-dimensional
+        uncertainty bound.
+\end{enumerate}
+
+\begin{remark}[Pronoun convention]
+\label{rem:pronouns}
+Following the initial observational motivating case, we refer to the focal person
+as $W$ and to members of the partner set $\{G_i\}$ using the male pronoun for
+notational consistency. \cref{sec:symmetry} proves that every equation, bound,
+and dynamical transition in the theory is invariant under relabeling of partners
+and roles, including the mirror configuration in which a male focal agent
+maintains multiple female partners.
 \end{remark}

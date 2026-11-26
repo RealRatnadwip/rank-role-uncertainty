@@ -168,8 +168,8 @@ Equating imaginary parts gives
 \end{equation}
 Substituting~\eqref{eq:im-identity} into~\eqref{eq:cs-step} yields
 $4\,\var{\opR}{\Psi}\,\var{\opL}{\Psi} \ge (\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi})^2$.
-Taking non-negative square roots yields~\eqref{eq:rank-role-inequality}.
-(Machine-checked over $\Qnum[i]^d$ in Lean~4 as \texttt{RST.rank\_role\_uncertainty}.)
+Taking non-negative square roots yields~\eqref{eq:rank-role-inequality},
+verified in Lean~4 over $\Qnum[i]^d$ as \texttt{RST.rank\_role\_uncertainty}.
 \end{proof}
 
 \begin{principle}[Rank-Role Uncertainty and the Situationship Constant]
@@ -198,6 +198,30 @@ Retaining both terms yields the tighter inequality
 which shows that correlated fluctuations in rank and role further elevate the
 uncertainty product above $\kappaS$ unless $C_{RL}(\Psi) = 0$.
 \end{remark}
+
+\begin{proposition}[Spectral spread upper bound]
+\label{prop:popoviciu}
+Let $\opR$ and $\opL$ have extremal eigenvalues $r_{\min} \le r_{\max}$ and
+$l_{\min} \le l_{\max}$, respectively. Then for every normalized state $\ket{\Psi}$,
+\begin{equation}
+  \kappaS(\Psi; \opR, \opL) \;\le\; \Delta R \cdot \Delta L
+  \;\le\; \frac{1}{4}\,(r_{\max} - r_{\min})(l_{\max} - l_{\min}).
+  \label{eq:spectral-cap}
+\end{equation}
+\end{proposition}
+\begin{proof}
+For any bounded real random variable $X \in [a, b]$ induced by the spectral
+measure of a Hermitian operator on $\ket{\Psi}$,
+\begin{equation*}
+  \var{X}{} = \E\bigl[(X - a)(b - X)\bigr] - (\E[X] - a)(b - \E[X])
+  \le \frac{(b - a)^2}{4},
+\end{equation*}
+since $(x - a)(b - x) \le \frac{1}{4}(b - a)^2$ for all $x \in [a, b]$ and
+the subtracted term is non-negative. Taking square roots gives
+$\Delta R \le \frac{1}{2}(r_{\max} - r_{\min})$ and
+$\Delta L \le \frac{1}{2}(l_{\max} - l_{\min})$. Multiplying and combining
+with~\eqref{eq:rank-role-inequality} yields~\eqref{eq:spectral-cap}.
+\end{proof}
 
 \subsection{Necessary and Sufficient Conditions for Tightness}
 \label{subsec:unc-tightness}

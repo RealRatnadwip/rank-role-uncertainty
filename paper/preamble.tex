@@ -73,6 +73,8 @@
 }
 
 % Listings styling for Lean 4 and pseudocode
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
 \lstdefinelanguage{Lean4}{
   morekeywords={import,namespace,end,structure,inductive,def,noncomputable,theorem,lemma,proposition,example,where,let,in,if,then,else,match,with,by,have,show,calc,fun,forall,exists,open,section,variable,private,protected,deriving,instance,class},
   sensitive=true,
@@ -90,6 +92,7 @@
   columns=fullflexible,
   keepspaces=true,
   showstringspaces=false,
+  literate={∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {∧}{{$\land$}}1 {∨}{{$\lor$}}1 {ψ}{{$\psi$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {₁}{{$_1$}}1 {₂}{{$_2$}}1,
   xleftmargin=0.8em,
   xrightmargin=0.8em,
   aboveskip=0.8em,

@@ -107,3 +107,67 @@ scalarization $\boldsymbol{\alpha}$ is therefore asking for an invariant that
 does not exist prior to measurement. Formalizing this state requires replacing
 static integer rankings with linear combinations over a role basis and
 probabilistic weights over partners, which we construct in \cref{sec:framework}.
+
+\subsection{Intransitive Indifference and Semiorder Obstructions}
+\label{subsec:bg-intransitivity}
+
+Even when an individual attempts to construct a single scalar ranking by
+comparing partners pairwise, indifference across multi-role tradeoffs is
+typically \emph{intransitive}~\citep{fishburn1970utility,sen2017collective}.
+Suppose $W$ compares four partners $\{G_1, G_2, G_3, G_4\}$ using a
+multi-attribute threshold rule: $G_i$ strictly beats $G_j$ only if $G_i$ leads
+$G_j$ by at least $\delta = 0.25$ on a weighted composite score, or dominates on
+a majority of active contexts. When adjacent partners excel in neighboring
+functional roles ($r_1$ vs $r_2$, $r_2$ vs $r_3$, $r_3$ vs $r_4$), the resulting
+indifference graph forms a path rather than a collection of disjoint equivalence
+classes: $G_1 \sim G_2$, $G_2 \sim G_3$, $G_3 \sim G_4$, yet $G_1 \succ G_4$
+(or $G_4 \succ G_1$ under a shift in evening context).
+
+\begin{example}[Pairwise cycle across three functional niches]
+\label{ex:condorcet-cycle}
+Consider three partners evaluated across three equiprobable weekly contexts:
+weekday logistics ($C_1$), Friday emotional debriefing ($C_2$), and Saturday
+social events ($C_3$), with the cyclic preference-score matrix
+\begin{equation*}
+  U_{\mathrm{cyc}} = \begin{pmatrix}
+    3 & 1 & 2 \\
+    2 & 3 & 1 \\
+    1 & 2 & 3
+  \end{pmatrix},
+\end{equation*}
+where row $i$ corresponds to partner $G_i$ and column $c$ to context $C_c$.
+Under context-majority comparison, $G_1$ beats $G_2$ in two contexts
+($C_1, C_3$: $3>2, 2>1$), $G_2$ beats $G_3$ in two contexts ($C_1, C_2$: $2>1, 3>2$),
+and $G_3$ beats $G_1$ in two contexts ($C_2, C_3$: $2>1, 3>2$). Majority
+preference therefore satisfies $G_1 \succ G_2 \succ G_3 \succ G_1$, violating
+acyclicity and precluding any total order.
+\end{example}
+
+\subsection{Portfolio Complementarity Versus Single-Match Stability}
+\label{subsec:bg-portfolio}
+
+In two-sided matching~\citep{gale1962college,roth1990two}, each agent matches
+with at most one partner in a one-to-one marriage market, so utility from
+matching with $G_i$ equals $u(G_i)$ alone. In contrast, when a focal agent
+exhibits diminishing marginal returns within any single functional role and
+strict complementarity across roles, maintaining a distributed portfolio can
+strictly dominate premature commitment to any single partner.
+
+Formally, suppose $W$'s total relational utility from aggregate role coverage
+$\bar{\mathbf{p}} = (\bar{p}_1, \dots, \bar{p}_m)$ is given by a strictly concave,
+symmetric function such as log-Cobb-Douglas utility
+$V(\bar{\mathbf{p}}) = \sum_{j=1}^m \beta_j \log \bar{p}_j$ ($\beta_j > 0$,
+$\sum_j \beta_j = 1$). If each partner $G_i$ is specialized in role $r_i$ with
+profile $\mathbf{p}^{(i)}$ concentrated near $\mathbf{e}_i$, then collapsing
+onto a single partner yields $\bar{p}_\ell \approx \epsilon \ll 1$ on $G_i$'s
+weak roles, driving $V(\mathbf{p}^{(i)}) \to -\infty$ (or sharply negative).
+By Jensen's inequality for strictly concave $V$, a convex portfolio $\mathbf{w}$
+with $\bar{\mathbf{p}} = \sum_{i=1}^n w_i \mathbf{p}^{(i)}$ satisfies
+\begin{equation}
+  V\!\left(\sum_{i=1}^{n} w_i \mathbf{p}^{(i)}\right)
+  \;>\; \sum_{i=1}^{n} w_i V(\mathbf{p}^{(i)}),
+  \label{eq:jensen-portfolio}
+\end{equation}
+establishing an explicit rational-choice incentive to delay collapse when
+multiple specialized partners remain concurrently accessible.
+

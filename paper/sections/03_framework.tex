@@ -186,6 +186,79 @@ Clearly $H_{\mathrm{rank}}(\mathbf{w}) = 0$ if and only if the system is
 collapsed ($w_k = 1$ for some $k$), and $H_{\mathrm{rank}}(\mathbf{w}) \le \log_2 n$
 with equality when weights are uniform ($w_i = 1/n$).
 
+\subsection{Density Operators: Coherent Superposition Versus Classical Indecision}
+\label{subsec:fw-density}
+
+A recurring conceptual question is how relational superposition
+$\ket{\Psi} = \sum_{i=1}^n a_i \ket{e_i} \otimes \ket{G_i}$ differs from a
+purely classical probabilistic mixture in which $W$ secretly treats one partner
+as primary on any given day according to a classical lottery $\mathbf{w}$,
+without cross-partner coherence. The distinction is sharp in the density-operator
+formalism~\citep{horn2012matrix}.
+
+For a pure superposed state $\ket{\Psi}$, the system density operator is the
+rank-$1$ projection $\rho_{\Psi} = \ketbra{\Psi}{\Psi}$ on $\vspaceTot$. Tracing
+out the role subsystem $\vspaceR$ defines the \emph{reduced partner density
+operator} $\rho_{\partnerset} = \tr_{\roleset}(\rho_{\Psi})$ on $\vspaceG$, whose
+matrix entries in the partner basis $\{\ket{e_i}\}$ are
+\begin{equation}
+  (\rho_{\partnerset})_{ik} = a_i a_k^* \braket{G_k}{G_i}.
+  \label{eq:reduced-partner-rho}
+\end{equation}
+Notice two structural consequences of~\eqref{eq:reduced-partner-rho}:
+\begin{enumerate}[nosep]
+  \item \textbf{Diagonal weights.} The diagonal entries are $(\rho_{\partnerset})_{ii} = \abs{a_i}^2 \braket{G_i}{G_i} = \abs{a_i}^2 = w_i$,
+        recovering the primary collapse weights identically.
+  \item \textbf{Off-diagonal role-overlap coherences.} The off-diagonal entry
+        $(\rho_{\partnerset})_{ik} = a_i a_k^* \braket{G_k}{G_i}$ vanishes if and
+        only if either $a_i a_k^* = 0$ or partners $G_i$ and $G_k$ occupy
+        strictly orthogonal role vectors ($\braket{G_k}{G_i} = 0$). Whenever
+        two active partners share nonzero overlap across roles (for example,
+        both occasionally cover weekend outings $r_4$), $\rho_{\partnerset}$
+        retains nonzero off-diagonal coherence, producing interference terms
+        in non-diagonal rank-role observables.
+\end{enumerate}
+Conversely, a purely classical mixture $\rho_{\mathrm{mix}} = \sum_{i=1}^n w_i \ketbra{e_i}{e_i}$
+has strictly zero off-diagonal entries regardless of role overlap. Measuring
+only diagonal primary weights $\{w_i\}$ cannot distinguish $\rho_{\partnerset}$
+from $\rho_{\mathrm{mix}}$, whereas non-commuting operator measurements
+(\cref{sec:uncertainty}) respond directly to off-diagonal coherences.
+
+\begin{example}[Reduced density matrix and coherence purity]
+\label{ex:density-comparison}
+Consider two partners $G_1$ and $G_2$ with system amplitudes
+$a_1 = \tfrac{3}{5}$, $a_2 = \tfrac{4}{5}$ (weights $w_1 = 0.36, w_2 = 0.64$)
+and role vectors in $\{r_1, r_2\}$ given by
+$\ket{G_1} = \sqrt{0.80}\ket{r_1} + \sqrt{0.20}\ket{r_2}$ and
+$\ket{G_2} = \sqrt{0.20}\ket{r_1} + \sqrt{0.80}\ket{r_2}$.
+Their role overlap is $\braket{G_2}{G_1} = 2\sqrt{0.16} = 0.80$. By~\eqref{eq:reduced-partner-rho},
+the coherent reduced partner density matrix and classical mixture are
+\begin{equation*}
+  \rho_{\partnerset} =
+  \begin{pmatrix}
+    0.360 & 0.384 \\
+    0.384 & 0.640
+  \end{pmatrix},
+  \qquad
+  \rho_{\mathrm{mix}} =
+  \begin{pmatrix}
+    0.360 & 0 \\
+    0 & 0.640
+  \end{pmatrix}.
+\end{equation*}
+Their purities differ substantially:
+\begin{equation*}
+  \tr(\rho_{\partnerset}^2) = 0.360^2 + 0.640^2 + 2(0.384)^2 = 0.8341,
+  \qquad
+  \tr(\rho_{\mathrm{mix}}^2) = 0.360^2 + 0.640^2 = 0.5392.
+\end{equation*}
+For any cross-partner swap observable $\hat{S} = \ketbra{e_1}{e_2} + \ketbra{e_2}{e_1}$,
+the classical mixture predicts $\tr(\rho_{\mathrm{mix}}\hat{S}) = 0$, whereas
+the superposed portfolio yields $\tr(\rho_{\partnerset}\hat{S}) = 2(0.384) = 0.768$,
+quantifying functional substitutability between $G_1$ and $G_2$.
+\end{example}
+
+
 \subsection{Worked Examples}
 \label{subsec:fw-examples}
 

@@ -9,9 +9,9 @@ SCRIPTS_DIR := scripts
 LATEXMK := latexmk
 LATEXMK_FLAGS := -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build
 
-.PHONY: all pdf figures lean clean
+.PHONY: all pdf figures lean test clean
 
-all: figures lean pdf
+all: figures lean test pdf
 
 pdf:
 	@mkdir -p $(BUILD_DIR) $(PAPER_DIR)/output
@@ -37,6 +37,9 @@ tikz-figures:
 
 lean:
 	cd $(LEAN_DIR) && lake build
+
+test:
+	python3 -m unittest discover -s tests -v
 
 clean:
 	rm -rf $(BUILD_DIR)

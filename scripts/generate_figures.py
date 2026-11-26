@@ -143,7 +143,8 @@ def plot_optionality_and_collapse() -> None:
 
 def plot_cascade_percolation() -> None:
     d = read_csv(DATA_DIR / "cascade_percolation.csv")
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.0))
+    dp = read_csv(DATA_DIR / "cascade_ptx_sensitivity.csv")
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(9.6, 3.0))
 
     q = d["edge_density_q"]
     q_crit = 1.0 / (7.0 * 0.72)
@@ -151,24 +152,35 @@ def plot_cascade_percolation() -> None:
     ax1.plot(q, d["cascade_erdos_renyi"], color=PALETTE["navy"], lw=1.5, marker="o", ms=3, label="Homogeneous graph")
     ax1.plot(q, d["cascade_clustered"], color=PALETTE["plum"], lw=1.4, marker="s", ms=3, label="Clustered circles")
     ax1.plot(q, d["cascade_hub_mediated"], color=PALETTE["amber"], lw=1.4, marker="^", ms=3, label="Hub-mediated")
-    ax1.axvline(q_crit, color=PALETTE["muted"], lw=0.9, ls="--", label=rf"Analytic $q_c \approx {q_crit:.2f}$")
-    ax1.set_xlabel(r"Shared-friend edge density $q$ (dimensionless)")
-    ax1.set_ylabel(r"$\mathbb{P}(\mathrm{total\ cascade})$ (dimensionless)")
-    ax1.set_title(r"(a) Cascade Transition ($n=8$, $p_{\mathrm{tx}}=0.72$)")
+    ax1.axvline(q_crit, color=PALETTE["muted"], lw=0.9, ls="--", label=rf"Branching $R_0=1$ ($q={q_crit:.2f}$)")
+    ax1.set_xlabel(r"Edge density $q$")
+    ax1.set_ylabel(r"$\mathbb{P}(\mathrm{total\ cascade})$")
+    ax1.set_title(r"(a) Topology ($n=8$, $p_{\mathrm{tx}}=0.72$)")
     ax1.set_ylim(-0.03, 1.05)
     ax1.grid(True, alpha=0.8)
-    ax1.legend(loc="lower right", fontsize=7.5)
+    ax1.legend(loc="lower right", fontsize=7.0)
 
     ax2.plot(q, d["mean_exposed_erdos_renyi"], color=PALETTE["navy"], lw=1.5, label="Homogeneous graph")
     ax2.plot(q, d["mean_exposed_clustered"], color=PALETTE["plum"], lw=1.4, label="Clustered circles")
     ax2.plot(q, d["mean_exposed_hub_mediated"], color=PALETTE["amber"], lw=1.4, label="Hub-mediated")
     ax2.axhline(0.60, color=PALETTE["muted"], lw=0.9, ls=":", label="Cascade threshold (0.60)")
-    ax2.set_xlabel(r"Shared-friend edge density $q$ (dimensionless)")
-    ax2.set_ylabel("Mean exposed fraction (dimensionless)")
-    ax2.set_title("(b) Mean Fraction of Informed Partners")
+    ax2.set_xlabel(r"Edge density $q$")
+    ax2.set_ylabel("Mean exposed fraction")
+    ax2.set_title("(b) Mean Informed Fraction")
     ax2.set_ylim(0.05, 1.05)
     ax2.grid(True, alpha=0.8)
-    ax2.legend(loc="lower right", fontsize=7.5)
+    ax2.legend(loc="lower right", fontsize=7.0)
+
+    qp = dp["edge_density_q"]
+    ax3.plot(qp, dp["cascade_ptx40"], color=PALETTE["teal"], lw=1.4, marker="o", ms=3, label=r"$p_{\mathrm{tx}}=0.40$")
+    ax3.plot(qp, dp["cascade_ptx72"], color=PALETTE["navy"], lw=1.5, marker="s", ms=3, label=r"$p_{\mathrm{tx}}=0.72$")
+    ax3.plot(qp, dp["cascade_ptx90"], color=PALETTE["plum"], lw=1.4, marker="^", ms=3, label=r"$p_{\mathrm{tx}}=0.90$")
+    ax3.set_xlabel(r"Edge density $q$")
+    ax3.set_ylabel(r"$\mathbb{P}(\mathrm{total\ cascade})$")
+    ax3.set_title(r"(c) Transmission Sensitivity ($p_{\mathrm{tx}}$)")
+    ax3.set_ylim(-0.03, 1.05)
+    ax3.grid(True, alpha=0.8)
+    ax3.legend(loc="lower right", fontsize=7.2)
 
     fig.tight_layout()
     save_both(fig, "fig_cascade_percolation")
@@ -178,15 +190,21 @@ def plot_uncertainty_sweep() -> None:
     d = read_csv(DATA_DIR / "uncertainty_sweep.csv")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.1))
 
-    kappa = d["kappa_bound"]
+    r_bound = d["robertson_bound"]
+    s_bound = d["schrodinger_bound"]
     prod = d["product"]
     gamma = d["gamma"]
 
-    colors = {0.25: PALETTE["teal"], 0.75: PALETTE["navy"], 1.5: PALETTE["plum"]}
-    for g_val in [0.25, 0.75, 1.50]:
+    colors = {
+        0.0: PALETTE["muted"],
+        0.25: PALETTE["teal"],
+        0.75: PALETTE["navy"],
+        1.5: PALETTE["plum"],
+    }
+    for g_val in [0.0, 0.25, 0.75, 1.50]:
         mask = np.isclose(gamma, g_val)
         ax1.scatter(
-            kappa[mask],
+            s_bound[mask],
             prod[mask],
             s=8,
             alpha=0.45,
@@ -194,41 +212,105 @@ def plot_uncertainty_sweep() -> None:
             edgecolors="none",
             label=rf"$\gamma = {g_val:.2f}$",
         )
-    max_k = float(np.max(kappa)) * 1.05
-    xs = np.linspace(0.0, max_k, 100)
-    ax1.plot(xs, xs, color=PALETTE["ink"], lw=1.1, ls="--", label=r"Tight bound $\Delta R \cdot \Delta L = \kappa$")
-    ax1.set_xlabel(r"Commutator lower bound $\kappa = \frac{1}{2}|\mathrm{Im}\langle\Psi|[\hat{R},\hat{L}]|\Psi\rangle|$")
+    max_b = float(np.max(s_bound)) * 1.05
+    xs = np.linspace(0.0, max_b, 100)
+    ax1.plot(xs, xs, color=PALETTE["ink"], lw=1.1, ls="--", label=r"Bound $\Delta R \Delta L = B_S$")
+    ax1.set_xlabel(r"Schrodinger bound $B_S = \sqrt{|\mathrm{Cov}|^2 + \frac{1}{4}|\langle[\hat{R},\hat{L}]\rangle|^2}$")
     ax1.set_ylabel(r"Observed product $\Delta R \cdot \Delta L$")
-    ax1.set_title(r"(a) Inequality Compliance ($N=2400$ states)")
-    ax1.set_xlim(0.0, max_k)
+    ax1.set_title(r"(a) Inequality Compliance ($N=3200$ states)")
+    ax1.set_xlim(0.0, max_b)
     ax1.set_ylim(0.0, float(np.percentile(prod, 99.5)) * 1.1)
     ax1.grid(True, alpha=0.8)
-    ax1.legend(loc="upper left", fontsize=7.5)
+    ax1.legend(loc="upper left", fontsize=7.0)
 
-    # Box/violin-like summary by dimension d
-    dims = [2, 3, 4, 5]
-    data_by_dim = [prod[np.isclose(d["dim"], dim_val)] for dim_val in dims]
-    bp = ax2.boxplot(
-        data_by_dim,
-        positions=dims,
-        widths=0.45,
-        patch_artist=True,
-        showfliers=False,
-        medianprops={"color": PALETTE["ink"], "linewidth": 1.3},
-        whiskerprops={"color": PALETTE["slate"], "linewidth": 0.9},
-        capprops={"color": PALETTE["slate"], "linewidth": 0.9},
-    )
-    for box in bp["boxes"]:
-        box.set_facecolor("#E2E8F0")
-        box.set_edgecolor(PALETTE["navy"])
-        box.set_linewidth(0.9)
+    # Compare observed product, Schrodinger bound, and Robertson bound by dimension d
+    dims = np.array([2, 3, 4, 5], dtype=float)
+    med_prod = [float(np.median(prod[np.isclose(d["dim"], dv)])) for dv in dims]
+    med_sch = [float(np.median(s_bound[np.isclose(d["dim"], dv)])) for dv in dims]
+    med_rob = [float(np.median(r_bound[np.isclose(d["dim"], dv)])) for dv in dims]
+
+    w = 0.24
+    ax2.bar(dims - w, med_rob, width=w, color=PALETTE["teal"], label="Robertson bound")
+    ax2.bar(dims, med_sch, width=w, color=PALETTE["navy"], label="Schrodinger bound")
+    ax2.bar(dims + w, med_prod, width=w, color=PALETTE["plum"], label=r"Observed $\Delta R \cdot \Delta L$")
+    ax2.set_xticks(dims)
     ax2.set_xlabel("State space dimension $d$ (partners)")
-    ax2.set_ylabel(r"Uncertainty product $\Delta R \cdot \Delta L$")
-    ax2.set_title("(b) Dispersion Product Across Dimension $d$")
+    ax2.set_ylabel("Median magnitude")
+    ax2.set_title("(b) Bound Tightness by Dimension $d$")
     ax2.grid(True, axis="y", alpha=0.8)
+    ax2.legend(loc="upper right", fontsize=7.0)
 
     fig.tight_layout()
     save_both(fig, "fig_uncertainty_bound")
+
+
+def plot_role_aggregation() -> None:
+    d = read_csv(DATA_DIR / "role_aggregation.csv")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.0))
+
+    # Exact benchmark scores from Worked Example / M_4x5 aggregation schemes
+    partners = np.array([1, 2, 3, 4], dtype=float)
+    g_vis = [0.4167, 0.2225, 0.1716, 0.1893]
+    g_sup = [0.2169, 0.3508, 0.2865, 0.1458]
+    w = 0.34
+    ax1.bar(partners - w / 2, g_vis, width=w, color=PALETTE["navy"], label=r"Visibility weights $\alpha_{\mathrm{vis}}$")
+    ax1.bar(partners + w / 2, g_sup, width=w, color=PALETTE["plum"], label=r"Support weights $\alpha_{\mathrm{sup}}$")
+    ax1.set_xticks(partners)
+    ax1.set_xticklabels([r"$G_1$", r"$G_2$", r"$G_3$", r"$G_4$"])
+    ax1.set_xlabel("Partner")
+    ax1.set_ylabel(r"Composite score $G_i(\alpha)$")
+    ax1.set_title("(a) Rank Reversal Under Scheme Change")
+    ax1.set_ylim(0.0, 0.50)
+    ax1.grid(True, axis="y", alpha=0.8)
+    ax1.legend(loc="upper right", fontsize=7.2)
+
+    top_p = d["top_partner"]
+    counts = [int(np.sum(np.isclose(top_p, k))) for k in [1, 2, 3, 4]]
+    shares = [c / len(top_p) for c in counts]
+    ax2.bar(partners, shares, width=0.52, color=[PALETTE["navy"], PALETTE["plum"], PALETTE["teal"], PALETTE["amber"]])
+    for x, s in zip(partners, shares):
+        ax2.text(x, s + 0.012, f"{100*s:.1f}%", ha="center", va="bottom", fontsize=7.8)
+    ax2.set_xticks(partners)
+    ax2.set_xticklabels([r"$G_1$", r"$G_2$", r"$G_3$", r"$G_4$"])
+    ax2.set_xlabel("Partner")
+    ax2.set_ylabel("Top-1 rank frequency ($N=1000$)")
+    ax2.set_title(r"(b) Simplex Top-Rank Shares ($\alpha \sim \mathrm{Dir}(1,\ldots,1)$)")
+    ax2.set_ylim(0.0, 0.42)
+    ax2.grid(True, axis="y", alpha=0.8)
+
+    fig.tight_layout()
+    save_both(fig, "fig_role_aggregation")
+
+
+def plot_optionality_extensions() -> None:
+    d = read_csv(DATA_DIR / "optionality_heterogeneity.csv")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.0))
+
+    n = d["n_partners"]
+    ax1.plot(n, d["homog_exact"], color=PALETTE["navy"], lw=1.5, marker="o", ms=3, label="Homogeneous binomial ($p=0.45$)")
+    ax1.plot(n, d["hetero_poisson_bin"], color=PALETTE["teal"], lw=1.4, ls="--", marker="s", ms=3, label="Heterogeneous Poisson binomial")
+    ax1.plot(n, d["budget_neg_corr"], color=PALETTE["amber"], lw=1.5, ls="-.", marker="^", ms=3, label="Capacity-constrained ($B_{\\max}=3$)")
+    ax1.set_xlabel("Viable pool size $n$")
+    ax1.set_ylabel(r"$\mathbb{P}(K \geq 2)$")
+    ax1.set_title("(a) Superposition Beyond i.i.d. Binomial")
+    ax1.set_xticks(range(1, 11))
+    ax1.set_ylim(-0.03, 1.05)
+    ax1.grid(True, alpha=0.8)
+    ax1.legend(loc="lower right", fontsize=7.0)
+
+    ax2.plot(n, n * 0.45, color=PALETTE["navy"], lw=1.3, ls="--", label="Unconstrained mean $np$")
+    ax2.plot(n, d["budget_mean_kept"], color=PALETTE["amber"], lw=1.5, marker="^", ms=3, label="Budget-capped mean $\\mathbb{E}[K]$")
+    ax2.axhline(3.0, color=PALETTE["muted"], lw=0.9, ls=":", label="Hard time cap ($B_{\\max}=3$)")
+    ax2.set_xlabel("Viable pool size $n$")
+    ax2.set_ylabel("Expected active partners")
+    ax2.set_title("(b) Sublinear Growth Under Attention Cap")
+    ax2.set_xticks(range(1, 11))
+    ax2.set_ylim(0.0, 4.8)
+    ax2.grid(True, alpha=0.8)
+    ax2.legend(loc="upper left", fontsize=7.2)
+
+    fig.tight_layout()
+    save_both(fig, "fig_optionality_extensions")
 
 
 def main() -> None:
@@ -238,6 +320,8 @@ def main() -> None:
     plot_optionality_and_collapse()
     plot_cascade_percolation()
     plot_uncertainty_sweep()
+    plot_role_aggregation()
+    plot_optionality_extensions()
 
 
 if __name__ == "__main__":

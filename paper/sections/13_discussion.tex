@@ -1,8 +1,75 @@
 \section{Discussion, Future Work, and Conclusion}
 \label{sec:discussion}
 
-We have introduced Relational Superposition Theory to account for concurrent
-relational configurations in which rank and role cannot be simultaneously
-resolved. Future work addresses empirical estimation of $\kappaS$, graph
-percolation regimes on real messaging networks, and formal analysis of
-non-reversible collapse trajectories.
+\subsection{Synthesis of Results}
+\label{subsec:disc-synthesis}
+
+Relational Superposition Theory offers a coherent mathematical vocabulary for
+concurrent non-exclusive dating arrangements without forcing them into
+ill-fitting total orders. Starting from the observation that multi-role
+functional specialization destroys scalar Pareto comparability (\cref{prop:order-failure}),
+we represented partner portfolios as normalized state vectors over a role basis
+and established three interlocking mechanisms:
+\begin{enumerate}[nosep]
+  \item \textbf{Static indeterminacy (\cref{prop:nobody-first,thm:rank-role-inequality}).}
+        Prior to collapse, no partner holds unit primary weight, and rank and
+        role dispersions obey $\Delta R \cdot \Delta L \ge \kappaS$ whenever the
+        rank and role operators fail to commute.
+  \item \textbf{Dynamical maintenance and sudden failure (\cref{prop:stationary,prin:poke-rule,thm:percolation-threshold}).}
+        Routine weekday, weekend, and stress cycles maintain positive rank
+        entropy indefinitely in stationarity, whereas a poke forces irreversible
+        projective collapse (\cref{prop:irreversibility}) or a network-wide
+        percolation cascade above critical friend-graph density $q_c$.
+  \item \textbf{Structural drivers (\cref{thm:optionality-monotonicity,prop:symmetry}).}
+        The prevalence of superposition scales monotonically with viable option
+        count $n(A)$ rather than individual disposition or gender, placing
+        both the baseline configuration and its mirror case on identical formal
+        footing.
+\end{enumerate}
+
+\subsection{Relation to Preference and Matching Literature}
+\label{subsec:disc-literature}
+
+In classical two-sided matching~\citep{gale1962college,roth1990two}, instability
+arises when blocking pairs prefer one another over assigned partners under
+fixed total orders. In situationships, instability is internal to a single
+agent's preference structure: the focal agent avoids committing to a total order
+precisely because doing so forfeits specialized complementary roles held by
+non-primary partners. Rather than blocking-pair instability, the primary
+failure mode is informational percolation across the shared social graph,
+linking individual preference indeterminacy directly to network threshold
+phenomena~\citep{granovetter1978threshold,watts2002simple}.
+
+\subsection{Directions for Future Work}
+\label{subsec:disc-future}
+
+Four concrete extensions merit further investigation:
+\begin{enumerate}[nosep]
+  \item \textbf{Empirical estimation of $\kappaS$ and $p$.} Deploying the
+        non-intrusive observational cadence protocol in \cref{app:instrument}
+        on anonymized messaging logs would test the option-mediation prediction
+        of \cref{conj:optionality} and yield empirical ranges for $\kappaS$.
+  \item \textbf{Endogenous poke feedback.} Coupling the Markov attention-drift
+        model of \cref{sec:dynamics} with neglect-triggered poke hazards
+        $\lambda_i(w_i(t))$ would unify pre-poke drift and collapse timing into
+        a single continuous-time jump-diffusion process.
+  \item \textbf{Multi-partner simultaneous pokes.} Extending the projective
+        collapse operator of \cref{sec:poke} to simultaneous non-commuting
+        queries from two partners ($G_i$ and $G_j$ poking within the same
+        silence window $\tau_s$) introduces order-dependent collapse branching.
+  \item \textbf{Continuous role manifolds.} Replacing the discrete $m$-role
+        basis $\roleset$ with a continuous latent functional space learned from
+        interaction embeddings would remove basis-granularity sensitivity.
+\end{enumerate}
+
+\subsection{Conclusion}
+\label{subsec:disc-conclusion}
+
+When a person maintains multiple concurrent partners across distinct functional
+roles, asking ``who is first?'' presupposes a classical ordering that the
+system has not constructed. Relational Superposition Theory replaces that
+presupposition with an explicit state-space model in which rank indeterminacy,
+role specialization, non-commutation, poke-induced collapse, social-graph
+decoherence, and optionality scaling follow from unified mathematical axioms.
+Until a poke collapses the state, no partner is first or second, and rank and
+role cannot be resolved together.

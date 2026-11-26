@@ -1,5 +1,118 @@
 \section{Formal Verification in Lean 4}
 \label{sec:verification}
 
-Core algebraic, normalization, monotonicity, and uncertainty properties of
-\RST{} are machine-checked in Lean~4~\citep{axler2024linear}.
+To ensure that the algebraic, probabilistic, and order-theoretic claims of
+\RST{} contain no hidden sign errors, division-by-zero corner cases, or
+unjustified inequalities, core results were formalized and machine-checked
+in the Lean~4 theorem prover (Lean version \texttt{4.36.0}, Lake
+\texttt{5.0.0}).
+
+\subsection{Architecture and Dependency Boundary}
+\label{subsec:ver-arch}
+
+The formalization resides in the standalone Lake project \texttt{lean/} and
+builds strictly on Lean~4's core standard prelude (\texttt{Init}) with no
+external mathematical library dependencies and zero uses of \texttt{sorry}
+or custom axioms. To represent complex state vectors and Hermitian observables
+constructively without noncomputable real-number machinery, \texttt{RST.Uncertainty}
+defines the Gaussian rational field $\Qnum[i]$ (\texttt{RST.Cpx}) with exact
+rational real and imaginary parts (\texttt{re, im : Rat}). Because every
+algebraic step of the finite-dimensional Cauchy-Schwarz proof and commutator
+decomposition holds over any ordered-field extension $\mathbb{F}[i]$, the
+machine-checked proof over $\Qnum[i]^d$ establishes the exact finite-dimensional
+structural theorem while also enabling direct kernel evaluation on concrete
+rational witnesses.
+
+\subsection{Inventory of Verified Theorems}
+\label{subsec:ver-inventory}
+
+\cref{tab:lean-map} maps each theoretical claim in the paper to its Lean~4
+module and declaration name.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Mapping between paper claims and machine-checked Lean~4 declarations in \texttt{lean/RST/}.}
+\label{tab:lean-map}
+\begin{tabularx}{\textwidth}{@{}llL@{}}
+\toprule
+Paper reference & Lean declaration & Verified statement \\
+\midrule
+\cref{eq:system-state} & \texttt{RST.collapse\_probs\_sum\_one} & Unit-norm amplitudes yield weights summing to $1$. \\
+\cref{prop:renormalization} & \texttt{RST.removePartner\_nonneg} & Post-removal renormalized weights are non-negative when $w_k < 1$. \\
+\cref{prop:renormalization} & \texttt{RST.removePartner\_sum\_one} & Post-removal renormalized weights sum to $1$. \\
+\cref{prop:renormalization} & \texttt{RST.renormMask\_valid} & Arbitrary retained-subset renormalization preserves validity. \\
+\cref{prop:nobody-first} & \texttt{RST.nobody\_is\_first} & Under two positive weights, every partner satisfies $w_k < 1$. \\
+\cref{prop:nobody-first} & \texttt{RST.amplitudes\_nobody\_is\_first} & Amplitude superposition implies $\abs{a_k}^2 < 1$ and $\abs{a_k}^2 \neq 1$. \\
+\cref{thm:optionality-monotonicity} & \texttt{RST.superpositionProb\_step} & Exact identity $f(p, n+1) - f(p, n) = n p^2 (1-p)^{n-1}$. \\
+\cref{thm:optionality-monotonicity} & \texttt{RST.superpositionProb\_mono} & Superposition probability is nondecreasing in $n$. \\
+\cref{thm:optionality-monotonicity} & \texttt{RST.superpositionProb\_strict\_step} & Strictly increasing in $n \ge 1$ when $0 < p < 1$. \\
+\cref{conj:optionality} & \texttt{RST.conjecture\_mono\_in\_attractiveness} & Composition monotonicity in $A$ given nondecreasing $n(A)$. \\
+\cref{thm:rank-role-inequality} & \texttt{RST.cauchy\_schwarz\_cpx} & Complex Cauchy-Schwarz over $\Qnum[i]^d$. \\
+\cref{lem:comm-antiherm} & \texttt{RST.dotC\_hermitian\_self\_im} & Hermitian expectation values have zero imaginary part. \\
+\cref{thm:rank-role-inequality} & \texttt{RST.rank\_role\_uncertainty} & $4\,\var{\opR}{\Psi}\,\var{\opL}{\Psi} \ge (\ImPart\braket{\Psi}{\comm{\opR}{\opL}\Psi})^2$. \\
+\cref{ex:uncertainty-2x2} & \texttt{RST.ex\_super\_uncertainty\_positive} & Concrete $2\times 2$ non-commuting witness with $\kappaS > 0$. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Selected Formal Statements}
+\label{subsec:ver-excerpts}
+
+To illustrate the exact typing of the formalization, \cref{lst:lean-uncertainty}
+shows the machine-checked statement of \texttt{RST.nobody\_is\_first} and
+\texttt{RST.rank\_role\_uncertainty} verbatim from \texttt{lean/RST/}.
+
+\begin{lstlisting}[language=Lean4,caption={Theorem signatures from \texttt{Superposition.lean} and \texttt{Uncertainty.lean}.},label={lst:lean-uncertainty}]
+theorem nobody_is_first {n : Nat} (W : Weights n) (hsup : InSuperposition W) :
+    ∀ k : Fin n, W.w k < 1
+
+theorem rank_role_uncertainty {d : Nat} (R L : Mat d)
+    (hR : IsHermitian R) (hL : IsHermitian L) (ψ : Fin d → Cpx) :
+    ((dotC ψ (comm R L ψ)).im) * ((dotC ψ (comm R L ψ)).im) ≤
+      4 * var R ψ * var L ψ
+\end{lstlisting}
+
+\begin{lstlisting}[language=Lean4,caption={Signatures from \texttt{Normalization.lean} and \texttt{Optionality.lean}.},label={lst:lean-norm-opt}]
+theorem removePartner_sum_one {n : Nat} (W : Weights n) (k : Fin n)
+    (hk : W.w k < 1) :
+    sumFin (removePartner W k) = 1
+
+theorem superpositionProb_step (p : Rat) : ∀ n : Nat, 1 ≤ n →
+    superpositionProb p (n + 1) - superpositionProb p n =
+      (n : Rat) * p * p * powRat (1 - p) (n - 1)
+
+theorem conjecture_mono_in_attractiveness {p : Rat} (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
+    (nOfA : Rat → Nat) (hA : ∀ A₁ A₂ : Rat, A₁ ≤ A₂ → nOfA A₁ ≤ nOfA A₂)
+    {A₁ A₂ : Rat} (hle : A₁ ≤ A₂) :
+    superpositionProb p (nOfA A₁) ≤ superpositionProb p (nOfA A₂)
+\end{lstlisting}
+
+Finite summations over $\mathrm{Fin}\,n$ are defined structurally via
+\texttt{Fin.succ} recursion (\texttt{RST.sumFin}), allowing clean inductive
+proofs of linearity, non-negativity, and single-entry removal without index-set
+finset machinery. Polynomial identities over $\Qnum$ and $\Qnum[i]$ are
+discharged via Lean~4's built-in \texttt{Field Rat} and \texttt{OrderedRing Rat}
+decision procedures (\texttt{grind}), while small concrete witnesses such as
+\texttt{RST.ex\_super\_uncertainty\_positive} are verified directly on exact
+rational entries.
+
+\subsection{Verification Scope and Reproduction}
+\label{subsec:ver-scope}
+
+To re-check every theorem locally from a clean checkout, execute:
+\begin{verbatim}
+cd lean && lake build
+\end{verbatim}
+or equivalently \texttt{make lean} from the repository root. A valid check
+terminates with exit status~$0$ and reports \texttt{Build completed successfully (12 jobs)}
+with zero warnings and zero errors.
+
+Consistent with strict verification hygiene, we explicitly delineate what is
+\emph{not} machine-checked in Lean: (1) continuous real-analytic properties of
+Shannon entropy and Perron-Frobenius mixing bounds (\cref{sec:framework,sec:dynamics}),
+(2) asymptotic Galton-Watson percolation survival probabilities (\cref{sec:cascade}),
+(3) empirical sociological claims in the Attractiveness-Optionality Conjecture
+(Lean verifies monotonicity of the binomial model conditional on $n(A)$ being
+nondecreasing, not the empirical premise $n'(A) > 0$), and (4) floating-point
+Monte Carlo simulations in \texttt{scripts/run\_simulations.py}.

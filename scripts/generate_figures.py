@@ -78,7 +78,7 @@ def save_both(fig: plt.Figure, stem: str) -> None:
 def plot_markov_drift() -> None:
     d = read_csv(DATA_DIR / "markov_drift.csv")
     fig, (ax1, ax2) = plt.subplots(
-        2, 1, figsize=(6.5, 4.4), sharex=True, gridspec_kw={"height_ratios": [2.2, 1.0]}
+        2, 1, figsize=(6.8, 4.7), sharex=True, gridspec_kw={"height_ratios": [2.2, 1.05]}
     )
 
     days = d["day"]
@@ -86,21 +86,21 @@ def plot_markov_drift() -> None:
     ax1.plot(days, d["w2"], label=r"$G_2$ (emotional support)", color=PALETTE["plum"], lw=1.4)
     ax1.plot(days, d["w3"], label=r"$G_3$ (financial support)", color=PALETTE["teal"], lw=1.2, ls="--")
     ax1.plot(days, d["w4"], label=r"$G_4$ (weekend entertainment)", color=PALETTE["amber"], lw=1.2, ls="-.")
-    ax1.set_ylabel(r"Attention weight $w_i(t)$ (dimensionless)")
-    ax1.set_ylim(0.0, 0.72)
+    ax1.set_ylabel(r"Attention weight $w_i(t)$")
+    ax1.set_ylim(-0.02, 0.80)
     ax1.grid(True, alpha=0.8)
-    ax1.legend(loc="upper right", ncol=2)
-    ax1.set_title("Synthetic 90-Day Attention-Weight Drift Under Periodic Regime Switching")
+    ax1.legend(loc="upper right", ncol=2, fontsize=7.6)
+    ax1.set_title("Synthetic 90-Day Attention-Weight Drift Under Periodic Regime Switching", pad=8)
 
     ax2.plot(days, d["entropy_bits"], color=PALETTE["ink"], lw=1.2)
     ax2.axhline(2.0, color=PALETTE["muted"], lw=0.8, ls=":", label=r"Uniform cap ($\log_2 4 = 2$ bits)")
     ax2.set_ylabel("Entropy (bits)")
     ax2.set_xlabel("Time $t$ (days)")
-    ax2.set_ylim(1.1, 2.15)
+    ax2.set_ylim(1.05, 2.22)
     ax2.grid(True, alpha=0.8)
-    ax2.legend(loc="lower right")
+    ax2.legend(loc="lower right", fontsize=7.6)
 
-    fig.tight_layout()
+    fig.tight_layout(pad=0.9, h_pad=1.0)
     save_both(fig, "fig_markov_drift")
 
 
@@ -108,7 +108,7 @@ def plot_optionality_and_collapse() -> None:
     dn = read_csv(DATA_DIR / "optionality_vs_n.csv")
     da = read_csv(DATA_DIR / "optionality_vs_A.csv")
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.1))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.6, 3.3))
 
     n = dn["n_partners"]
     ax1.plot(n, dn["exact_p25"], color=PALETTE["teal"], lw=1.3, label=r"$p=0.25$ (analytic)")
@@ -118,33 +118,33 @@ def plot_optionality_and_collapse() -> None:
     ax1.plot(n, dn["exact_p65"], color=PALETTE["plum"], lw=1.3, label=r"$p=0.65$ (analytic)")
     ax1.scatter(n, dn["mc_p65"], color=PALETTE["plum"], s=16, zorder=4)
     ax1.plot(n, dn["collapse_hazard_30d"], color=PALETTE["amber"], lw=1.2, ls="--", label="30-day collapse hazard")
-    ax1.set_xlabel("Viable partner count $n$ (partners)")
-    ax1.set_ylabel("Probability (dimensionless)")
-    ax1.set_title("(a) Superposition & Collapse Hazard vs. $n$")
+    ax1.set_xlabel("Viable partner count $n$")
+    ax1.set_ylabel("Probability")
+    ax1.set_title("(a) Superposition & Hazard vs. $n$", pad=8)
     ax1.set_xticks(range(1, 11))
-    ax1.set_ylim(-0.03, 1.05)
+    ax1.set_ylim(-0.03, 1.06)
     ax1.grid(True, alpha=0.8)
-    ax1.legend(loc="lower right", fontsize=7.5)
+    ax1.legend(loc="lower right", fontsize=7.3)
 
     a = da["attractiveness_A"]
     ax2.plot(a, da["p_superposition_p25"], color=PALETTE["teal"], lw=1.3, marker="o", ms=3, label=r"$p=0.25$")
     ax2.plot(a, da["p_superposition_p45"], color=PALETTE["navy"], lw=1.5, marker="s", ms=3, label=r"$p=0.45$")
     ax2.plot(a, da["p_superposition_p65"], color=PALETTE["plum"], lw=1.3, marker="^", ms=3, label=r"$p=0.65$")
-    ax2.set_xlabel(r"Perceived attractiveness index $A$ (0 to 10 scale)")
-    ax2.set_ylabel(r"$\mathbb{P}(\mathrm{superposition})$ (dimensionless)")
-    ax2.set_title(r"(b) Superposition vs. Optionality Index $A$")
-    ax2.set_ylim(-0.03, 1.05)
+    ax2.set_xlabel(r"Perceived attractiveness index $A$ (0 to 10)")
+    ax2.set_ylabel(r"$\mathbb{P}(\mathrm{superposition})$")
+    ax2.set_title(r"(b) Scaling vs. Index $A$", pad=8)
+    ax2.set_ylim(-0.03, 1.06)
     ax2.grid(True, alpha=0.8)
-    ax2.legend(loc="lower right", fontsize=7.8)
+    ax2.legend(loc="lower right", fontsize=7.6)
 
-    fig.tight_layout()
+    fig.tight_layout(pad=0.9, w_pad=2.5)
     save_both(fig, "fig_collapse_vs_n_A")
 
 
 def plot_cascade_percolation() -> None:
     d = read_csv(DATA_DIR / "cascade_percolation.csv")
     dp = read_csv(DATA_DIR / "cascade_ptx_sensitivity.csv")
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(9.6, 3.0))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10.2, 3.3))
 
     q = d["edge_density_q"]
     q_crit = 1.0 / (7.0 * 0.72)
@@ -152,13 +152,13 @@ def plot_cascade_percolation() -> None:
     ax1.plot(q, d["cascade_erdos_renyi"], color=PALETTE["navy"], lw=1.5, marker="o", ms=3, label="Homogeneous graph")
     ax1.plot(q, d["cascade_clustered"], color=PALETTE["plum"], lw=1.4, marker="s", ms=3, label="Clustered circles")
     ax1.plot(q, d["cascade_hub_mediated"], color=PALETTE["amber"], lw=1.4, marker="^", ms=3, label="Hub-mediated")
-    ax1.axvline(q_crit, color=PALETTE["muted"], lw=0.9, ls="--", label=rf"Branching $R_0=1$ ($q={q_crit:.2f}$)")
+    ax1.axvline(q_crit, color=PALETTE["muted"], lw=0.9, ls="--", label=rf"$R_0=1$ ($q={q_crit:.2f}$)")
     ax1.set_xlabel(r"Edge density $q$")
     ax1.set_ylabel(r"$\mathbb{P}(\mathrm{total\ cascade})$")
-    ax1.set_title(r"(a) Topology ($n=8$, $p_{\mathrm{tx}}=0.72$)")
-    ax1.set_ylim(-0.03, 1.05)
+    ax1.set_title(r"(a) Topology ($n=8$, $p_{\mathrm{tx}}=0.72$)", pad=8)
+    ax1.set_ylim(-0.03, 1.06)
     ax1.grid(True, alpha=0.8)
-    ax1.legend(loc="lower right", fontsize=7.0)
+    ax1.legend(loc="lower right", fontsize=6.8)
 
     ax2.plot(q, d["mean_exposed_erdos_renyi"], color=PALETTE["navy"], lw=1.5, label="Homogeneous graph")
     ax2.plot(q, d["mean_exposed_clustered"], color=PALETTE["plum"], lw=1.4, label="Clustered circles")
@@ -166,10 +166,10 @@ def plot_cascade_percolation() -> None:
     ax2.axhline(0.60, color=PALETTE["muted"], lw=0.9, ls=":", label="Cascade threshold (0.60)")
     ax2.set_xlabel(r"Edge density $q$")
     ax2.set_ylabel("Mean exposed fraction")
-    ax2.set_title("(b) Mean Informed Fraction")
-    ax2.set_ylim(0.05, 1.05)
+    ax2.set_title("(b) Mean Informed Fraction", pad=8)
+    ax2.set_ylim(0.05, 1.06)
     ax2.grid(True, alpha=0.8)
-    ax2.legend(loc="lower right", fontsize=7.0)
+    ax2.legend(loc="lower right", fontsize=6.8)
 
     qp = dp["edge_density_q"]
     ax3.plot(qp, dp["cascade_ptx40"], color=PALETTE["teal"], lw=1.4, marker="o", ms=3, label=r"$p_{\mathrm{tx}}=0.40$")
@@ -177,18 +177,18 @@ def plot_cascade_percolation() -> None:
     ax3.plot(qp, dp["cascade_ptx90"], color=PALETTE["plum"], lw=1.4, marker="^", ms=3, label=r"$p_{\mathrm{tx}}=0.90$")
     ax3.set_xlabel(r"Edge density $q$")
     ax3.set_ylabel(r"$\mathbb{P}(\mathrm{total\ cascade})$")
-    ax3.set_title(r"(c) Transmission Sensitivity ($p_{\mathrm{tx}}$)")
-    ax3.set_ylim(-0.03, 1.05)
+    ax3.set_title(r"(c) Sensitivity to $p_{\mathrm{tx}}$", pad=8)
+    ax3.set_ylim(-0.03, 1.06)
     ax3.grid(True, alpha=0.8)
-    ax3.legend(loc="lower right", fontsize=7.2)
+    ax3.legend(loc="lower right", fontsize=7.0)
 
-    fig.tight_layout()
+    fig.tight_layout(pad=0.9, w_pad=2.2)
     save_both(fig, "fig_cascade_percolation")
 
 
 def plot_uncertainty_sweep() -> None:
     d = read_csv(DATA_DIR / "uncertainty_sweep.csv")
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.1))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.6, 3.3))
 
     r_bound = d["robertson_bound"]
     s_bound = d["schrodinger_bound"]
@@ -215,9 +215,9 @@ def plot_uncertainty_sweep() -> None:
     max_b = float(np.max(s_bound)) * 1.05
     xs = np.linspace(0.0, max_b, 100)
     ax1.plot(xs, xs, color=PALETTE["ink"], lw=1.1, ls="--", label=r"Bound $\Delta R \Delta L = B_S$")
-    ax1.set_xlabel(r"Schrodinger bound $B_S = \sqrt{|\mathrm{Cov}|^2 + \frac{1}{4}|\langle[\hat{R},\hat{L}]\rangle|^2}$")
+    ax1.set_xlabel(r"Schrodinger bound $B_S$")
     ax1.set_ylabel(r"Observed product $\Delta R \cdot \Delta L$")
-    ax1.set_title(r"(a) Inequality Compliance ($N=3200$ states)")
+    ax1.set_title(r"(a) Inequality Compliance ($N=3200$)", pad=8)
     ax1.set_xlim(0.0, max_b)
     ax1.set_ylim(0.0, float(np.percentile(prod, 99.5)) * 1.1)
     ax1.grid(True, alpha=0.8)
@@ -234,19 +234,20 @@ def plot_uncertainty_sweep() -> None:
     ax2.bar(dims, med_sch, width=w, color=PALETTE["navy"], label="Schrodinger bound")
     ax2.bar(dims + w, med_prod, width=w, color=PALETTE["plum"], label=r"Observed $\Delta R \cdot \Delta L$")
     ax2.set_xticks(dims)
-    ax2.set_xlabel("State space dimension $d$ (partners)")
+    ax2.set_xlabel("State space dimension $d$")
     ax2.set_ylabel("Median magnitude")
-    ax2.set_title("(b) Bound Tightness by Dimension $d$")
+    ax2.set_ylim(0.0, 0.96)
+    ax2.set_title("(b) Bound Tightness by Dimension $d$", pad=8)
     ax2.grid(True, axis="y", alpha=0.8)
-    ax2.legend(loc="upper right", fontsize=7.0)
+    ax2.legend(loc="upper left", fontsize=7.0)
 
-    fig.tight_layout()
+    fig.tight_layout(pad=0.9, w_pad=2.5)
     save_both(fig, "fig_uncertainty_bound")
 
 
 def plot_role_aggregation() -> None:
     d = read_csv(DATA_DIR / "role_aggregation.csv")
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.0))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.6, 3.3))
 
     # Exact benchmark scores from Worked Example / M_4x5 aggregation schemes
     partners = np.array([1, 2, 3, 4], dtype=float)
@@ -259,7 +260,7 @@ def plot_role_aggregation() -> None:
     ax1.set_xticklabels([r"$G_1$", r"$G_2$", r"$G_3$", r"$G_4$"])
     ax1.set_xlabel("Partner")
     ax1.set_ylabel(r"Composite score $G_i(\alpha)$")
-    ax1.set_title("(a) Rank Reversal Under Scheme Change")
+    ax1.set_title("(a) Rank Reversal Across Schemes", pad=8)
     ax1.set_ylim(0.0, 0.50)
     ax1.grid(True, axis="y", alpha=0.8)
     ax1.legend(loc="upper right", fontsize=7.2)
@@ -267,24 +268,24 @@ def plot_role_aggregation() -> None:
     top_p = d["top_partner"]
     counts = [int(np.sum(np.isclose(top_p, k))) for k in [1, 2, 3, 4]]
     shares = [c / len(top_p) for c in counts]
-    ax2.bar(partners, shares, width=0.52, color=[PALETTE["navy"], PALETTE["plum"], PALETTE["teal"], PALETTE["amber"]])
+    ax2.bar(partners, shares, width=0.50, color=[PALETTE["navy"], PALETTE["plum"], PALETTE["teal"], PALETTE["amber"]])
     for x, s in zip(partners, shares):
         ax2.text(x, s + 0.012, f"{100*s:.1f}%", ha="center", va="bottom", fontsize=7.8)
     ax2.set_xticks(partners)
     ax2.set_xticklabels([r"$G_1$", r"$G_2$", r"$G_3$", r"$G_4$"])
     ax2.set_xlabel("Partner")
     ax2.set_ylabel("Top-1 rank frequency ($N=1000$)")
-    ax2.set_title(r"(b) Simplex Top-Rank Shares ($\alpha \sim \mathrm{Dir}(1,\ldots,1)$)")
+    ax2.set_title(r"(b) Uniform Dirichlet Top-1 Shares", pad=8)
     ax2.set_ylim(0.0, 0.42)
     ax2.grid(True, axis="y", alpha=0.8)
 
-    fig.tight_layout()
+    fig.tight_layout(pad=0.9, w_pad=2.5)
     save_both(fig, "fig_role_aggregation")
 
 
 def plot_optionality_extensions() -> None:
     d = read_csv(DATA_DIR / "optionality_heterogeneity.csv")
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.0))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.6, 3.3))
 
     n = d["n_partners"]
     ax1.plot(n, d["homog_exact"], color=PALETTE["navy"], lw=1.5, marker="o", ms=3, label="Homogeneous binomial ($p=0.45$)")
@@ -292,9 +293,9 @@ def plot_optionality_extensions() -> None:
     ax1.plot(n, d["budget_neg_corr"], color=PALETTE["amber"], lw=1.5, ls="-.", marker="^", ms=3, label="Capacity-constrained ($B_{\\max}=3$)")
     ax1.set_xlabel("Viable pool size $n$")
     ax1.set_ylabel(r"$\mathbb{P}(K \geq 2)$")
-    ax1.set_title("(a) Superposition Beyond i.i.d. Binomial")
+    ax1.set_title("(a) Heterogeneous & Capped Models", pad=8)
     ax1.set_xticks(range(1, 11))
-    ax1.set_ylim(-0.03, 1.05)
+    ax1.set_ylim(-0.03, 1.06)
     ax1.grid(True, alpha=0.8)
     ax1.legend(loc="lower right", fontsize=7.0)
 
@@ -303,13 +304,13 @@ def plot_optionality_extensions() -> None:
     ax2.axhline(3.0, color=PALETTE["muted"], lw=0.9, ls=":", label="Hard time cap ($B_{\\max}=3$)")
     ax2.set_xlabel("Viable pool size $n$")
     ax2.set_ylabel("Expected active partners")
-    ax2.set_title("(b) Sublinear Growth Under Attention Cap")
+    ax2.set_title("(b) Sublinear Growth Under Cap", pad=8)
     ax2.set_xticks(range(1, 11))
-    ax2.set_ylim(0.0, 4.8)
+    ax2.set_ylim(0.0, 4.9)
     ax2.grid(True, alpha=0.8)
     ax2.legend(loc="upper left", fontsize=7.2)
 
-    fig.tight_layout()
+    fig.tight_layout(pad=0.9, w_pad=2.5)
     save_both(fig, "fig_optionality_extensions")
 
 

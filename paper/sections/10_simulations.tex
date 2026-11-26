@@ -55,7 +55,7 @@ $(227, 190, 253, 330)$, confirming zero universal consensus leader on $\Delta^{4
 Using the exact transition matrices $P^{(\mathrm{wd})}, P^{(\mathrm{we})}, P^{(\mathrm{st})}$
 in \cref{app:rep-matrices} with $p_{\mathrm{st}} = 0.15$ and EMA smoothing $\alpha = 0.16$
 (Seed \texttt{202601}), we compute both the exact $7$-day stroboscopic eigenvector
-$\pi_{\mathrm{week}}$, the exact $12$-state joint `(partner, regime)` marginal stationary
+$\pi_{\mathrm{week}}$, the exact $12$-state joint (partner, regime) marginal stationary
 distribution $\pi_{\mathrm{joint}}$, and the empirical visitation frequencies over $180$
 simulated days (\cref{tab:markov-stationary}, \cref{fig:markov-drift}). Weekend clustering
 pushes stroboscopic $\pi_{\mathrm{week}}(G_4) = 0.3779$, diverging sharply from static support
@@ -72,7 +72,7 @@ rebalance the $12$-state marginal back toward $G_1$ ($0.3334$) and $G_2$ ($0.308
 Distribution / Metric & $G_1$ & $G_2$ & $G_3$ & $G_4$ \\
 \midrule
 Stroboscopic weekly stationary $\pi_{\mathrm{week}}$ & 0.2511 & 0.2248 & 0.1462 & 0.3779 \\
-12-state joint `(partner, regime)` marginal & 0.3334 & 0.3087 & 0.1741 & 0.1838 \\
+12-state joint (partner, regime) marginal & 0.3334 & 0.3087 & 0.1741 & 0.1838 \\
 180-day synthetic empirical visitation & 0.2516 & 0.2200 & 0.1439 & 0.3846 \\
 Static visibility score $G_i(\boldsymbol{\alpha}_{\mathrm{vis}})$ & 0.4167 & 0.2225 & 0.1716 & 0.1893 \\
 Static support score $G_i(\boldsymbol{\alpha}_{\mathrm{sup}})$ & 0.2169 & 0.3508 & 0.2865 & 0.1458 \\
@@ -157,7 +157,7 @@ $U(\gamma) = \exp(i\gamma H)$ for normalized random Hermitian $H$.
 
 Zero violations occurred out of $3{,}200$ samples for either Robertson ($\min \Delta R \Delta L / \kappa_R = 1.000$)
 or Schr\"odinger ($\min \Delta R \Delta L / B_S = 1.000$). Crucially, at $\gamma = 0.0$
-where $[\opR, \opL(0)] = 0$, Robertson's commutator bound vanishes identically (`0.0000`
+where $[\opR, \opL(0)] = 0$, Robertson's commutator bound vanishes identically (\texttt{0.0000}
 in every dimension), whereas Schr\"odinger's covariance term tracks the positive dispersion
 correlation cleanly (and hits exact equality in $d = 2$ across all $\gamma$). Overall across
 nonzero $\gamma$, median observed product is $0.4996$, median Schr\"odinger bound is $0.4409$,
@@ -165,12 +165,14 @@ and median Robertson bound is $0.1087$ (\cref{fig:uncertainty-bound}, \cref{tab:
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.94\textwidth]{figures/fig_uncertainty_bound.pdf}
+  \vspace{0.3em}
+  \includegraphics[width=0.98\textwidth]{figures/fig_uncertainty_bound.pdf}
   \caption{Unitary operator uncertainty sweep ($N = 3{,}200$ states, Seed \texttt{202604}).
   (a)~Observed product $\Delta R \cdot \Delta L$ vs.\ Schr\"odinger bound $B_S$ across
   $\gamma \in \{0.0, 0.25, 0.75, 1.50\}$. (b)~Dimension-wise medians comparing Robertson,
   Schr\"odinger, and observed dispersion product.}
   \label{fig:uncertainty-bound}
+  \vspace{0.3em}
 \end{figure}
 
 \begin{table}[htbp]

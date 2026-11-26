@@ -86,6 +86,7 @@ theorem distributed_not_implies_shared_max :
   exact h.2.2 (hall w99 h.1)
 \end{lstlisting}
 
+\needspace{12\baselineskip}
 \begin{lstlisting}[language=Lean4,caption={Schr\"odinger and Robertson inequalities in Lean~4 (\texttt{Robertson.lean}).},label={lst:lean-schrodinger}]
 theorem schrodinger_uncertainty {d : Nat} (R L : Mat d)
     (hR : IsHermitian R) (hL : IsHermitian L) (ψ : Fin d → Cpx) :
@@ -96,7 +97,6 @@ theorem schrodinger_uncertainty {d : Nat} (R L : Mat d)
   have hcomm := centered_comm_im R L hR hL ψ
   have hanti := centered_anticomm_re R L hR hL ψ
   rw [← hcomm, ← hanti]
-  ...
 \end{lstlisting}
 
 \subsection{Reproduction and Strict Verification Boundary}

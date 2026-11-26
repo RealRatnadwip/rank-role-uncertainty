@@ -1,91 +1,118 @@
-# Technical Notes and Verification
+# Technical Architecture and Verification (v1.1)
 
-This repository contains the LaTeX monograph, deterministic Monte Carlo
-simulation scripts, generated datasets and vector figures, and a standalone
-Lean 4 formalization for Relational Superposition Theory.
+This repository holds the LaTeX monograph, deterministic Monte Carlo and
+linear-algebra simulation scripts, invariant tests, generated datasets and
+vector figures, and a modular Lean 4 formalization for Relational Superposition
+Theory (RST).
 
 ## Repository Layout and Build Pipeline
 
-The monograph compiles from [paper/main.tex](paper/main.tex) with package and
-macro configuration in [paper/preamble.tex](paper/preamble.tex), chapter files
-in `paper/sections/`, and bibliographic entries in
-[paper/bib/references.bib](paper/bib/references.bib). Intermediate build files go
-into `paper/build/` (ignored by git), and only the compiled PDF lands at
-[paper/output/rank-role-uncertainty.pdf](paper/output/rank-role-uncertainty.pdf).
+- Monograph sources live in [paper/main.tex](paper/main.tex),
+  [paper/preamble.tex](paper/preamble.tex), `paper/sections/`, and
+  [paper/bib/references.bib](paper/bib/references.bib). Intermediate artifacts
+  go to `paper/build/`, and the compiled PDF lands at
+  [paper/output/rank-role-uncertainty.pdf](paper/output/rank-role-uncertainty.pdf).
+- Source-level mathematical audit and v1.1 revision summary live at
+  [paper/appendices/mathematical-audit.md](paper/appendices/mathematical-audit.md)
+  and [paper/appendices/revision-report.md](paper/appendices/revision-report.md).
+- Simulation and plotting pipeline:
+  - [scripts/run_simulations.py](scripts/run_simulations.py) runs five
+    deterministic experiments (NumPy PCG64) writing CSV tables and
+    [paper/data/summary.json](paper/data/summary.json).
+  - [scripts/generate_figures.py](scripts/generate_figures.py) generates six
+    publication PDF/SVG plots from the CSV outputs, while standalone TikZ
+    diagrams (`fig_weight_matrix.tex`, `fig_collapse.tex`, `fig_social_graph.tex`)
+    render via `pdflatex` and `pdf2svg`.
+- Automated invariant tests live in [tests/test_rst_invariants.py](tests/test_rst_invariants.py)
+  covering both direct algebraic properties of simulation helpers and invariants
+  over generated CSV outputs.
 
-All figures are produced in both PDF (for LaTeX inclusion) and SVG (for web
-rendering) inside `paper/figures/`:
-- [scripts/run_simulations.py](scripts/run_simulations.py) writes deterministic
-  CSV outputs and `paper/data/summary.json` using NumPy PCG64 generators.
-- [scripts/generate_figures.py](scripts/generate_figures.py) renders the four
-  data-driven plots from those CSV files.
-- Standalone TikZ diagrams (`fig_weight_matrix.tex`, `fig_collapse.tex`,
-  `fig_social_graph.tex`) compile via `pdflatex` and convert to SVG via `pdf2svg`.
+## Modular Formal Verification in Lean 4
 
-## Formal Verification in Lean 4
+The Lean suite in `lean/` targets Lean `4.36.0` (pinned in
+[lean/lean-toolchain](lean/lean-toolchain)) with Lake `5.0.0` and pure standard
+`Init` (no external dependencies, zero `sorry`, zero `admit`, zero custom axioms).
 
-The Lean project in `lean/` targets Lean `4.36.0` (pinned in
-[lean/lean-toolchain](lean/lean-toolchain)) with Lake `5.0.0` and zero external
-library dependencies (`Init` only). No `sorry` or custom axioms appear anywhere.
+Library root [lean/RST.lean](lean/RST.lean) and executable entrypoint
+[lean/Main.lean](lean/Main.lean) organize 20 modules across six namespaces:
 
-Verified modules and key declarations:
-- [lean/RST/Normalization.lean](lean/RST/Normalization.lean): `collapse_probs_sum_one`
-  (squared unit amplitudes sum to 1), `removePartner_nonneg`,
-  `removePartner_sum_one` (post-removal renormalization preserves validity when
-  `w k < 1`), and `renormMask_valid` (arbitrary retained-subset renormalization).
-- [lean/RST/Superposition.lean](lean/RST/Superposition.lean): `nobody_is_first`
-  and `amplitudes_nobody_is_first` (under at least two positive weights, every
-  partner satisfies `w k < 1` and `w k ≠ 1`).
-- [lean/RST/Optionality.lean](lean/RST/Optionality.lean): `superpositionProb_step`
-  (exact marginal identity `f(p, n+1) - f(p, n) = n * p^2 * (1 - p)^(n - 1)`),
-  `superpositionProb_mono`, `superpositionProb_strict_step`, and
-  `conjecture_mono_in_attractiveness`.
-- [lean/RST/Uncertainty.lean](lean/RST/Uncertainty.lean): `cauchy_schwarz_cpx`
-  over the Gaussian rationals `Q[i]^d`, `dotC_hermitian_self_im`,
-  `rank_role_uncertainty` (`4 * var R psi * var L psi >= (Im <psi, [R, L]psi>)^2`),
-  and concrete non-commuting witness `ex_super_uncertainty_positive`.
+- `RST.Foundations`:
+  - `FiniteSets`: recursive `sumFin` linearity lemmas and boolean counting `countFin`.
+  - `Vectors`: Gaussian rational vectors over `Q[i]^d`, conjugate transpose dot products,
+    and division-free complex Cauchy-Schwarz (`cauchy_schwarz_cpx`).
+  - `Normalization`: simplex weights (`Weights`), guarded exit renormalization
+    (`removePartner_sum_one`), masked subset renormalization (`renormMask_valid`),
+    and the `n = 1` singleton boundary (`singleton_weight_one`).
+  - `Probability`: discrete distributions (`ProbDist`), expectations, and non-negative
+    variance (`varianceVal_nonneg`).
+- `RST.Relational`:
+  - `RoleMatrix`: non-negative raw matrix normalization with zero-column safety
+    (`colNormalize_sum_one`, `colNormalize_zero_col`).
+  - `RoleDominance`: dimension dominance and explicit rank-reversal witness
+    (`ex_aggregation_rank_reversal`).
+  - `Ranking`: competition ordinal rank `1 + #{j : w_j > w_i}` (`ordinalRank_ge_one`,
+    `ordinalRank_le_n`, tie invariance).
+  - `UniqueMaximum`: uniqueness of global maximizer and strict rank-1 characterization.
+  - `SharedMaximum`: separates Model A (`DistributedWeights`) from Model B (`SharedMaximum`),
+    proving `subunit_weights_of_distributed`, `shared_max_excludes_unique_max`, and the
+    formal refutation `distributed_not_implies_shared_max` via `w99 = (99/100, 1/100)`.
+- `RST.Superposition`:
+  - `Amplitudes`: real and Gaussian-rational collapse weights summing to 1.
+  - `States`: tensor product composite state unit norm (`composite_state_norm_one`).
+  - `Projection`: orthogonal subspace projector idempotence, Pythagorean split, and
+    unit norm of normalized post-projection vectors (`projected_vector_unit_norm`).
+- `RST.Uncertainty`:
+  - `Operators`: `IsHermitian`, `IsUnitary`, real expectation property, centered variance.
+  - `Commutator`: diagonal operator commutativity (`diagMat_commute`), centered
+    anticommutator, and Hermiticity preservation under `U^dagger D U` (`conjugateBy_hermitian`).
+  - `Robertson`: full finite-dimensional Schrodinger uncertainty inequality
+    (`schrodinger_uncertainty`), Robertson corollary (`robertson_uncertainty`), plus
+    verified 2D (`U2_unitary`, `ex_2d_schrodinger_verified`) and 3D
+    (`ex_3d_schrodinger_verified`) unitary witnesses.
+- `RST.Dynamics`:
+  - `Markov`: row-stochastic matrices, `stepDist` propagation, convex regime mixtures.
+  - `StateTransitions`: absorbing state invariance (`absorbing_point_mass_invariant`)
+    and valid EMA weight updates (`emaUpdate`).
+  - `NetworkCascades`: simple graph bounds (`cascadeFraction_bounds`) and monotonic
+    branching reproduction number (`reproductionNumber_mono_q`).
+- `RST.Optionality`:
+  - `Bernoulli`: Bernoulli variance bound `p*(1 - p) <= 1/4` and Poisson-binomial
+    mean and variance bounds (`poissonBinomialVar_le_n_quarter`).
+  - `Binomial`: exact incremental formula `superpositionProb_step`, monotonicity in `n`
+    (`superpositionProb_mono`), strict step positivity, and conditional monotonicity
+    `conjecture_mono_in_attractiveness`.
 
-What is not machine-checked in Lean: continuous real-analytic properties of
-Shannon entropy and Markov mixing rates (Sections 3 and 5), asymptotic
-Galton-Watson percolation survival probabilities (Section 7), the empirical
-premise `n'(A) > 0` in the Attractiveness-Optionality Conjecture (Section 8),
-and floating-point Monte Carlo runs in `scripts/run_simulations.py`.
+## Simulation Ledger and Seeds
 
-## Key Simulation Parameters and Seeds
+1. **Role aggregation (`SEED_ROLE_AGG = 202605`)**: `4 x 5` matrix normalization,
+   comparison of `alpha_vis` vs `alpha_sup` rank reversal (`G_1` at `0.4167` vs
+   `G_2` at `0.3508`), and 1,000 `Dirichlet(1,...,1)` samples yielding Top-1 shares
+   `[227, 190, 253, 330]`. Outputs `paper/data/role_aggregation.csv`.
+2. **Markov drift (`SEED_MARKOV = 202601`)**: 180 half-day steps (`p_st = 0.15`,
+   EMA `alpha = 0.16`), periodic weekly stroboscopic stationary vector
+   `[0.2511, 0.2248, 0.1462, 0.3779]`, and `12 x 12` homogeneous joint marginal
+   `[0.3334, 0.3087, 0.1741, 0.1838]`. Outputs `paper/data/markov_drift.csv`.
+3. **Optionality (`SEED_OPTIONALITY = 202602`)**: 4,000 trials per grid point on
+   `n in {1..10}` (`p in {0.25, 0.45, 0.65}`), `A in [0, 10]`, heterogeneous
+   Poisson-binomial retention, and time-budget crowding (`B_max = 3`, mean kept `3.4947`
+   vs unconstrained `4.5000` at `n = 10`). Outputs `optionality_vs_n.csv`,
+   `optionality_vs_A.csv`, and `optionality_heterogeneity.csv`.
+4. **Cascade percolation (`SEED_CASCADE = 202603`)**: `n = 8`, 1,500 trials per edge
+   density across ER, clustered two-clique, and hub topologies at `p_tx = 0.72`
+   (`R_0 = 1` at `q = 0.1984`) plus `p_tx in {0.40, 0.72, 0.90}` sensitivity. Outputs
+   `cascade_percolation.csv` and `cascade_ptx_sensitivity.csv`.
+5. **Operator uncertainty (`SEED_UNCERTAINTY = 202604`)**: 3,200 Haar-random states
+   across `d in {2, 3, 4, 5}` and `gamma in {0.0, 0.25, 0.75, 1.50}` with
+   `L(gamma) = U(gamma)^dagger D_L U(gamma)`. Outputs `uncertainty_sweep.csv`
+   with `0` Robertson violations and `0` Schrodinger violations.
 
-- Attention drift (`SEED_MARKOV = 202601`, 180 half-day steps, 20,000-week
-  check): stress probability `p_st = 0.15`, EMA smoothing `alpha = 0.16`.
-- Optionality scaling (`SEED_OPTIONALITY = 202602`, 4,000 trials per grid
-  point): retention probability `p in {0.25, 0.45, 0.65}`, attractiveness grid
-  `A in [0, 10]` with Poisson pool mean `0.35 * exp(0.32 * A)`.
-- Social-graph percolation (`SEED_CASCADE = 202603`, 1,500 trials per density):
-  `n = 8` partners, note-sharing probability `p_tx = 0.72`, cascade threshold
-  `theta = 0.60`, comparing homogeneous, clustered, and hub-mediated graphs.
-- Uncertainty operator sweep (`SEED_UNCERTAINTY = 202604`, 2,400 samples):
-  dimensions `d in {2, 3, 4, 5}`, coupling `gamma in {0.25, 0.75, 1.50}`.
-
-Known limits of the models (observer reactivity under direct probing, selection
-bias, non-universality of `kappa`, role-basis orthogonality, and independence
-assumptions in retention and percolation) are documented in Section 12 of the
-monograph.
-
-## Check It Yourself
-
-Run the full deterministic pipeline from the repository root:
+## Full Reproduction Pipeline
 
 ```bash
-make figures
-make lean
-make pdf
+make figures   # runs simulations, matplotlib figures, and TikZ diagrams
+make lean      # runs lake build (44 jobs across 20 RST modules + Main)
+make test      # runs python3 -m unittest discover -s tests -v (6 test suites)
+make pdf       # compiles paper/main.tex to paper/output/rank-role-uncertainty.pdf
 ```
 
-Expected output and reproducible reference values:
-1. `make figures` populates 5 CSVs plus `summary.json` in `paper/data/` and
-   14 vector files (7 PDF, 7 SVG) in `paper/figures/`. In `summary.json`:
-   - `stationary_theory`: `[0.2511, 0.2248, 0.1462, 0.3779]`
-   - `p_superposition_n5_p45_exact`: `0.743782` (`mc`: `0.73175`)
-   - `q_crit_analytic`: `0.1984` (`cascade_er_q02`: `0.293333`)
-   - `uncertainty.violations`: `0`, `min_ratio_prod_over_bound`: `1.0`
-2. `make lean` prints `Build completed successfully (12 jobs)` with exit code `0`.
-3. `make pdf` writes [paper/output/rank-role-uncertainty.pdf](paper/output/rank-role-uncertainty.pdf)
-   (48 pages, author `Ratnadwip Sarkar`, zero TeX errors or undefined references).
+`make all` executes all four targets sequentially (`figures -> lean -> test -> pdf`).

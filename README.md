@@ -24,22 +24,26 @@ breaks the arrangement that made those roles useful in the first place.
 Sometimes one person comes out as the answer. Sometimes everyone compares
 notes in the wrong group chat and the whole thing vanishes at once.
 
-This monograph is my attempt to write that phenomenon down cleanly, without
-hand-waving. It treats Relational Superposition Theory the way you would treat
-any other coordination problem: state vectors over roles, operators that fail
-to commute, Markov drift across weekdays and weekends, projective collapse,
-percolation on a friend graph, and the uncomfortable role optionality plays in
-who ends up keeping several doors open at once.
+This monograph treats Relational Superposition Theory with deliberate formal
+seriousness: multi-criteria role matrices, a sharp distinction between distributed
+weights and genuine shared maxima (exposing why `(0.99, 0.01)` still has a rank-1
+winner), non-commuting Robertson and Schrodinger uncertainty bounds, Markov drift
+across weekdays and weekends, projective poke collapse, percolation on a friend
+graph, and the structural role optionality plays in who ends up keeping several
+doors open at once. Every mathematical derivation, deterministic simulation,
+invariant test, and Lean 4 theorem is organized so readers can smile at the
+premise while auditing every line of math.
 
 If you have ever stared at a typing indicator for twenty minutes after asking
-a simple question, you will probably recognize the silence phase in Section 6.
-If you have ever been the person unable to answer without losing something real
-in every direction, you will recognize the rest of it too.
+a simple question, you will recognize the silence phase in Section 6.
+If you have ever tried to map out what actually sits underneath the joke, the
+audit in [paper/appendices/mathematical-audit.md](paper/appendices/mathematical-audit.md)
+and the v1.1 changelog in [paper/appendices/revision-report.md](paper/appendices/revision-report.md)
+lay out every assumption explicitly.
 
-The finished paper is in [paper/output/rank-role-uncertainty.pdf](paper/output/rank-role-uncertainty.pdf).
-If you want to inspect the simulation seeds, the figure pipeline, or the
-machine-checked Lean 4 proofs behind the main bounds, all of that lives in
-[TECHNICAL.md](TECHNICAL.md).
+The finished monograph (54 pages in v1.1) is in [paper/output/rank-role-uncertainty.pdf](paper/output/rank-role-uncertainty.pdf).
+Reproducible simulation seeds, figure scripts, unit tests, and the 20-module
+Lean 4 suite are documented in [TECHNICAL.md](TECHNICAL.md).
 
 Written and maintained by Ratnadwip Sarkar ([github.com/RealRatnadwip](https://github.com/RealRatnadwip),
 [ratnadwip.com](https://ratnadwip.com)).

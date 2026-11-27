@@ -1,4 +1,4 @@
-"""Deterministic mathematical simulations and parameter sweeps for RST v1.1.
+"""Deterministic mathematical simulations and parameter sweeps for RST v1.2.
 
 Every simulation corresponds explicitly to a formal model in the monograph:
 1. Role Matrix Normalization & Aggregation Sensitivity (SEED_ROLE_AGG = 202605)

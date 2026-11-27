@@ -150,7 +150,7 @@
 
   function formatUtc24(isoStr) {
     const d = new Date(isoStr);
-    if (Number.isNaN(d.getTime())) return "2026-11-26 23:18:46 UTC";
+    if (Number.isNaN(d.getTime())) return "2026-11-27 00:09:00 UTC";
     const datePart = `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
     const timePart = `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())}`;
     return `${datePart} ${timePart} UTC`;
@@ -159,7 +159,7 @@
   /* Dynamically update footer timestamp (24h HH:MM:SS) from GitHub repository */
   const statusEl = document.getElementById("updateStatus");
   if (statusEl) {
-    const fallbackIso = statusEl.getAttribute("data-fallback-ts") || "2026-11-26T23:18:46Z";
+    const fallbackIso = statusEl.getAttribute("data-fallback-ts") || "2026-11-27T00:09:00Z";
     const fallbackFormatted = formatUtc24(fallbackIso);
 
     if (typeof fetch === "function") {
@@ -179,17 +179,17 @@
               fallbackIso;
             const formatted = formatUtc24(rawDate);
             if (sha) {
-              statusEl.textContent = `Last updated: ${formatted} (${sha}, v1.1)`;
+              statusEl.textContent = `Last updated: ${formatted} (${sha}, v1.2)`;
               return;
             }
           }
-          statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.1)`;
+          statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.2)`;
         })
         .catch(() => {
-          statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.1)`;
+          statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.2)`;
         });
     } else {
-      statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.1)`;
+      statusEl.textContent = `Last updated: ${fallbackFormatted} (v1.2)`;
     }
   }
 

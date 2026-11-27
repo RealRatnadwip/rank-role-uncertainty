@@ -41,7 +41,7 @@ audit in [paper/appendices/mathematical-audit.md](paper/appendices/mathematical-
 and the v1.1 changelog in [paper/appendices/revision-report.md](paper/appendices/revision-report.md)
 document every definition and assumption explicitly.
 
-The finished monograph (55 pages in v1.1) is in [paper/output/rank-role-uncertainty.pdf](paper/output/rank-role-uncertainty.pdf).
+The finished monograph (55 pages in v1.2) is in [paper/output/rank-role-uncertainty.pdf](paper/output/rank-role-uncertainty.pdf).
 Reproducible simulation seeds, figure scripts, unit tests, and the 20-module
 Lean 4 suite are documented in [TECHNICAL.md](TECHNICAL.md).
 

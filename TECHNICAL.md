@@ -1,4 +1,4 @@
-# Technical Architecture and Verification (v1.1)
+# Technical Architecture and Verification (v1.2)
 
 This repository holds the LaTeX monograph, deterministic Monte Carlo and
 linear-algebra simulation scripts, invariant tests, generated datasets and

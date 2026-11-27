@@ -624,7 +624,9 @@ a {
   color: #A8A8AE;
   text-align: justify;
   text-justify: inter-word;
-  hyphens: auto;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  hyphens: none;
 }
 
 .panel p + p {
@@ -886,6 +888,7 @@ code {
     text-align: justify;
     text-justify: inter-word;
     -webkit-hyphens: none;
+    -moz-hyphens: none;
     hyphens: none;
   }
 

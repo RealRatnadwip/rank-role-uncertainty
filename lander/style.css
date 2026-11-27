@@ -885,7 +885,8 @@ code {
     font-size: 0.94rem;
     text-align: justify;
     text-justify: inter-word;
-    hyphens: auto;
+    -webkit-hyphens: none;
+    hyphens: none;
   }
 
   .panel:hover,
